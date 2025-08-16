@@ -1,0 +1,139 @@
+import axios from 'axios';
+
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
+
+// Create axios instance with default config
+const api = axios.create({
+  baseURL: API_BASE_URL,
+  timeout: 10000,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
+
+// Request interceptor to add auth token
+api.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+
+// Response interceptor to handle auth errors
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 401) {
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      window.location.href = '/login';
+    }
+    return Promise.reject(error);
+  }
+);
+
+// Auth API
+export const authAPI = {
+  register: (data: { username: string; email: string; password: string; full_name: string }) =>
+    api.post('/auth/register', data),
+  
+  login: (data: { username: string; password: string }) =>
+    api.post('/auth/login', data),
+  
+  logout: () => api.post('/auth/logout'),
+  
+  refreshToken: () => api.post('/auth/refresh'),
+  
+  getProfile: () => api.get('/auth/profile'),
+  
+  updateProfile: (data: any) => api.put('/auth/profile', data),
+  
+  changePassword: (data: { current_password: string; new_password: string }) =>
+    api.put('/auth/change-password', data),
+};
+
+// Problems API
+export const problemsAPI = {
+  getAll: (params?: { page?: number; limit?: number; difficulty?: string; tags?: string }) =>
+    api.get('/problems', { params }),
+  
+  getById: (id: string) => api.get(`/problems/${id}`),
+  
+  getTestCases: (id: string) => api.get(`/problems/${id}/test-cases`),
+  
+  submit: (id: string, data: { code: string; language: string }) =>
+    api.post(`/problems/${id}/submit`, data),
+};
+
+// Submissions API
+export const submissionsAPI = {
+  getAll: (params?: { page?: number; limit?: number; problem_id?: string; status?: string }) =>
+    api.get('/submissions', { params }),
+  
+  getById: (id: string) => api.get(`/submissions/${id}`),
+  
+  getMySubmissions: (params?: { page?: number; limit?: number }) =>
+    api.get(`/users/${localStorage.getItem('userId') || 'me'}/submissions`, { params }),
+};
+
+// Contests API
+export const contestsAPI = {
+  getAll: (params?: { page?: number; limit?: number; status?: string }) =>
+    api.get('/contests', { params }),
+  
+  getById: (id: string) => api.get(`/contests/${id}`),
+  
+  register: (id: string) => api.post(`/contests/${id}/register`),
+  
+  getLeaderboard: (id: string) => api.get(`/contests/${id}/leaderboard`),
+  
+  getProblems: (id: string) => api.get(`/contests/${id}/problems`),
+  
+  submit: (contestId: string, problemId: string, data: { code: string; language: string }) =>
+    api.post(`/contests/${contestId}/problems/${problemId}/submit`, data),
+};
+
+// Users API
+export const usersAPI = {
+  getAll: (params?: { page?: number; limit?: number; search?: string }) =>
+    api.get('/users', { params }),
+  
+  getLeaderboard: (params?: { page?: number; limit?: number }) =>
+    api.get('/users/leaderboard', { params }),
+  
+  getStats: (username: string) => api.get(`/users/${username}/stats`),
+  
+  getProfile: (id: string) => api.get(`/users/${id}`),
+};
+
+// Admin API
+export const adminAPI = {
+  // Problems
+  createProblem: (data: any) => api.post('/admin/problems', data),
+  updateProblem: (id: string, data: any) => api.put(`/admin/problems/${id}`, data),
+  deleteProblem: (id: string) => api.delete(`/admin/problems/${id}`),
+  
+  // Contests
+  createContest: (data: any) => api.post('/admin/contests', data),
+  updateContest: (id: string, data: any) => api.put(`/admin/contests/${id}`, data),
+  deleteContest: (id: string) => api.delete(`/admin/contests/${id}`),
+  
+  // Users
+  getAllUsers: (params?: { page?: number; limit?: number }) =>
+    api.get('/admin/users', { params }),
+  updateUser: (id: string, data: any) => api.put(`/admin/users/${id}`, data),
+  deleteUser: (id: string) => api.delete(`/admin/users/${id}`),
+  
+  // System
+  getSystemStats: () => api.get('/admin/stats'),
+  getSystemSettings: () => api.get('/admin/settings'),
+  updateSystemSettings: (data: any) => api.put('/admin/settings', data),
+};
+
+export default api;
