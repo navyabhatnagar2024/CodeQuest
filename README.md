@@ -54,6 +54,18 @@ A comprehensive competitive programming platform built with Node.js, Express, SQ
 
 ## Installation
 
+### Quick Setup (Recommended)
+```bash
+# Clone the repository
+git clone <repository-url>
+cd competitive-programming-platform
+
+# Run the automated setup script
+node setup.js
+```
+
+### Manual Setup
+
 1. **Clone the repository**
    ```bash
    git clone <repository-url>
@@ -63,6 +75,9 @@ A comprehensive competitive programming platform built with Node.js, Express, SQ
 2. **Install dependencies**
    ```bash
    npm install
+   cd server && npm install
+   cd ../client && npm install
+   cd ..
    ```
 
 3. **Set up environment variables**
@@ -77,15 +92,45 @@ A comprehensive competitive programming platform built with Node.js, Express, SQ
 
 4. **Initialize the database**
    ```bash
-   npm run db:migrate
+   cd server
+   node database/seed.js seed
+   cd ..
    ```
 
-5. **Start the development server**
+5. **Start the development servers**
    ```bash
-   npm run dev
+   # Terminal 1: Start server
+   cd server && npm start
+   
+   # Terminal 2: Start client
+   cd client && npm start
    ```
 
-The server will start on `http://localhost:5000`
+The server will start on `http://localhost:5000` and the client on `http://localhost:3000`
+
+### Database Setup
+
+**Important**: The database file is not included in the repository. After cloning, you must run the seed script to populate the database with sample data.
+
+**Sample Data Included**:
+- Admin user: username: `admin`, password: `admin123`
+- 3 sample programming problems with test cases
+- 2 sample contests
+- Default system settings
+
+**Database Commands**:
+```bash
+cd server
+
+# Seed the database
+node database/seed.js seed
+
+# Clear all data
+node database/seed.js clear
+
+# Reset (clear + reseed)
+node database/seed.js reset
+```
 
 ## API Documentation
 

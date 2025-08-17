@@ -1,5 +1,50 @@
 # Server Setup
 
+## Quick Start
+
+### 1. Install Dependencies
+```bash
+npm install
+```
+
+### 2. Setup Database
+```bash
+# Option A: Use the setup script (recommended)
+node setup.js
+
+# Option B: Manual setup
+node database/seed.js seed
+```
+
+### 3. Start the Server
+```bash
+npm start
+```
+
+The server will be available at `http://localhost:5000`
+
+## Database Setup
+
+**Important**: The database file (`coding_platform.db`) is not included in the repository due to `.gitignore`. After cloning, you must run the seed script to populate the database with sample data.
+
+### Sample Data Included
+- **Admin User**: username: `admin`, password: `admin123`
+- **Sample Problems**: 3 programming problems with test cases
+- **Sample Contests**: 2 practice contests
+- **System Settings**: Default configuration
+
+### Database Commands
+```bash
+# Seed the database with sample data
+node database/seed.js seed
+
+# Clear all data
+node database/seed.js clear
+
+# Reset (clear + reseed)
+node database/seed.js reset
+```
+
 ## Python Dependencies
 
 This server uses Python scripts to fetch problems from LeetCode using leetscrape. To set up the Python environment:

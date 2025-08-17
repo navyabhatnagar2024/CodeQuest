@@ -35,57 +35,39 @@ Output: [0,1]
 - 2 <= nums.length <= 10^4
 - -10^9 <= nums[i] <= 10^9
 - -10^9 <= target <= 10^9
-- Only one valid answer exists.`,
-                difficulty: 'Easy',
-                time_limit: 1000,
-                memory_limit: 256,
+- Only one valid answer exists`,
+                problem_statement: `Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.
+
+You may assume that each input would have exactly one solution, and you may not use the same element twice.
+
+You can return the answer in any order.`,
+                difficulty_level: 'Easy',
+                time_limit_ms: 1000,
+                memory_limit_mb: 256,
                 topic_tags: JSON.stringify(['array', 'hash-table']),
-                examples: JSON.stringify([
-                    {
-                        input: '[2,7,11,15]\n9',
-                        output: '[0,1]',
-                        explanation: 'nums[0] + nums[1] = 2 + 7 = 9'
-                    },
-                    {
-                        input: '[3,2,4]\n6',
-                        output: '[1,2]',
-                        explanation: 'nums[1] + nums[2] = 2 + 4 = 6'
-                    }
-                ]),
+                input_format: 'The first line contains two integers n and target.\nThe second line contains n space-separated integers representing the array nums.',
+                output_format: 'Print two space-separated integers representing the indices of the two numbers.',
                 constraints: JSON.stringify([
                     '2 <= nums.length <= 10^4',
                     '-10^9 <= nums[i] <= 10^9',
                     '-10^9 <= target <= 10^9',
                     'Only one valid answer exists'
                 ]),
-                solution_template: JSON.stringify({
-                    'javascript': `/**
- * @param {number[]} nums
- * @param {number} target
- * @return {number[]}
- */
-var twoSum = function(nums, target) {
-    // Your code here
-};`,
-                    'python3': `class Solution:
-    def twoSum(self, nums: List[int], target: int) -> List[int]:
-        # Your code here
-        pass`,
-                    'cpp': `class Solution {
-public:
-    vector<int> twoSum(vector<int>& nums, int target) {
-        // Your code here
-    }
-};`,
-                    'java': `class Solution {
-    public int[] twoSum(int[] nums, int target) {
-        // Your code here
-    }
-}`
-                }),
-                is_published: true,
-                created_at: new Date().toISOString(),
-                updated_at: new Date().toISOString()
+                examples: JSON.stringify([
+                    {
+                        input: '4 9\n2 7 11 15',
+                        output: '0 1',
+                        explanation: 'nums[0] + nums[1] = 2 + 7 = 9'
+                    },
+                    {
+                        input: '3 6\n3 2 4',
+                        output: '1 2',
+                        explanation: 'nums[1] + nums[2] = 2 + 4 = 6'
+                    }
+                ]),
+                hints: 'Try using a hash map to store the complement of each number.',
+                source_platform: 'LeetCode',
+                source_problem_id: '1'
             },
             {
                 title: 'Valid Parentheses',
@@ -118,58 +100,43 @@ Output: false
 **Constraints:**
 - 1 <= s.length <= 10^4
 - s consists of parentheses only '()[]{}'`,
-                difficulty: 'Easy',
-                time_limit: 1000,
-                memory_limit: 256,
+                problem_statement: `Given a string s containing just the characters '(', ')', '{', '}', '[' and ']', determine if the input string is valid.
+
+An input string is valid if:
+
+1. Open brackets must be closed by the same type of brackets.
+2. Open brackets must be closed in the correct order.
+3. Every close bracket has a corresponding open bracket of the same type.`,
+                difficulty_level: 'Easy',
+                time_limit_ms: 1000,
+                memory_limit_mb: 256,
                 topic_tags: JSON.stringify(['string', 'stack']),
-                examples: JSON.stringify([
-                    {
-                        input: '"()"',
-                        output: 'true',
-                        explanation: 'Simple valid parentheses'
-                    },
-                    {
-                        input: '"()[]{}"',
-                        output: 'true',
-                        explanation: 'Multiple valid parentheses'
-                    },
-                    {
-                        input: '"(]"',
-                        output: 'false',
-                        explanation: 'Invalid parentheses'
-                    }
-                ]),
+                input_format: 'The first line contains a string s consisting of parentheses.',
+                output_format: 'Print "true" if the string is valid, "false" otherwise.',
                 constraints: JSON.stringify([
                     '1 <= s.length <= 10^4',
                     's consists of parentheses only \'()[]{}\''
                 ]),
-                solution_template: JSON.stringify({
-                    'javascript': `/**
- * @param {string} s
- * @return {boolean}
- */
-var isValid = function(s) {
-    // Your code here
-};`,
-                    'python3': `class Solution:
-    def isValid(self, s: str) -> bool:
-        # Your code here
-        pass`,
-                    'cpp': `class Solution {
-public:
-    bool isValid(string s) {
-        // Your code here
-    }
-};`,
-                    'java': `class Solution {
-    public boolean isValid(String s) {
-        // Your code here
-    }
-}`
-                }),
-                is_published: true,
-                created_at: new Date().toISOString(),
-                updated_at: new Date().toISOString()
+                examples: JSON.stringify([
+                    {
+                        input: '()',
+                        output: 'true',
+                        explanation: 'Simple valid parentheses'
+                    },
+                    {
+                        input: '()[]{}',
+                        output: 'true',
+                        explanation: 'Multiple valid parentheses'
+                    },
+                    {
+                        input: '(]',
+                        output: 'false',
+                        explanation: 'Invalid parentheses'
+                    }
+                ]),
+                hints: 'Use a stack to keep track of opening brackets.',
+                source_platform: 'LeetCode',
+                source_problem_id: '20'
             },
             {
                 title: 'Maximum Subarray',
@@ -197,150 +164,129 @@ Output: 23
 **Constraints:**
 - 1 <= nums.length <= 10^5
 - -10^4 <= nums[i] <= 10^4`,
-                difficulty: 'Medium',
-                time_limit: 1000,
-                memory_limit: 256,
+                problem_statement: `Given an integer array nums, find the subarray with the largest sum, and return its sum.`,
+                difficulty_level: 'Medium',
+                time_limit_ms: 1000,
+                memory_limit_mb: 256,
                 topic_tags: JSON.stringify(['array', 'divide-and-conquer', 'dynamic-programming']),
-                examples: JSON.stringify([
-                    {
-                        input: '[-2,1,-3,4,-1,2,1,-5,4]',
-                        output: '6',
-                        explanation: 'The subarray [4,-1,2,1] has the largest sum 6'
-                    },
-                    {
-                        input: '[1]',
-                        output: '1',
-                        explanation: 'Single element array'
-                    },
-                    {
-                        input: '[5,4,-1,7,8]',
-                        output: '23',
-                        explanation: 'The entire array has the largest sum'
-                    }
-                ]),
+                input_format: 'The first line contains an integer n.\nThe second line contains n space-separated integers representing the array nums.',
+                output_format: 'Print a single integer representing the maximum subarray sum.',
                 constraints: JSON.stringify([
                     '1 <= nums.length <= 10^5',
                     '-10^4 <= nums[i] <= 10^4'
                 ]),
-                solution_template: JSON.stringify({
-                    'javascript': `/**
- * @param {number[]} nums
- * @return {number}
- */
-var maxSubArray = function(nums) {
-    // Your code here
-};`,
-                    'python3': `class Solution:
-    def maxSubArray(self, nums: List[int]) -> int:
-        # Your code here
-        pass`,
-                    'cpp': `class Solution {
-public:
-    int maxSubArray(vector<int>& nums) {
-        // Your code here
-    }
-};`,
-                    'java': `class Solution {
-    public int maxSubArray(int[] nums) {
-        // Your code here
-    }
-}`
-                }),
-                is_published: true,
-                created_at: new Date().toISOString(),
-                updated_at: new Date().toISOString()
+                examples: JSON.stringify([
+                    {
+                        input: '9\n-2 1 -3 4 -1 2 1 -5 4',
+                        output: '6',
+                        explanation: 'The subarray [4,-1,2,1] has the largest sum 6'
+                    },
+                    {
+                        input: '1\n1',
+                        output: '1',
+                        explanation: 'Single element array'
+                    },
+                    {
+                        input: '5\n5 4 -1 7 8',
+                        output: '23',
+                        explanation: 'The entire array has the largest sum'
+                    }
+                ]),
+                hints: 'Try using Kadane\'s algorithm or dynamic programming.',
+                source_platform: 'LeetCode',
+                source_problem_id: '53'
             }
         ];
 
         this.sampleTestCases = {
             'Two Sum': [
                 {
-                    input: '[2,7,11,15]\n9',
-                    expected_output: '[0,1]',
+                    input: '4 9\n2 7 11 15',
+                    expected_output: '0 1',
                     is_sample: true,
-                    points: 10
+                    weight: 10
                 },
                 {
-                    input: '[3,2,4]\n6',
-                    expected_output: '[1,2]',
-                    is_sample: false,
-                    points: 20
+                    input: '3 6\n3 2 4',
+                    expected_output: '1 2',
+                    is_sample: true,
+                    weight: 10
                 },
                 {
-                    input: '[3,3]\n6',
-                    expected_output: '[0,1]',
+                    input: '2 6\n3 3',
+                    expected_output: '0 1',
                     is_sample: false,
-                    points: 20
+                    weight: 20
                 },
                 {
-                    input: '[1,5,8,10,13]\n18',
-                    expected_output: '[2,4]',
+                    input: '5 18\n1 5 8 10 13',
+                    expected_output: '2 4',
                     is_sample: false,
-                    points: 25
+                    weight: 25
                 }
             ],
             'Valid Parentheses': [
                 {
-                    input: '"()"',
+                    input: '()',
                     expected_output: 'true',
                     is_sample: true,
-                    points: 10
+                    weight: 10
                 },
                 {
-                    input: '"()[]{}"',
+                    input: '()[]{}',
                     expected_output: 'true',
                     is_sample: true,
-                    points: 10
+                    weight: 10
                 },
                 {
-                    input: '"(]"',
+                    input: '(]',
                     expected_output: 'false',
                     is_sample: true,
-                    points: 10
+                    weight: 10
                 },
                 {
-                    input: '"([)]"',
+                    input: '([)]',
                     expected_output: 'false',
                     is_sample: false,
-                    points: 20
+                    weight: 20
                 },
                 {
-                    input: '"{[]}"',
+                    input: '{[]}',
                     expected_output: 'true',
                     is_sample: false,
-                    points: 20
+                    weight: 20
                 }
             ],
             'Maximum Subarray': [
                 {
-                    input: '[-2,1,-3,4,-1,2,1,-5,4]',
+                    input: '9\n-2 1 -3 4 -1 2 1 -5 4',
                     expected_output: '6',
                     is_sample: true,
-                    points: 10
+                    weight: 10
                 },
                 {
-                    input: '[1]',
+                    input: '1\n1',
                     expected_output: '1',
                     is_sample: true,
-                    points: 10
+                    weight: 10
                 },
                 {
-                    input: '[5,4,-1,7,8]',
+                    input: '5\n5 4 -1 7 8',
                     expected_output: '23',
                     is_sample: true,
-                    points: 10
+                    weight: 10
                 },
                 {
-                    input: '[-1,-2,-3,-4]',
+                    input: '4\n-1 -2 -3 -4',
                     expected_output: '-1',
                     is_sample: false,
-                    points: 20
+                    weight: 20
                 },
                 {
-                    input: '[1,2,3,4,5]',
+                    input: '5\n1 2 3 4 5',
                     expected_output: '15',
                     is_sample: false,
-                    points: 20
+                    weight: 20
                 }
             ]
         };
@@ -360,7 +306,7 @@ public:
                 // Create sample contests
                 await this.createSampleContests();
                 
-                // Create system settings
+                // Create system settings (only if they don't exist)
                 await this.createSystemSettings();
             });
 
@@ -379,29 +325,22 @@ public:
             email: 'admin@competitiveplatform.com',
             password_hash: hashedPassword,
             full_name: 'Administrator',
-            elo_rating: 1500,
-            total_problems_solved: 0,
-            contests_participated: 0,
+            country: 'Global',
+            timezone: 'UTC',
             is_admin: 1,
             is_verified: 1,
-            account_status: 'active',
-            preferred_language: 'python',
-            created_at: new Date().toISOString(),
-            updated_at: new Date().toISOString()
+            total_problems_solved: 0
         };
 
         await database.run(`
             INSERT OR IGNORE INTO users (
-                username, email, password_hash, full_name, elo_rating, 
-                total_problems_solved, contests_participated, is_admin, is_verified,
-                account_status, preferred_language, created_at, updated_at
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                username, email, password_hash, full_name, country, timezone,
+                is_admin, is_verified, total_problems_solved
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
         `, [
             adminUser.username, adminUser.email, adminUser.password_hash,
-            adminUser.full_name, adminUser.elo_rating, adminUser.total_problems_solved,
-            adminUser.contests_participated, adminUser.is_admin, adminUser.is_verified,
-            adminUser.account_status, adminUser.preferred_language,
-            adminUser.created_at, adminUser.updated_at
+            adminUser.full_name, adminUser.country, adminUser.timezone,
+            adminUser.is_admin, adminUser.is_verified, adminUser.total_problems_solved
         ]);
 
         console.log('✓ Created admin user (username: admin, password: admin123)');
@@ -409,127 +348,171 @@ public:
 
     async createSampleProblems() {
         console.log('Creating sample problems...');
-        console.log('Sample problems array:', this.sampleProblems.length);
         
         for (const problem of this.sampleProblems) {
-            console.log('Processing problem:', problem.title);
             try {
-                const result = await database.run(`
-                    INSERT OR IGNORE INTO problems (
-                        title, description, problem_statement, difficulty_level, time_limit_ms, memory_limit_mb,
-                        topic_tags, examples, constraints, is_active, created_at, updated_at
-                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-                `, [
-                    problem.title, problem.description, problem.description, problem.difficulty,
-                    problem.time_limit, problem.memory_limit, problem.topic_tags,
-                    problem.examples, problem.constraints, 1, problem.created_at, problem.updated_at
-                ]);
-
-                console.log('Insert result:', result);
-                if (result.lastID) {
-                    console.log(`✓ Created problem: ${problem.title}`);
-                    
-                    // Add test cases for this problem
-                    const testCases = this.sampleTestCases[problem.title] || [];
-                    for (const testCase of testCases) {
-                        await database.run(`
-                            INSERT OR IGNORE INTO test_cases (
-                                problem_id, input_data, expected_output, is_sample, weight
-                            ) VALUES (?, ?, ?, ?, ?)
-                        `, [
-                            result.lastID, testCase.input, testCase.expected_output,
-                            testCase.is_sample, testCase.points
-                        ]);
-                    }
-                    
-                    console.log(`  - Added ${testCases.length} test cases`);
+                console.log(`Processing problem: ${problem.title}`);
+                
+                // First check if problem exists
+                const existingProblem = await database.get('SELECT id FROM problems WHERE title = ?', [problem.title]);
+                
+                let problemId;
+                if (existingProblem) {
+                    problemId = existingProblem.id;
+                    console.log(`⚠ Problem already exists: ${problem.title} with ID: ${problemId}`);
                 } else {
-                    console.log(`No problem created for: ${problem.title}`);
+                    console.log(`Creating new problem: ${problem.title}`);
+                    const result = await database.run(`
+                        INSERT INTO problems (
+                            title, description, problem_statement, difficulty_level, time_limit_ms, memory_limit_mb,
+                            topic_tags, input_format, output_format, constraints, examples, hints,
+                            source_platform, source_problem_id, is_active
+                        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    `, [
+                        problem.title, problem.description, problem.problem_statement, problem.difficulty_level,
+                        problem.time_limit_ms, problem.memory_limit_mb, problem.topic_tags,
+                        problem.input_format, problem.output_format, problem.constraints, problem.examples,
+                        problem.hints, problem.source_platform, problem.source_problem_id, 1
+                    ]);
+                    
+                    problemId = result.lastID;
+                    console.log(`✓ Created problem: ${problem.title} with ID: ${problemId}`);
                 }
+                
+                // Add test cases for this problem
+                const testCases = this.sampleTestCases[problem.title] || [];
+                let testCasesCreated = 0;
+                
+                console.log(`Adding ${testCases.length} test cases for problem: ${problem.title}`);
+                
+                for (const testCase of testCases) {
+                    try {
+                        // Check if test case already exists
+                        const existingTestCase = await database.get(
+                            'SELECT id FROM test_cases WHERE problem_id = ? AND input_data = ? AND expected_output = ?',
+                            [problemId, testCase.input, testCase.expected_output]
+                        );
+                        
+                        if (!existingTestCase) {
+                            const testCaseResult = await database.run(`
+                                INSERT INTO test_cases (
+                                    problem_id, input_data, expected_output, is_sample, weight
+                                ) VALUES (?, ?, ?, ?, ?)
+                            `, [
+                                problemId, testCase.input, testCase.expected_output,
+                                testCase.is_sample, testCase.weight
+                            ]);
+                            testCasesCreated++;
+                            console.log(`  ✓ Created test case: ${testCase.input} -> ${testCase.expected_output}`);
+                        } else {
+                            console.log(`  ⚠ Test case already exists: ${testCase.input} -> ${testCase.expected_output}`);
+                        }
+                    } catch (testCaseError) {
+                        console.error(`Error creating test case for ${problem.title}:`, testCaseError);
+                    }
+                }
+                
+                if (testCasesCreated > 0) {
+                    console.log(`  - Added ${testCasesCreated} new test cases`);
+                } else {
+                    console.log(`  - All test cases already exist`);
+                }
+                
             } catch (error) {
                 console.error(`Error creating problem ${problem.title}:`, error);
+                console.error('Error details:', {
+                    message: error.message,
+                    code: error.code,
+                    errno: error.errno
+                });
             }
         }
     }
 
     async createSampleContests() {
+        // First, get the admin user ID
+        const adminUser = await database.get('SELECT id FROM users WHERE username = ?', ['admin']);
+        if (!adminUser) {
+            console.error('❌ Admin user not found. Cannot create contests.');
+            return;
+        }
+
         const sampleContests = [
             {
                 title: 'Beginner Contest #1',
                 description: 'A beginner-friendly contest with easy problems',
                 start_time: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(), // Tomorrow
                 end_time: new Date(Date.now() + 25 * 60 * 60 * 1000).toISOString(),
-                duration: 60,
+                duration_minutes: 60,
                 max_participants: 1000,
                 registration_deadline: new Date(Date.now() + 23 * 60 * 60 * 1000).toISOString(),
-                is_published: true,
-                scoring_rules: JSON.stringify({
-                    'penalty_per_wrong_submission': 10,
-                    'points_per_problem': 100,
-                    'bonus_for_fast_solve': 10
-                }),
-                created_at: new Date().toISOString(),
-                updated_at: new Date().toISOString()
+                contest_type: 'Practice',
+                difficulty_range: JSON.stringify({ min: 'Easy', max: 'Easy' }),
+                prizes_description: 'Practice contest - no prizes',
+                rules: 'Standard competitive programming rules apply',
+                is_active: 1,
+                is_public: 1
             },
             {
                 title: 'Weekly Challenge #1',
                 description: 'Weekly programming challenge with mixed difficulty problems',
                 start_time: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(), // Next week
                 end_time: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000 + 2 * 60 * 60 * 1000).toISOString(),
-                duration: 120,
+                duration_minutes: 120,
                 max_participants: 500,
                 registration_deadline: new Date(Date.now() + 6 * 24 * 60 * 60 * 1000).toISOString(),
-                is_published: true,
-                scoring_rules: JSON.stringify({
-                    'penalty_per_wrong_submission': 15,
-                    'points_per_problem': 150,
-                    'bonus_for_fast_solve': 20
-                }),
-                created_at: new Date().toISOString(),
-                updated_at: new Date().toISOString()
+                contest_type: 'Rated',
+                difficulty_range: JSON.stringify({ min: 'Easy', max: 'Medium' }),
+                prizes_description: 'Rating points and bragging rights',
+                rules: 'Rated contest - affects your rating',
+                is_active: 1,
+                is_public: 1
             }
         ];
 
         for (const contest of sampleContests) {
-            const result = await database.run(`
-                INSERT OR IGNORE INTO contests (
-                    title, description, start_time, end_time, duration_minutes,
-                    max_participants, registration_deadline, is_active, is_public,
-                    created_by_admin_id, created_at, updated_at
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-            `, [
-                contest.title, contest.description, contest.start_time,
-                contest.end_time, contest.duration, contest.max_participants,
-                contest.registration_deadline, 1, 1, 1, contest.created_at, contest.updated_at
-            ]);
+            try {
+                const result = await database.run(`
+                    INSERT OR IGNORE INTO contests (
+                        title, description, start_time, end_time, duration_minutes,
+                        max_participants, registration_deadline, contest_type, difficulty_range,
+                        prizes_description, rules, is_active, is_public, created_by_admin_id
+                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                `, [
+                    contest.title, contest.description, contest.start_time,
+                    contest.end_time, contest.duration_minutes, contest.max_participants,
+                    contest.registration_deadline, contest.contest_type, contest.difficulty_range,
+                    contest.prizes_description, contest.rules, contest.is_active, contest.is_public, adminUser.id
+                ]);
 
-            if (result.lastID) {
-                console.log(`✓ Created contest: ${contest.title}`);
+                if (result.lastID) {
+                    console.log(`✓ Created contest: ${contest.title}`);
+                }
+            } catch (error) {
+                console.error(`Error creating contest ${contest.title}:`, error);
             }
         }
     }
 
     async createSystemSettings() {
-        const defaultSettings = [
-            ['platform_name', 'Competitive Programming Platform'],
-            ['platform_description', 'A comprehensive platform for competitive programming contests'],
-            ['max_submission_length', '50000'],
-            ['default_time_limit', '1000'],
-            ['default_memory_limit', '256'],
-            ['enable_registration', 'true'],
-            ['enable_public_problems', 'true'],
-            ['maintenance_mode', 'false'],
-            ['version', '1.0.0']
+        // Only add settings that aren't already in the schema
+        const additionalSettings = [
+            ['platform_name', 'Competitive Programming Platform', 'Name of the platform'],
+            ['platform_description', 'A comprehensive platform for competitive programming contests', 'Platform description'],
+            ['enable_registration', 'true', 'Whether user registration is enabled'],
+            ['enable_public_problems', 'true', 'Whether problems are publicly visible'],
+            ['maintenance_mode', 'false', 'Whether the platform is in maintenance mode'],
+            ['version', '1.0.0', 'Platform version']
         ];
 
-        for (const [key, value] of defaultSettings) {
+        for (const [key, value, description] of additionalSettings) {
             await database.run(`
-                INSERT OR IGNORE INTO system_settings (setting_key, setting_value)
-                VALUES (?, ?)
-            `, [key, value]);
+                INSERT OR IGNORE INTO system_settings (setting_key, setting_value, description)
+                VALUES (?, ?, ?)
+            `, [key, value, description]);
         }
 
-        console.log('✓ Created system settings');
+        console.log('✓ Created additional system settings');
     }
 
     async clear() {
