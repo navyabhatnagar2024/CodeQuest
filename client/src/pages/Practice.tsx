@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { problemsAPI } from '../services/api';
-import { useAuth } from '../contexts/AuthContext';
 
 interface Problem {
   id: number;
@@ -22,8 +21,7 @@ interface Topic {
   selected: boolean;
 }
 
-const Problems: React.FC = () => {
-  const { user } = useAuth();
+const Practice: React.FC = () => {
   const [problems, setProblems] = useState<Problem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -35,6 +33,7 @@ const Problems: React.FC = () => {
   const [difficulty, setDifficulty] = useState<string>('');
   const [selectedTopics, setSelectedTopics] = useState<string[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
+  const [sourcePlatform, setSourcePlatform] = useState<string>('LeetCode');
   
   // Available topics
   const [availableTopics, setAvailableTopics] = useState<Topic[]>([]);
@@ -43,10 +42,6 @@ const Problems: React.FC = () => {
   // Timer state
   const [activeTimer, setActiveTimer] = useState<number | null>(null);
   const [timerSeconds, setTimerSeconds] = useState(0);
-
-  // Sync problems state
-  const [syncing, setSyncing] = useState(false);
-  const [syncMessage, setSyncMessage] = useState<string | null>(null);
 
   const fetchProblems = useCallback(async () => {
     try {
@@ -57,6 +52,7 @@ const Problems: React.FC = () => {
         difficulty: difficulty || undefined,
         topics: selectedTopics.length > 0 ? JSON.stringify(selectedTopics) : undefined,
         search: searchTerm || undefined,
+        source_platform: sourcePlatform === 'LeetCode' ? undefined : sourcePlatform
       };
 
       const response = await problemsAPI.getAll(params);
@@ -75,7 +71,7 @@ const Problems: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  }, [page, difficulty, selectedTopics, searchTerm]);
+  }, [page, difficulty, selectedTopics, searchTerm, sourcePlatform]);
 
   const fetchAvailableTopics = useCallback(async () => {
     try {
@@ -91,29 +87,6 @@ const Problems: React.FC = () => {
       console.error('Error fetching topics:', err);
     }
   }, []);
-
-  const handleSyncProblems = async () => {
-    try {
-      setSyncing(true);
-      setSyncMessage('Syncing problems from LeetCode...');
-      
-      const response = await problemsAPI.syncExternalProblems();
-      
-      if (response.data.success) {
-        setSyncMessage(`Successfully synced ${response.data.synced} new problems and updated ${response.data.updated} existing problems.`);
-        fetchProblems();
-        fetchAvailableTopics();
-      } else {
-        setSyncMessage('Failed to sync problems. Please try again.');
-      }
-    } catch (err: any) {
-      console.error('Error syncing problems:', err);
-      setSyncMessage('Error syncing problems. Please check the console for details.');
-    } finally {
-      setSyncing(false);
-      setTimeout(() => setSyncMessage(null), 5000);
-    }
-  };
 
   useEffect(() => {
     fetchAvailableTopics();
@@ -168,6 +141,7 @@ const Problems: React.FC = () => {
     setDifficulty('');
     setSelectedTopics([]);
     setSearchTerm('');
+    setSourcePlatform('LeetCode');
     setPage(1);
   };
 
@@ -176,6 +150,13 @@ const Problems: React.FC = () => {
       case 'Easy': return 'text-green-600 bg-green-100';
       case 'Medium': return 'text-yellow-600 bg-yellow-100';
       case 'Hard': return 'text-red-600 bg-red-100';
+      default: return 'text-gray-600 bg-gray-100';
+    }
+  };
+
+  const getPlatformColor = (platform: string) => {
+    switch (platform) {
+      case 'LeetCode': return 'text-orange-600 bg-orange-100';
       default: return 'text-gray-600 bg-gray-100';
     }
   };
@@ -215,51 +196,9 @@ const Problems: React.FC = () => {
           <p className="text-gray-600">Solve problems from LeetCode to improve your skills</p>
         </div>
 
-        {/* Admin Sync Button */}
-        {user?.is_admin && (
-          <div className="mb-6">
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h3 className="text-lg font-medium text-blue-900">Admin Controls</h3>
-                  <p className="text-sm text-blue-700">Sync problems from LeetCode to keep the database updated</p>
-                </div>
-                <button
-                  onClick={handleSyncProblems}
-                  disabled={syncing}
-                  className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-2"
-                >
-                  {syncing ? (
-                    <>
-                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-                      <span>Syncing...</span>
-                    </>
-                  ) : (
-                    <>
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                      </svg>
-                      <span>Sync Problems</span>
-                    </>
-                  )}
-                </button>
-              </div>
-              {syncMessage && (
-                <div className={`mt-3 p-3 rounded-md text-sm ${
-                  syncMessage.includes('Successfully') 
-                    ? 'bg-green-100 text-green-800 border border-green-200' 
-                    : 'bg-red-100 text-red-800 border border-red-200'
-                }`}>
-                  {syncMessage}
-                </div>
-              )}
-            </div>
-          </div>
-        )}
-
         {/* Filters */}
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             {/* Search */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">Search</label>
@@ -284,6 +223,18 @@ const Problems: React.FC = () => {
                 <option value="Easy">Easy</option>
                 <option value="Medium">Medium</option>
                 <option value="Hard">Hard</option>
+              </select>
+            </div>
+
+            {/* Source Platform */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Platform</label>
+              <select
+                value={sourcePlatform}
+                onChange={(e) => setSourcePlatform(e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-primary-500 focus:border-primary-500"
+              >
+                <option value="LeetCode">LeetCode</option>
               </select>
             </div>
 
@@ -351,6 +302,9 @@ const Problems: React.FC = () => {
                     Topics
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Platform
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Test Cases
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -379,7 +333,7 @@ const Problems: React.FC = () => {
                     </td>
                     <td className="px-6 py-4">
                       <div className="flex flex-wrap gap-1">
-                        {problem.topic_tags && problem.topic_tags.slice(0, 3).map((tag, index) => (
+                        {problem.topic_tags.slice(0, 3).map((tag, index) => (
                           <span
                             key={index}
                             className="inline-flex px-2 py-1 text-xs font-medium bg-gray-100 text-gray-800 rounded-full"
@@ -387,12 +341,17 @@ const Problems: React.FC = () => {
                             {tag}
                           </span>
                         ))}
-                        {problem.topic_tags && problem.topic_tags.length > 3 && (
+                        {problem.topic_tags.length > 3 && (
                           <span className="inline-flex px-2 py-1 text-xs font-medium bg-gray-100 text-gray-800 rounded-full">
                             +{problem.topic_tags.length - 3}
                           </span>
                         )}
                       </div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getPlatformColor(problem.source_platform)}`}>
+                        {problem.source_platform}
+                      </span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="text-sm text-gray-500">
@@ -504,4 +463,4 @@ const Problems: React.FC = () => {
   );
 };
 
-export default Problems;
+export default Practice;

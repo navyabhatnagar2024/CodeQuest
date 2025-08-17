@@ -38,7 +38,6 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 
   const adminNavigation = [
     { name: 'Admin Dashboard', href: '/admin', icon: Cog6ToothIcon },
-    { name: 'Manage Problems', href: '/admin/problems', icon: CodeBracketIcon },
     { name: 'Manage Contests', href: '/admin/contests', icon: TrophyIcon },
     { name: 'Manage Users', href: '/admin/users', icon: UsersIcon },
   ];
@@ -173,7 +172,6 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                 <div className="flex items-center gap-x-4">
                   <div className="text-sm text-gray-700">
                     <span className="font-medium">{user?.username}</span>
-                    <span className="ml-2 text-gray-500">({user?.elo_rating} ELO)</span>
                   </div>
                   <Link
                     to="/profile"

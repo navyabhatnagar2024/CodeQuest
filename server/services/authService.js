@@ -106,11 +106,6 @@ class AuthService {
             throw new Error('Invalid credentials');
         }
 
-        // Check if account is active
-        if (user.account_status !== 'active') {
-            throw new Error('Account is not active');
-        }
-
         // Verify password
         const isValidPassword = await this.comparePassword(password, user.password_hash);
         if (!isValidPassword) {

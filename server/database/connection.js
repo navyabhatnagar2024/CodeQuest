@@ -5,7 +5,7 @@ const fs = require('fs');
 class Database {
     constructor() {
         this.db = null;
-        this.dbPath = path.join(__dirname, '..', '..', 'data', 'competitive_platform.db');
+        this.dbPath = path.join(__dirname, 'coding_platform.db');
         this.init();
     }
 

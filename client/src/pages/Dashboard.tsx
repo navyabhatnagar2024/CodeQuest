@@ -5,7 +5,6 @@ import { usersAPI, submissionsAPI } from '../services/api';
 
 interface UserStats {
   total_problems_solved: number;
-  elo_rating: number;
   total_submissions: number;
   correct_submissions: number;
   accuracy_percentage: number;
@@ -47,7 +46,6 @@ const Dashboard: React.FC = () => {
       // Create stats object from user data with fallbacks
       const userStats = {
         total_problems_solved: userData?.total_problems_solved || 0,
-        elo_rating: userData?.elo_rating || 1500,
         total_submissions: userData?.total_submissions || 0,
         correct_submissions: userData?.correct_submissions || 0,
         accuracy_percentage: userData?.total_submissions > 0 ? 
@@ -75,7 +73,6 @@ const Dashboard: React.FC = () => {
       // Set default stats if profile fetch fails
       setStats({
         total_problems_solved: 0,
-        elo_rating: 1500,
         total_submissions: 0,
         correct_submissions: 0,
         accuracy_percentage: 0,
@@ -187,8 +184,8 @@ const Dashboard: React.FC = () => {
                   </svg>
                 </div>
                 <div className="ml-4">
-                  <p className="text-sm font-medium text-gray-600">Elo Rating</p>
-                  <p className="text-2xl font-bold text-gray-900">{stats.elo_rating}</p>
+                  <p className="text-sm font-medium text-gray-600">Total Submissions</p>
+                  <p className="text-2xl font-bold text-gray-900">{stats.total_submissions}</p>
                 </div>
               </div>
             </div>
@@ -201,8 +198,8 @@ const Dashboard: React.FC = () => {
                   </svg>
                 </div>
                 <div className="ml-4">
-                  <p className="text-sm font-medium text-gray-600">Total Submissions</p>
-                  <p className="text-2xl font-bold text-gray-900">{stats.total_submissions}</p>
+                  <p className="text-sm font-medium text-gray-600">Accuracy</p>
+                  <p className="text-2xl font-bold text-gray-900">{stats.accuracy_percentage}%</p>
                 </div>
               </div>
             </div>
@@ -215,8 +212,8 @@ const Dashboard: React.FC = () => {
                   </svg>
                 </div>
                 <div className="ml-4">
-                  <p className="text-sm font-medium text-gray-600">Accuracy</p>
-                  <p className="text-2xl font-bold text-gray-900">{stats.accuracy_percentage}%</p>
+                  <p className="text-sm font-medium text-gray-600">Rank</p>
+                  <p className="text-2xl font-bold text-gray-900">{stats.rank}</p>
                 </div>
               </div>
             </div>

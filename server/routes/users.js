@@ -436,34 +436,67 @@ router.get('/search', optionalAuth, validateUserQuery, handleValidationErrors, a
 // Get global leaderboard
 router.get('/leaderboard/global', optionalAuth, async (req, res) => {
     try {
-        const { page = 1, limit = 50 } = req.query;
+        const { page = 1, limit = 50, timeFrame = 'all' } = req.query;
         const offset = (page - 1) * limit;
+
+        let timeFilter = '';
+        let timeParams = [];
+
+        // Apply time-based filtering
+        if (timeFrame === 'weekly') {
+            timeFilter = 'AND DATE(submissions.submission_time) >= DATE("now", "-7 days")';
+        } else if (timeFrame === 'monthly') {
+            timeFilter = 'AND DATE(submissions.submission_time) >= DATE("now", "-30 days")';
+        }
 
         // Get total count
         const countResult = await req.app.locals.database.get(
-            'SELECT COUNT(*) as total FROM users WHERE account_status = "active"'
+            'SELECT COUNT(*) as total FROM users'
         );
 
-        // Get leaderboard
-        const leaderboard = await req.app.locals.database.all(
-            `SELECT 
-                id, username, full_name, elo_rating, total_problems_solved,
-                contests_participated, registration_date, country
-             FROM users 
-             WHERE account_status = "active"
-             ORDER BY elo_rating DESC, total_problems_solved DESC
-             LIMIT ? OFFSET ?`,
-            [parseInt(limit), offset]
-        );
+        // Get leaderboard with time-based problem solving
+        let leaderboardQuery = '';
+        if (timeFrame === 'all') {
+            // All-time leaderboard - use total_problems_solved from users table
+            leaderboardQuery = `
+                SELECT 
+                    u.id, u.username, u.full_name, u.total_problems_solved,
+                    u.created_at, u.country, u.last_login
+                FROM users u
+                ORDER BY u.total_problems_solved DESC, u.username ASC
+                LIMIT ? OFFSET ?
+            `;
+            timeParams = [parseInt(limit), offset];
+        } else {
+            // Weekly/Monthly leaderboard - count problems solved in time period
+            leaderboardQuery = `
+                SELECT 
+                    u.id, u.username, u.full_name,
+                    COUNT(DISTINCT s.problem_id) as total_problems_solved,
+                    u.created_at, u.country, u.last_login
+                FROM users u
+                LEFT JOIN submissions s ON u.id = s.user_id 
+                    AND s.status = 'AC' ${timeFilter}
+                GROUP BY u.id, u.username, u.full_name, u.created_at, u.country, u.last_login
+                ORDER BY total_problems_solved DESC, u.username ASC
+                LIMIT ? OFFSET ?
+            `;
+            timeParams = [parseInt(limit), offset];
+        }
+
+        const leaderboard = await req.app.locals.database.all(leaderboardQuery, timeParams);
 
         // Add ranks
         leaderboard.forEach((user, index) => {
             user.rank = offset + index + 1;
+            // Ensure total_problems_solved is a number
+            user.total_problems_solved = parseInt(user.total_problems_solved) || 0;
         });
 
         res.json({
             success: true,
             leaderboard,
+            timeFrame,
             pagination: {
                 page: parseInt(page),
                 limit: parseInt(limit),
@@ -483,24 +516,23 @@ router.get('/leaderboard/global', optionalAuth, async (req, res) => {
 // Get top users by category
 router.get('/leaderboard/top', optionalAuth, async (req, res) => {
     try {
-        const { category = 'elo_rating', limit = 10 } = req.query;
+        const { category = 'total_problems_solved', limit = 10 } = req.query;
 
         // Validate category
-        const validCategories = ['elo_rating', 'total_problems_solved', 'contests_participated'];
+        const validCategories = ['total_problems_solved', 'created_at'];
         if (!validCategories.includes(category)) {
             return res.status(400).json({
                 error: 'Invalid category',
-                message: 'Category must be one of: elo_rating, total_problems_solved, contests_participated'
+                message: 'Category must be one of: total_problems_solved, created_at'
             });
         }
 
         // Get top users
         const topUsers = await req.app.locals.database.all(
             `SELECT 
-                id, username, full_name, elo_rating, total_problems_solved,
-                contests_participated, registration_date, country
+                id, username, full_name, total_problems_solved,
+                created_at, country, last_login
              FROM users 
-             WHERE account_status = "active"
              ORDER BY ${category} DESC
              LIMIT ?`,
             [parseInt(limit)]

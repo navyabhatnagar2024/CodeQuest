@@ -108,10 +108,19 @@ const handleValidationErrors = (req, res, next) => {
 router.post('/register', validateRegistration, handleValidationErrors, async (req, res) => {
     try {
         const result = await authService.register(req.body);
+        
+        // Generate token for newly registered user
+        const token = authService.generateToken({
+            userId: result.user.id,
+            username: result.user.username,
+            isAdmin: result.user.is_admin
+        });
+
         res.status(201).json({
             success: true,
             message: result.message,
-            user: result.user
+            user: result.user,
+            token: token
         });
     } catch (error) {
         console.error('Registration error:', error);

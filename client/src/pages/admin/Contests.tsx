@@ -19,6 +19,11 @@ const AdminContests: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [filter, setFilter] = useState('all');
+  const [showCreateModal, setShowCreateModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [editingContest, setEditingContest] = useState<AdminContest | null>(null);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [deletingContest, setDeletingContest] = useState<AdminContest | null>(null);
 
   const fetchContests = useCallback(async () => {
     try {
@@ -34,7 +39,7 @@ const AdminContests: React.FC = () => {
         setContests([]);
         setError('Received unexpected data format from API');
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error('Error fetching contests:', err);
       setContests([]);
       setError('Failed to fetch contests');
@@ -46,6 +51,34 @@ const AdminContests: React.FC = () => {
   useEffect(() => {
     fetchContests();
   }, [fetchContests]);
+
+  const handleCreateContest = () => {
+    setShowCreateModal(true);
+  };
+
+  const handleEditContest = (contest: AdminContest) => {
+    setEditingContest(contest);
+    setShowEditModal(true);
+  };
+
+  const handleDeleteContest = (contest: AdminContest) => {
+    setDeletingContest(contest);
+    setShowDeleteModal(true);
+  };
+
+  const confirmDeleteContest = async () => {
+    if (!deletingContest) return;
+    
+    try {
+      await contestsAPI.delete(deletingContest.id.toString());
+      await fetchContests();
+      setShowDeleteModal(false);
+      setDeletingContest(null);
+    } catch (err: any) {
+      console.error('Error deleting contest:', err);
+      alert('Failed to delete contest');
+    }
+  };
 
   const filteredContests = contests.filter(contest => {
     if (filter === 'all') return true;
@@ -130,7 +163,10 @@ const AdminContests: React.FC = () => {
               <h1 className="text-3xl font-bold text-gray-900 mb-2">Manage Contests</h1>
               <p className="text-gray-600">Create and manage programming contests</p>
             </div>
-            <button className="bg-primary-600 text-white px-6 py-3 rounded-lg hover:bg-primary-700 transition-colors">
+            <button 
+              onClick={handleCreateContest}
+              className="bg-primary-600 text-white px-6 py-3 rounded-lg hover:bg-primary-700 transition-colors"
+            >
               + Create Contest
             </button>
           </div>
@@ -215,10 +251,16 @@ const AdminContests: React.FC = () => {
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                           <div className="flex space-x-2">
-                            <button className="text-primary-600 hover:text-primary-900">
+                            <button 
+                              onClick={() => handleEditContest(contest)}
+                              className="text-primary-600 hover:text-primary-900"
+                            >
                               Edit
                             </button>
-                            <button className="text-red-600 hover:text-red-900">
+                            <button 
+                              onClick={() => handleDeleteContest(contest)}
+                              className="text-red-600 hover:text-red-900"
+                            >
                               Delete
                             </button>
                           </div>
@@ -245,6 +287,74 @@ const AdminContests: React.FC = () => {
             <div className="text-gray-400 text-6xl mb-4">🔍</div>
             <h3 className="text-xl font-medium text-gray-900 mb-2">No contests match your filter</h3>
             <p className="text-gray-600">Try adjusting your filter criteria</p>
+          </div>
+        )}
+
+        {/* Create Contest Modal */}
+        {showCreateModal && (
+          <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+            <div className="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+              <div className="mt-3 text-center">
+                <h3 className="text-lg font-medium text-gray-900 mb-4">Create Contest</h3>
+                <p className="text-sm text-gray-500 mb-4">Contest creation functionality coming soon!</p>
+                <div className="flex justify-end space-x-3">
+                  <button
+                    onClick={() => setShowCreateModal(false)}
+                    className="bg-gray-300 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-400"
+                  >
+                    Close
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Edit Contest Modal */}
+        {showEditModal && editingContest && (
+          <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+            <div className="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+              <div className="mt-3 text-center">
+                <h3 className="text-lg font-medium text-gray-900 mb-4">Edit Contest</h3>
+                <p className="text-sm text-gray-500 mb-4">Editing contest: {editingContest.title}</p>
+                <p className="text-sm text-gray-500 mb-4">Edit functionality coming soon!</p>
+                <div className="flex justify-end space-x-3">
+                  <button
+                    onClick={() => setShowEditModal(false)}
+                    className="bg-gray-300 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-400"
+                  >
+                    Close
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Delete Contest Modal */}
+        {showDeleteModal && deletingContest && (
+          <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+            <div className="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+              <div className="mt-3 text-center">
+                <h3 className="text-lg font-medium text-gray-900 mb-4">Delete Contest</h3>
+                <p className="text-sm text-gray-500 mb-4">Are you sure you want to delete "{deletingContest.title}"?</p>
+                <p className="text-sm text-red-500 mb-4">This action cannot be undone.</p>
+                <div className="flex justify-end space-x-3">
+                  <button
+                    onClick={() => setShowDeleteModal(false)}
+                    className="bg-gray-300 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-400"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={confirmDeleteContest}
+                    className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700"
+                  >
+                    Delete
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
         )}
       </div>

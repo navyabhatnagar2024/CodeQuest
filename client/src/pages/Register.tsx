@@ -46,6 +46,8 @@ const Register: React.FC = () => {
       errors.password = 'Password is required';
     } else if (formData.password.length < 6) {
       errors.password = 'Password must be at least 6 characters';
+    } else if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(formData.password)) {
+      errors.password = 'Password must contain at least one lowercase letter, one uppercase letter, and one number';
     }
 
     if (!formData.confirmPassword) {
@@ -194,6 +196,9 @@ const Register: React.FC = () => {
                   placeholder="Create a strong password"
                 />
               </div>
+              <p className="mt-1 text-sm text-gray-500">
+                Password must be at least 6 characters with lowercase, uppercase, and number
+              </p>
               {validationErrors.password && (
                 <p className="mt-1 text-sm text-red-600">{validationErrors.password}</p>
               )}

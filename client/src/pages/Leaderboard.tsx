@@ -1,72 +1,65 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { Link } from 'react-router-dom';
 import { usersAPI } from '../services/api';
 
 interface LeaderboardUser {
   id: number;
   username: string;
   full_name: string;
-  elo_rating: number;
   total_problems_solved: number;
-  contests_participated: number;
-  rank: number;
+  last_login: string;
 }
 
 const Leaderboard: React.FC = () => {
   const [users, setUsers] = useState<LeaderboardUser[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [filter, setFilter] = useState('all');
+  const [timeFrame, setTimeFrame] = useState<'all' | 'weekly' | 'monthly'>('all');
 
   const fetchLeaderboard = useCallback(async () => {
     try {
       setLoading(true);
-      // Use the existing users API to get all users for leaderboard
-      const response = await usersAPI.getAll();
+      const response = await usersAPI.getLeaderboard({ timeFrame });
       
       if (response && response.data && response.data.success) {
         const usersArray = response.data.users || [];
-        // Sort users by ELO rating (highest first) and add rank
-        const sortedUsers = usersArray
-          .sort((a: any, b: any) => (b.elo_rating || 0) - (a.elo_rating || 0))
-          .map((user: any, index: number) => ({
-            ...user,
-            rank: index + 1,
-            elo_rating: user.elo_rating || 1500,
-            total_problems_solved: user.total_problems_solved || 0,
-            contests_participated: user.contests_participated || 0
-          }));
+        // Sort by problems solved (descending)
+        const sortedUsers = usersArray.sort((a: LeaderboardUser, b: LeaderboardUser) => 
+          (b.total_problems_solved || 0) - (a.total_problems_solved || 0)
+        );
         setUsers(sortedUsers);
         setError(null);
       } else {
-        console.error('Unexpected users API response format:', response);
+        console.error('Unexpected leaderboard API response format:', response);
         setUsers([]);
         setError('Received unexpected data format from API');
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error('Error fetching leaderboard:', err);
       setUsers([]);
-      setError('Failed to fetch leaderboard data');
+      setError('Failed to fetch leaderboard');
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [timeFrame]);
 
   useEffect(() => {
     fetchLeaderboard();
   }, [fetchLeaderboard]);
 
-  const filteredUsers = users.filter(user => {
-    if (filter === 'all') return true;
-    if (filter === 'top10') return user.rank <= 10;
-    if (filter === 'top50') return user.rank <= 50;
-    return true;
-  });
+  const getTimeFrameLabel = (timeFrame: string) => {
+    switch (timeFrame) {
+      case 'weekly': return 'This Week';
+      case 'monthly': return 'This Month';
+      default: return 'All Time';
+    }
+  };
 
   const getRankColor = (rank: number) => {
     if (rank === 1) return 'text-yellow-600 bg-yellow-100';
     if (rank === 2) return 'text-gray-600 bg-gray-100';
     if (rank === 3) return 'text-orange-600 bg-orange-100';
-    return 'text-gray-600 bg-gray-100';
+    return 'text-gray-600 bg-gray-50';
   };
 
   const getRankIcon = (rank: number) => {
@@ -74,6 +67,11 @@ const Leaderboard: React.FC = () => {
     if (rank === 2) return '🥈';
     if (rank === 3) return '🥉';
     return `#${rank}`;
+  };
+
+  const formatDate = (dateString: string) => {
+    if (!dateString || dateString === 'Never') return 'Never';
+    return new Date(dateString).toLocaleDateString();
   };
 
   if (loading) {
@@ -102,33 +100,66 @@ const Leaderboard: React.FC = () => {
     );
   }
 
+  // Show empty state if no users and no error
+  if (!loading && !error && users.length === 0) {
+    return (
+      <div className="min-h-screen bg-gray-50 py-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="mb-8">
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">Leaderboard</h1>
+            <p className="text-gray-600">See how you rank among other coders</p>
+          </div>
+
+          <div className="text-center py-20">
+            <div className="text-gray-400 text-8xl mb-6">🏆</div>
+            <h3 className="text-2xl font-medium text-gray-900 mb-4">Leaderboard is Empty</h3>
+            <p className="text-gray-600 mb-8 max-w-md mx-auto">
+              No users have solved problems yet. Start solving problems to appear on the leaderboard!
+            </p>
+            <Link
+              to="/problems"
+              className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-primary-600 hover:bg-primary-700 transition-colors"
+            >
+              Browse Problems
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Header */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">Leaderboard</h1>
-          <p className="text-gray-600">Top competitive programmers ranked by performance</p>
+          <p className="text-gray-600">See how you rank among other coders</p>
         </div>
 
-        {/* Filters */}
-        <div className="mb-6 flex flex-wrap gap-2">
-          {[
-            { key: 'all', label: 'All Users' },
-            { key: 'top10', label: 'Top 10' },
-            { key: 'top50', label: 'Top 50' }
-          ].map(({ key, label }) => (
-            <button
-              key={key}
-              onClick={() => setFilter(key)}
-              className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-                filter === key
-                  ? 'bg-primary-600 text-white'
-                  : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-300'
-              }`}
-            >
-              {label}
-            </button>
-          ))}
+        {/* Time Frame Tabs */}
+        <div className="mb-6">
+          <div className="border-b border-gray-200">
+            <nav className="-mb-px flex space-x-8">
+              {[
+                { key: 'all', label: 'All Time' },
+                { key: 'monthly', label: 'Monthly' },
+                { key: 'weekly', label: 'Weekly' }
+              ].map(({ key, label }) => (
+                <button
+                  key={key}
+                  onClick={() => setTimeFrame(key as 'all' | 'weekly' | 'monthly')}
+                  className={`py-2 px-1 border-b-2 font-medium text-sm ${
+                    timeFrame === key
+                      ? 'border-primary-500 text-primary-600'
+                      : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                  }`}
+                >
+                  {label}
+                </button>
+              ))}
+            </nav>
+          </div>
         </div>
 
         {/* Leaderboard Table */}
@@ -138,36 +169,36 @@ const Leaderboard: React.FC = () => {
               <thead className="bg-gray-50">
                 <tr>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Rank
+                    RANK
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    User
+                    USER
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    ELO Rating
+                    PROBLEMS SOLVED
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Problems Solved
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Contests
+                    LAST LOGIN
                   </th>
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
-                {filteredUsers.length > 0 ? (
-                  filteredUsers.map((user) => (
+                {users.map((user, index) => {
+                  const rank = index + 1;
+                  return (
                     <tr key={user.id} className="hover:bg-gray-50">
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getRankColor(user.rank)}`}>
-                          {getRankIcon(user.rank)}
-                        </span>
+                        <div className="flex items-center">
+                          <span className={`inline-flex items-center justify-center w-8 h-8 rounded-full text-sm font-medium ${getRankColor(rank)}`}>
+                            {getRankIcon(rank)}
+                          </span>
+                        </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="flex items-center">
                           <div className="flex-shrink-0 h-10 w-10">
-                            <div className="h-10 w-10 rounded-full bg-primary-100 flex items-center justify-center">
-                              <span className="text-primary-600 font-medium text-sm">
+                            <div className="h-10 w-10 rounded-full bg-primary-600 flex items-center justify-center">
+                              <span className="text-sm font-medium text-white">
                                 {user.username.charAt(0).toUpperCase()}
                               </span>
                             </div>
@@ -179,35 +210,51 @@ const Leaderboard: React.FC = () => {
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <span className="text-sm font-medium text-gray-900">{user.elo_rating}</span>
+                        <div className="text-2xl font-bold text-gray-900">
+                          {user.total_problems_solved || 0}
+                        </div>
+                        <div className="text-sm text-gray-500">
+                          {getTimeFrameLabel(timeFrame)}
+                        </div>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <span className="text-sm text-gray-900">{user.total_problems_solved}</span>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <span className="text-sm text-gray-900">{user.contests_participated}</span>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        {formatDate(user.last_login)}
                       </td>
                     </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td colSpan={5} className="px-6 py-12 text-center text-gray-500">
-                      <div className="text-gray-400 text-6xl mb-4">🏆</div>
-                      <h3 className="text-lg font-medium text-gray-900 mb-2">No users found</h3>
-                      <p className="text-gray-600">Be the first to solve problems and climb the leaderboard!</p>
-                    </td>
-                  </tr>
-                )}
+                  );
+                })}
               </tbody>
             </table>
           </div>
+
+          {users.length === 0 && (
+            <div className="text-center py-12">
+              <div className="text-gray-400 text-6xl mb-4">🔍</div>
+              <h3 className="text-xl font-medium text-gray-900 mb-2">No users match your filter</h3>
+              <p className="text-gray-600">Try adjusting your time frame or check back later.</p>
+            </div>
+          )}
         </div>
 
-        {filteredUsers.length === 0 && (
-          <div className="text-center py-12">
-            <div className="text-gray-400 text-6xl mb-4">📊</div>
-            <h3 className="text-xl font-medium text-gray-900 mb-2">Leaderboard is empty</h3>
-            <p className="text-gray-600">Start solving problems to appear on the leaderboard!</p>
+        {/* Summary Stats */}
+        {users.length > 0 && (
+          <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 text-center">
+              <div className="text-2xl font-bold text-gray-900">{users.length}</div>
+              <div className="text-sm text-gray-600">Total Participants</div>
+            </div>
+            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 text-center">
+              <div className="text-2xl font-bold text-green-600">
+                {users.reduce((sum, user) => sum + (user.total_problems_solved || 0), 0)}
+              </div>
+              <div className="text-sm text-gray-600">Total Problems Solved</div>
+            </div>
+            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 text-center">
+              <div className="text-2xl font-bold text-blue-600">
+                {users.length > 0 ? Math.round(users.reduce((sum, user) => sum + (user.total_problems_solved || 0), 0) / users.length) : 0}
+              </div>
+              <div className="text-sm text-gray-600">Average Problems Solved</div>
+            </div>
           </div>
         )}
       </div>

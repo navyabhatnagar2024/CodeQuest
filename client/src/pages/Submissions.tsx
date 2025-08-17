@@ -45,16 +45,23 @@ const Submissions: React.FC = () => {
         setTotalPages(Math.ceil(submissionsArray.length / itemsPerPage));
         setError(null);
       } else {
-        console.error('Unexpected submissions API response format:', submissionsResponse);
+        // No submissions found - this is not an error, just empty state
         setSubmissions([]);
         setTotalPages(1);
-        setError('Received unexpected data format from API');
+        setError(null);
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error('Submissions fetch error:', err);
-      setSubmissions([]);
-      setTotalPages(1);
-      setError('Failed to fetch submissions');
+      // Check if it's a 404 or no submissions error
+      if (err.response?.status === 404 || err.message?.includes('not found')) {
+        setSubmissions([]);
+        setTotalPages(1);
+        setError(null);
+      } else {
+        setSubmissions([]);
+        setTotalPages(1);
+        setError('Failed to fetch submissions');
+      }
     } finally {
       setLoading(false);
     }
@@ -128,6 +135,34 @@ const Submissions: React.FC = () => {
     return (
       <div className="flex justify-center items-center min-h-screen">
         <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary-600"></div>
+      </div>
+    );
+  }
+
+  // Show empty state if no submissions and no error
+  if (!loading && !error && submissions.length === 0) {
+    return (
+      <div className="min-h-screen bg-gray-50 py-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="mb-8">
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">My Submissions</h1>
+            <p className="text-gray-600">Track your coding progress and submission history</p>
+          </div>
+
+          <div className="text-center py-20">
+            <div className="text-gray-400 text-8xl mb-6">📝</div>
+            <h3 className="text-2xl font-medium text-gray-900 mb-4">No Submissions Yet</h3>
+            <p className="text-gray-600 mb-8 max-w-md mx-auto">
+              You haven't submitted any solutions yet. Start solving problems to see your submission history here!
+            </p>
+            <Link
+              to="/problems"
+              className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-primary-600 hover:bg-primary-700 transition-colors"
+            >
+              Browse Problems
+            </Link>
+          </div>
+        </div>
       </div>
     );
   }

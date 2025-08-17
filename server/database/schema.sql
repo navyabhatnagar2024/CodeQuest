@@ -8,23 +8,14 @@ CREATE TABLE IF NOT EXISTS users (
     email VARCHAR(100) UNIQUE NOT NULL,
     password_hash VARCHAR(255) NOT NULL,
     full_name VARCHAR(100) NOT NULL,
-    elo_rating INTEGER DEFAULT 1200,
-    total_problems_solved INTEGER DEFAULT 0,
-    contests_participated INTEGER DEFAULT 0,
-    registration_date DATETIME DEFAULT CURRENT_TIMESTAMP,
-    last_login DATETIME,
+    country VARCHAR(100),
+    timezone VARCHAR(50) DEFAULT 'UTC',
     is_admin BOOLEAN DEFAULT 0,
     is_verified BOOLEAN DEFAULT 0,
-    account_status VARCHAR(20) DEFAULT 'active',
-    preferred_language VARCHAR(20) DEFAULT 'python',
-    timezone VARCHAR(50) DEFAULT 'UTC',
-    country VARCHAR(50),
-    bio TEXT,
-    avatar_url VARCHAR(255),
-    github_url VARCHAR(255),
-    website_url VARCHAR(255),
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    total_problems_solved INTEGER DEFAULT 0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    last_login TIMESTAMP
 );
 
 -- Problems Table
@@ -220,7 +211,6 @@ CREATE TABLE IF NOT EXISTS notifications (
 -- Create Indexes for Performance
 CREATE INDEX IF NOT EXISTS idx_users_username ON users(username);
 CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
-CREATE INDEX IF NOT EXISTS idx_users_elo_rating ON users(elo_rating);
 CREATE INDEX IF NOT EXISTS idx_problems_difficulty ON problems(difficulty_level);
 CREATE INDEX IF NOT EXISTS idx_problems_active ON problems(is_active);
 CREATE INDEX IF NOT EXISTS idx_test_cases_problem ON test_cases(problem_id);
@@ -249,6 +239,5 @@ INSERT OR IGNORE INTO system_settings (setting_key, setting_value, description) 
 ('default_time_limit', '1000', 'Default time limit in milliseconds'),
 ('default_memory_limit', '256', 'Default memory limit in MB'),
 ('contest_registration_deadline_hours', '24', 'Hours before contest start when registration closes'),
-('elo_k_factor', '32', 'K-factor for Elo rating calculations'),
 ('max_concurrent_submissions', '5', 'Maximum concurrent submissions per user'),
 ('rate_limit_submissions_per_minute', '10', 'Rate limit for submissions per minute per user');

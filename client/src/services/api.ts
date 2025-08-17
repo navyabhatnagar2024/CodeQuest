@@ -56,19 +56,21 @@ export const authAPI = {
   
   changePassword: (data: { current_password: string; new_password: string }) =>
     api.put('/auth/change-password', data),
+  
+  deleteAccount: () => api.delete('/auth/account'),
 };
 
 // Problems API
 export const problemsAPI = {
-  getAll: (params?: { page?: number; limit?: number; difficulty?: string; tags?: string }) =>
+  getAll: (params?: { page?: number; limit?: number; difficulty?: string; topics?: string[]; search?: string }) =>
     api.get('/problems', { params }),
-  
   getById: (id: string) => api.get(`/problems/${id}`),
-  
   getTestCases: (id: string) => api.get(`/problems/${id}/test-cases`),
-  
   submit: (id: string, data: { code: string; language: string }) =>
     api.post(`/problems/${id}/submit`, data),
+  delete: (id: string) => api.delete(`/admin/problems/${id}`),
+  getAvailableTopics: () => api.get('/problems/topics/available'),
+  syncExternalProblems: () => api.post('/problems/sync'),
 };
 
 // Submissions API
@@ -86,17 +88,13 @@ export const submissionsAPI = {
 export const contestsAPI = {
   getAll: (params?: { page?: number; limit?: number; status?: string }) =>
     api.get('/contests', { params }),
-  
   getById: (id: string) => api.get(`/contests/${id}`),
-  
   register: (id: string) => api.post(`/contests/${id}/register`),
-  
   getLeaderboard: (id: string) => api.get(`/contests/${id}/leaderboard`),
-  
   getProblems: (id: string) => api.get(`/contests/${id}/problems`),
-  
   submit: (contestId: string, problemId: string, data: { code: string; language: string }) =>
     api.post(`/contests/${contestId}/problems/${problemId}/submit`, data),
+  delete: (id: string) => api.delete(`/contests/${id}`),
 };
 
 // Users API
@@ -104,12 +102,14 @@ export const usersAPI = {
   getAll: (params?: { page?: number; limit?: number; search?: string }) =>
     api.get('/users', { params }),
   
-  getLeaderboard: (params?: { page?: number; limit?: number }) =>
-    api.get('/users/leaderboard', { params }),
+  getLeaderboard: (params?: { page?: number; limit?: number; timeFrame?: 'all' | 'weekly' | 'monthly' }) =>
+    api.get('/users/leaderboard/global', { params }),
   
   getStats: (username: string) => api.get(`/users/${username}/stats`),
   
   getProfile: (id: string) => api.get(`/users/${id}`),
+  
+  updateUser: (id: string, data: any) => api.put(`/users/${id}`, data),
 };
 
 // Admin API
@@ -127,6 +127,7 @@ export const adminAPI = {
   // Users
   getAllUsers: (params?: { page?: number; limit?: number }) =>
     api.get('/admin/users', { params }),
+  createUser: (data: any) => api.post('/admin/users', data),
   updateUser: (id: string, data: any) => api.put(`/admin/users/${id}`, data),
   deleteUser: (id: string) => api.delete(`/admin/users/${id}`),
   
