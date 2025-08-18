@@ -81,6 +81,7 @@ class SetupManager {
                 
                 db.exec(initialData, (err) => {
                     if (err) {
+                        console.error('❌ Error importing data:', err.message);
                         reject(err);
                         return;
                     }
@@ -92,7 +93,7 @@ class SetupManager {
             });
         } else {
             console.log('⚠️  No initial data file found. Database will be empty.');
-            console.log('   Run: node server/database/export_database.js to export current data');
+            console.log('   Run: npm run export-db to export current data');
         }
     }
 

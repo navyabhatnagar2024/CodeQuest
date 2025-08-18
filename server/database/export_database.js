@@ -96,12 +96,34 @@ class DatabaseExporter {
 -- 2. Run this file to populate with initial data
 -- 3. The platform will be ready to use with real problems and test cases
 
-BEGIN TRANSACTION;
+-- Disable foreign key constraints temporarily
+PRAGMA foreign_keys = OFF;
+
+-- Clear any existing data
+DELETE FROM users WHERE id > 0;
+DELETE FROM problems WHERE id > 0;
+DELETE FROM test_cases WHERE id > 0;
+DELETE FROM contests WHERE id > 0;
+DELETE FROM system_settings WHERE id > 0;
+DELETE FROM leetcode_suggestions WHERE id > 0;
+
+-- Reset auto-increment counters
+DELETE FROM sqlite_sequence;
 
 `;
-        
+
         const footer = `
-COMMIT;
+
+-- Re-enable foreign key constraints
+PRAGMA foreign_keys = ON;
+
+-- Update auto-increment counters to match the highest IDs
+UPDATE sqlite_sequence SET seq = (SELECT MAX(id) FROM users) WHERE name = 'users';
+UPDATE sqlite_sequence SET seq = (SELECT MAX(id) FROM problems) WHERE name = 'problems';
+UPDATE sqlite_sequence SET seq = (SELECT MAX(id) FROM test_cases) WHERE name = 'test_cases';
+UPDATE sqlite_sequence SET seq = (SELECT MAX(id) FROM contests) WHERE name = 'contests';
+UPDATE sqlite_sequence SET seq = (SELECT MAX(id) FROM system_settings) WHERE name = 'system_settings';
+UPDATE sqlite_sequence SET seq = (SELECT MAX(id) FROM leetcode_suggestions) WHERE name = 'leetcode_suggestions';
 `;
 
         return header + queries.join('\n') + footer;
