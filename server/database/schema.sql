@@ -56,6 +56,27 @@ CREATE TABLE IF NOT EXISTS test_cases (
     FOREIGN KEY (problem_id) REFERENCES problems(id) ON DELETE CASCADE
 );
 
+-- LeetCode Problem Suggestions Table
+CREATE TABLE IF NOT EXISTS leetcode_suggestions (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    title VARCHAR(200) NOT NULL,
+    description TEXT NOT NULL,
+    difficulty_level VARCHAR(20) NOT NULL CHECK (difficulty_level IN ('Easy', 'Medium', 'Hard')),
+    topic_tags TEXT, -- JSON array of topics
+    problem_statement TEXT NOT NULL,
+    input_format TEXT,
+    output_format TEXT,
+    constraints TEXT,
+    examples TEXT, -- JSON array of examples
+    hints TEXT,
+    source_problem_id VARCHAR(100) UNIQUE NOT NULL,
+    time_limit_ms INTEGER DEFAULT 1000,
+    memory_limit_mb INTEGER DEFAULT 256,
+    test_cases TEXT, -- JSON array of test cases
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
 -- Contests Table
 CREATE TABLE IF NOT EXISTS contests (
     id INTEGER PRIMARY KEY AUTOINCREMENT,

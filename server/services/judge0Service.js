@@ -2,38 +2,33 @@ const axios = require('axios');
 
 class Judge0Service {
     constructor() {
-        // Judge0 API endpoint (you can use the public instance or host your own)
-        this.baseURL = process.env.JUDGE0_URL || 'https://judge0-ce.p.rapidapi.com';
-        this.apiKey = process.env.JUDGE0_API_KEY || '';
+        this.apiKey = process.env.JUDGE0_API_KEY;
+        this.apiHost = process.env.JUDGE0_API_HOST || 'judge0-ce.p.rapidapi.com';
+        this.baseURL = process.env.JUDGE0_API_URL || 'https://judge0-ce.p.rapidapi.com';
+        this.useRapidAPI = this.baseURL.includes('rapidapi.com');
         
-        // Supported languages mapping
+        // Language mapping for Judge0
         this.languageMap = {
-            'python': 71,      // Python 3
-            'python3': 71,     // Python 3
-            'javascript': 63,   // JavaScript (Node.js)
-            'js': 63,          // JavaScript (Node.js)
-            'java': 62,        // Java
-            'cpp': 54,         // C++17
             'c': 50,           // C (GCC 9.2.0)
+            'cpp': 54,         // C++ (GCC 9.2.0)
+            'java': 62,        // Java (OpenJDK 13.0.1)
+            'python': 71,      // Python (3.8.1)
+            'javascript': 63,  // JavaScript (Node.js 12.14.0)
+            'ruby': 72,        // Ruby (2.7.0)
             'csharp': 51,      // C# (Mono 6.6.0.161)
-            'go': 60,          // Go
-            'rust': 73,        // Rust
-            'php': 68,         // PHP
-            'ruby': 72,        // Ruby
-            'swift': 83,       // Swift
-            'kotlin': 78,      // Kotlin
-            'scala': 81,       // Scala
-            'r': 80,           // R
-            'dart': 87,        // Dart
-            'elixir': 57,      // Elixir
-            'erlang': 58,      // Erlang
-            'haskell': 61,     // Haskell
-            'lua': 64,         // Lua
-            'perl': 85,        // Perl
-            'bash': 46,        // Bash
-            'sql': 82,         // SQL
-            'typescript': 74,  // TypeScript
-            'ts': 74           // TypeScript
+            'go': 60,          // Go (1.13.5)
+            'rust': 73,        // Rust (1.40.0)
+            'swift': 83,       // Swift (5.2.3)
+            'php': 68,         // PHP (7.4.1)
+            'kotlin': 78,      // Kotlin (1.3.70)
+            'scala': 81,       // Scala (2.13.2)
+            'haskell': 61,     // Haskell (GHC 8.8.1)
+            'perl': 85,        // Perl (5.28.1)
+            'bash': 46,        // Bash (5.0.0)
+            'r': 80,           // R (4.0.0)
+            'dart': 87,        // Dart (2.7.0)
+            'elixir': 57,      // Elixir (1.9.4)
+            'clojure': 86      // Clojure (1.10.1)
         };
     }
 
@@ -53,17 +48,33 @@ class Judge0Service {
                 stdin: input
             };
 
-            const response = await axios.post(`${this.baseURL}/submissions`, submission, {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-RapidAPI-Key': this.apiKey,
-                    'X-RapidAPI-Host': 'judge0-ce.p.rapidapi.com'
-                }
-            });
+            let headers = {
+                'Content-Type': 'application/json'
+            };
+
+            // Add RapidAPI headers if using RapidAPI
+            if (this.useRapidAPI && this.apiKey) {
+                headers['X-RapidAPI-Key'] = this.apiKey;
+                headers['X-RapidAPI-Host'] = 'judge0-ce.p.rapidapi.com';
+            }
+
+            const response = await axios.post(`${this.baseURL}/submissions`, submission, { headers });
 
             return response.data.token;
         } catch (error) {
             console.error('Error submitting code to Judge0:', error);
+            
+            // Provide more helpful error messages
+            if (error.response) {
+                if (error.response.status === 401) {
+                    throw new Error('Judge0 API key is invalid or missing. Please check your JUDGE0_API_KEY environment variable.');
+                } else if (error.response.status === 429) {
+                    throw new Error('Judge0 API rate limit exceeded. Please try again later.');
+                } else if (error.response.status === 500) {
+                    throw new Error('Judge0 service is temporarily unavailable. Please try again later.');
+                }
+            }
+            
             throw new Error(`Failed to submit code: ${error.message}`);
         }
     }
@@ -73,12 +84,15 @@ class Judge0Service {
      */
     async getSubmissionResult(token) {
         try {
-            const response = await axios.get(`${this.baseURL}/submissions/${token}`, {
-                headers: {
-                    'X-RapidAPI-Key': this.apiKey,
-                    'X-RapidAPI-Host': 'judge0-ce.p.rapidapi.com'
-                }
-            });
+            let headers = {};
+            
+            // Add RapidAPI headers if using RapidAPI
+            if (this.useRapidAPI && this.apiKey) {
+                headers['X-RapidAPI-Key'] = this.apiKey;
+                headers['X-RapidAPI-Host'] = 'judge0-ce.p.rapidapi.com';
+            }
+
+            const response = await axios.get(`${this.baseURL}/submissions/${token}`, { headers });
 
             return response.data;
         } catch (error) {
@@ -113,29 +127,71 @@ class Judge0Service {
     }
 
     /**
+     * Execute code with input and return result
+     */
+    async executeCode(code, language, input = '') {
+        try {
+            console.log(`Executing ${language} code with input: "${input}"`);
+            
+            // Submit code
+            const token = await this.submitCode(code, language, input);
+            console.log('Code submitted, token:', token);
+            
+            // Wait for result
+            const result = await this.waitForSubmission(token, 15000);
+            console.log('Execution result:', result);
+            
+            return result;
+        } catch (error) {
+            console.error('Error executing code:', error);
+            throw error;
+        }
+    }
+
+    /**
      * Execute code against test cases
      */
     async executeTestCases(code, language, testCases) {
         try {
+            console.log('Starting test case execution...');
+            console.log('Language:', language);
+            console.log('Code length:', code.length);
+            console.log('Number of test cases:', testCases.length);
+            console.log('Test cases:', JSON.stringify(testCases, null, 2));
+            
             const results = [];
             
             for (const testCase of testCases) {
                 try {
+                    console.log(`Processing test case ${testCase.id}:`, {
+                        input: testCase.input_data,
+                        expected_output: testCase.expected_output,
+                        is_sample: testCase.is_sample
+                    });
+                    
                     // Submit code with test case input
-                    const token = await this.submitCode(code, language, testCase.input);
+                    const token = await this.submitCode(code, language, testCase.input_data);
+                    console.log(`Test case ${testCase.id} submitted, token:`, token);
                     
                     // Wait for completion
                     const result = await this.waitForSubmission(token);
+                    console.log(`Test case ${testCase.id} completed:`, {
+                        status_id: result.status?.id,
+                        status_description: result.status?.description,
+                        stdout: result.stdout,
+                        stderr: result.stderr,
+                        compile_output: result.compile_output
+                    });
                     
                     // Check if execution was successful
                     if (result.status && result.status.id === 3) { // Accepted
-                        const isCorrect = this.compareOutput(result.stdout, testCase.output);
+                        const isCorrect = this.compareOutput(result.stdout, testCase.expected_output);
                         
                         results.push({
                             testCase: testCase,
                             status: isCorrect ? 'PASSED' : 'FAILED',
                             output: result.stdout,
-                            expected: testCase.output,
+                            expected: testCase.expected_output,
                             executionTime: result.time,
                             memory: result.memory,
                             error: null
@@ -145,7 +201,7 @@ class Judge0Service {
                             testCase: testCase,
                             status: 'FAILED',
                             output: result.stdout,
-                            expected: testCase.output,
+                            expected: testCase.expected_output,
                             executionTime: result.time,
                             memory: result.memory,
                             error: null
@@ -155,7 +211,7 @@ class Judge0Service {
                             testCase: testCase,
                             status: 'TLE',
                             output: null,
-                            expected: testCase.output,
+                            expected: testCase.expected_output,
                             executionTime: null,
                             memory: null,
                             error: 'Time Limit Exceeded'
@@ -165,7 +221,7 @@ class Judge0Service {
                             testCase: testCase,
                             status: 'CE',
                             output: null,
-                            expected: testCase.output,
+                            expected: testCase.expected_output,
                             executionTime: null,
                             memory: null,
                             error: result.compile_output || 'Compilation Error'
@@ -175,7 +231,7 @@ class Judge0Service {
                             testCase: testCase,
                             status: 'ERROR',
                             output: null,
-                            expected: testCase.output,
+                            expected: testCase.expected_output,
                             executionTime: null,
                             memory: null,
                             error: result.status?.description || 'Unknown Error'
@@ -186,7 +242,7 @@ class Judge0Service {
                         testCase: testCase,
                         status: 'ERROR',
                         output: null,
-                        expected: testCase.output,
+                        expected: testCase.expected_output,
                         executionTime: null,
                         memory: null,
                         error: error.message
@@ -194,6 +250,7 @@ class Judge0Service {
                 }
             }
             
+            console.log('Test case execution completed. Results:', results);
             return results;
         } catch (error) {
             console.error('Error executing test cases:', error);

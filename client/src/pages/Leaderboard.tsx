@@ -114,13 +114,13 @@ const Leaderboard: React.FC = () => {
             <div className="text-gray-400 text-8xl mb-6">🏆</div>
             <h3 className="text-2xl font-medium text-gray-900 mb-4">Leaderboard is Empty</h3>
             <p className="text-gray-600 mb-8 max-w-md mx-auto">
-              No users have solved problems yet. Start solving problems to appear on the leaderboard!
+              No users have solved practice problems yet. Start solving practice problems to appear on the leaderboard!
             </p>
             <Link
-              to="/problems"
+              to="/practice"
               className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-primary-600 hover:bg-primary-700 transition-colors"
             >
-              Browse Problems
+              Browse Practice Problems
             </Link>
           </div>
         </div>

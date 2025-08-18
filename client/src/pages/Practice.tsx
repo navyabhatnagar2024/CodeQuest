@@ -33,7 +33,6 @@ const Practice: React.FC = () => {
   const [difficulty, setDifficulty] = useState<string>('');
   const [selectedTopics, setSelectedTopics] = useState<string[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
-  const [sourcePlatform, setSourcePlatform] = useState<string>('LeetCode');
   
   // Available topics
   const [availableTopics, setAvailableTopics] = useState<Topic[]>([]);
@@ -42,6 +41,7 @@ const Practice: React.FC = () => {
   // Timer state
   const [activeTimer, setActiveTimer] = useState<number | null>(null);
   const [timerSeconds, setTimerSeconds] = useState(0);
+  const [totalTimeSpent, setTotalTimeSpent] = useState<Record<number, number>>({});
 
   const fetchProblems = useCallback(async () => {
     try {
@@ -51,8 +51,7 @@ const Practice: React.FC = () => {
         limit: 20,
         difficulty: difficulty || undefined,
         topics: selectedTopics.length > 0 ? JSON.stringify(selectedTopics) : undefined,
-        search: searchTerm || undefined,
-        source_platform: sourcePlatform === 'LeetCode' ? undefined : sourcePlatform
+        search: searchTerm || undefined
       };
 
       const response = await problemsAPI.getAll(params);
@@ -71,7 +70,7 @@ const Practice: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  }, [page, difficulty, selectedTopics, searchTerm, sourcePlatform]);
+  }, [page, difficulty, selectedTopics, searchTerm]);
 
   const fetchAvailableTopics = useCallback(async () => {
     try {
@@ -115,6 +114,12 @@ const Practice: React.FC = () => {
   };
 
   const stopTimer = () => {
+    if (activeTimer !== null) {
+      setTotalTimeSpent(prev => ({
+        ...prev,
+        [activeTimer]: (prev[activeTimer] || 0) + timerSeconds
+      }));
+    }
     setActiveTimer(null);
     setTimerSeconds(0);
   };
@@ -141,7 +146,6 @@ const Practice: React.FC = () => {
     setDifficulty('');
     setSelectedTopics([]);
     setSearchTerm('');
-    setSourcePlatform('LeetCode');
     setPage(1);
   };
 
@@ -154,12 +158,7 @@ const Practice: React.FC = () => {
     }
   };
 
-  const getPlatformColor = (platform: string) => {
-    switch (platform) {
-      case 'LeetCode': return 'text-orange-600 bg-orange-100';
-      default: return 'text-gray-600 bg-gray-100';
-    }
-  };
+
 
   if (loading && problems.length === 0) {
     return (
@@ -174,7 +173,7 @@ const Practice: React.FC = () => {
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <div className="text-red-600 text-6xl mb-4">⚠️</div>
-          <h2 className="text-2xl font-bold text-gray-800 mb-2">Error Loading Problems</h2>
+          <h2 className="text-2xl font-bold text-gray-800 mb-2">Error Loading Practice Problems</h2>
           <p className="text-gray-600 mb-4">{error}</p>
           <button 
             onClick={fetchProblems}
@@ -198,13 +197,13 @@ const Practice: React.FC = () => {
 
         {/* Filters */}
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {/* Search */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">Search</label>
               <input
                 type="text"
-                placeholder="Search problems..."
+                placeholder="Search practice problems..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-primary-500 focus:border-primary-500"
@@ -226,17 +225,7 @@ const Practice: React.FC = () => {
               </select>
             </div>
 
-            {/* Source Platform */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Platform</label>
-              <select
-                value={sourcePlatform}
-                onChange={(e) => setSourcePlatform(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-primary-500 focus:border-primary-500"
-              >
-                <option value="LeetCode">LeetCode</option>
-              </select>
-            </div>
+
 
             {/* Topics */}
             <div>
@@ -281,12 +270,12 @@ const Practice: React.FC = () => {
               Clear all filters
             </button>
             <div className="text-sm text-gray-500">
-              {totalProblems} problems found
+              {totalProblems} practice problems found
             </div>
           </div>
         </div>
 
-        {/* Problems List */}
+        {/* Practice Problems List */}
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
           <div className="overflow-x-auto">
             <table className="min-w-full divide-y divide-gray-200">
@@ -301,14 +290,9 @@ const Practice: React.FC = () => {
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Topics
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Platform
-                  </th>
+
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Test Cases
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Timer
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Actions
@@ -348,52 +332,72 @@ const Practice: React.FC = () => {
                         )}
                       </div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getPlatformColor(problem.source_platform)}`}>
-                        {problem.source_platform}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
+
+                    <td className={`px-6 py-4 whitespace-nowrap ${
+                      activeTimer === problem.id ? 'bg-green-50' : ''
+                    }`}>
                       <div className="text-sm text-gray-500">
                         {problem.test_cases && problem.test_cases.length > 0 ? (
                           `${problem.test_cases.length} test case(s)`
                         ) : (
                           'No test cases'
                         )}
+                        {activeTimer === problem.id && (
+                          <div className="mt-2 p-2 bg-green-100 rounded-md border border-green-200">
+                            <div className="text-xs font-mono text-green-700 flex items-center justify-between">
+                              <span>⏱️ Timer: {formatTime(timerSeconds)}</span>
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  stopTimer();
+                                }}
+                                className="text-red-500 hover:text-red-700 text-xs px-2 py-1 rounded hover:bg-red-50"
+                              >
+                                Stop
+                              </button>
+                            </div>
+                          </div>
+                        )}
+                        {totalTimeSpent[problem.id] && totalTimeSpent[problem.id] > 0 && (
+                          <div className="mt-1 text-xs text-gray-500">
+                            Total time: {formatTime(totalTimeSpent[problem.id])}
+                          </div>
+                        )}
                       </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      {activeTimer === problem.id ? (
-                        <div className="text-sm font-mono text-primary-600">
-                          {formatTime(timerSeconds)}
-                        </div>
-                      ) : (
-                        <div className="text-sm text-gray-500">--:--:--</div>
-                      )}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                       <div className="flex space-x-2">
-                        {activeTimer === problem.id ? (
-                          <button
-                            onClick={stopTimer}
-                            className="text-red-600 hover:text-red-900"
-                          >
-                            Stop Timer
-                          </button>
-                        ) : (
-                          <button
-                            onClick={() => startTimer(problem.id)}
-                            className="text-green-600 hover:text-green-900"
-                          >
-                            Start Timer
-                          </button>
-                        )}
-                        <Link
-                          to={`/problems/${problem.id}`}
-                          className="text-primary-600 hover:text-primary-900"
+                        <button
+                          onClick={() => {
+                            if (activeTimer === problem.id) {
+                              // Timer is already running, just navigate
+                              window.location.href = `/problems/${problem.id}`;
+                            } else {
+                              // Ask for confirmation to start timer
+                              if (window.confirm('Do you want to start the timer?')) {
+                                startTimer(problem.id);
+                                // Navigate after starting timer with a small delay
+                                setTimeout(() => {
+                                  window.location.href = `/problems/${problem.id}`;
+                                }, 200);
+                              } else {
+                                // Navigate without starting timer
+                                window.location.href = `/problems/${problem.id}`;
+                              }
+                            }
+                          }}
+                          title={activeTimer === problem.id 
+                            ? 'Continue solving with active timer' 
+                            : 'Click to solve - you can choose to start a timer'
+                          }
+                          className={`${
+                            activeTimer === problem.id 
+                              ? 'text-green-600 hover:text-green-900' 
+                              : 'text-primary-600 hover:text-primary-900'
+                          }`}
                         >
-                          Solve
-                        </Link>
+                          {activeTimer === problem.id ? 'Continue' : 'Solve'}
+                        </button>
                       </div>
                     </td>
                   </tr>
@@ -454,7 +458,7 @@ const Practice: React.FC = () => {
         {!loading && problems.length === 0 && (
           <div className="text-center py-12">
             <div className="text-gray-400 text-6xl mb-4">🔍</div>
-            <h3 className="text-xl font-medium text-gray-900 mb-2">No problems found</h3>
+            <h3 className="text-xl font-medium text-gray-900 mb-2">No practice problems found</h3>
             <p className="text-gray-600">Try adjusting your filters or check back later.</p>
           </div>
         )}

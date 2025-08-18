@@ -5,7 +5,7 @@ import Layout from './components/Layout';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
-import Problems from './pages/Problems';
+import Practice from './pages/Practice';
 import ProblemDetail from './pages/ProblemDetail';
 import Contests from './pages/Contests';
 import ContestDetail from './pages/ContestDetail';
@@ -79,11 +79,11 @@ const AppRoutes: React.FC = () => {
           }
         />
         <Route
-          path="/problems"
+          path="/practice"
           element={
             <ProtectedRoute>
               <Layout>
-                <Problems />
+                <Practice />
               </Layout>
             </ProtectedRoute>
           }

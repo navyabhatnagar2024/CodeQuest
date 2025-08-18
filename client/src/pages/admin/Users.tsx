@@ -9,7 +9,11 @@ interface AdminUser {
   full_name: string;
   is_admin: boolean;
   total_problems_solved: number;
-  last_login: string;
+  created_at: string;
+  updated_at: string;
+  is_verified: boolean;
+  country: string;
+  timezone: string;
 }
 
 const AdminUsers: React.FC = () => {
@@ -17,6 +21,7 @@ const AdminUsers: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [filter, setFilter] = useState('all');
+  const [searchTerm, setSearchTerm] = useState('');
   const [showAddUserModal, setShowAddUserModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [editingUser, setEditingUser] = useState<AdminUser | null>(null);
@@ -35,14 +40,14 @@ const AdminUsers: React.FC = () => {
   const fetchUsers = useCallback(async () => {
     try {
       setLoading(true);
-      const response = await usersAPI.getAll();
+      const response = await adminAPI.getAllUsers();
       
       if (response && response.data && response.data.success) {
         const usersArray = response.data.users || [];
         setUsers(usersArray);
         setError(null);
       } else {
-        console.error('Unexpected users API response format:', response);
+        console.error('Unexpected admin users API response format:', response);
         setUsers([]);
         setError('Received unexpected data format from API');
       }
@@ -97,6 +102,17 @@ const AdminUsers: React.FC = () => {
 
   const handleSubmitUser = async () => {
     try {
+      // Validate required fields
+      if (!formData.username.trim() || !formData.email.trim() || !formData.full_name.trim()) {
+        alert('Please fill in all required fields');
+        return;
+      }
+      
+      if (!editingUser && !formData.password.trim()) {
+        alert('Password is required for new users');
+        return;
+      }
+      
       if (editingUser) {
         // Update existing user
         const updateData: any = {
@@ -148,6 +164,17 @@ const AdminUsers: React.FC = () => {
   };
 
   const filteredUsers = users.filter(user => {
+    // Apply search filter
+    if (searchTerm) {
+      const searchLower = searchTerm.toLowerCase();
+      const matchesSearch = 
+        user.username.toLowerCase().includes(searchLower) ||
+        user.full_name.toLowerCase().includes(searchLower) ||
+        user.email.toLowerCase().includes(searchLower);
+      if (!matchesSearch) return false;
+    }
+    
+    // Apply role filter
     if (filter === 'all') return true;
     if (filter === 'admins') return user.is_admin;
     if (filter === 'users') return !user.is_admin;
@@ -216,6 +243,8 @@ const AdminUsers: React.FC = () => {
             <input
               type="text"
               placeholder="Search users by username, name, or email..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
             />
           </div>
@@ -256,7 +285,7 @@ const AdminUsers: React.FC = () => {
                     PROBLEMS SOLVED
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    LAST LOGIN
+                    CREATED
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     ACTIONS
@@ -292,7 +321,7 @@ const AdminUsers: React.FC = () => {
                         {user.total_problems_solved}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        {formatDate(user.last_login)}
+                        {formatDate(user.created_at)}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                         <div className="flex space-x-2">

@@ -30,7 +30,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 
   const navigation = [
     { name: 'Dashboard', href: '/', icon: HomeIcon },
-    { name: 'Problems', href: '/problems', icon: CodeBracketIcon },
+    { name: 'Practice', href: '/practice', icon: CodeBracketIcon },
     { name: 'Contests', href: '/contests', icon: TrophyIcon },
     { name: 'Leaderboard', href: '/leaderboard', icon: ChartBarIcon },
     { name: 'Submissions', href: '/submissions', icon: CodeBracketIcon },
@@ -38,6 +38,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 
   const adminNavigation = [
     { name: 'Admin Dashboard', href: '/admin', icon: Cog6ToothIcon },
+    { name: 'Manage Problems', href: '/admin/problems', icon: CodeBracketIcon },
     { name: 'Manage Contests', href: '/admin/contests', icon: TrophyIcon },
     { name: 'Manage Users', href: '/admin/users', icon: UsersIcon },
   ];

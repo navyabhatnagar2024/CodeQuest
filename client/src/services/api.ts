@@ -70,7 +70,6 @@ export const problemsAPI = {
     api.post(`/problems/${id}/submit`, data),
   delete: (id: string) => api.delete(`/admin/problems/${id}`),
   getAvailableTopics: () => api.get('/problems/topics/available'),
-  syncExternalProblems: () => api.post('/problems/sync'),
 };
 
 // Submissions API
@@ -115,9 +114,17 @@ export const usersAPI = {
 // Admin API
 export const adminAPI = {
   // Problems
+  getAllProblems: (params?: { page?: number; limit?: number; search?: string; difficulty?: string; status?: string }) =>
+    api.get('/admin/problems', { params }),
   createProblem: (data: any) => api.post('/admin/problems', data),
   updateProblem: (id: string, data: any) => api.put(`/admin/problems/${id}`, data),
   deleteProblem: (id: string) => api.delete(`/admin/problems/${id}`),
+  
+              // LeetCode Suggestions
+            getLeetCodeSuggestions: (params?: { page?: number; limit?: number; search?: string; difficulty?: string; topics?: string[] }) =>
+              api.get('/admin/problems/leetcode-suggestions', { params }),
+            addLeetCodeSuggestion: (id: number) => api.post(`/admin/problems/add-leetcode-suggestion/${id}`),
+            getLeetCodeTopics: () => api.get('/admin/problems/leetcode-topics'),
   
   // Contests
   createContest: (data: any) => api.post('/admin/contests', data),
@@ -125,7 +132,7 @@ export const adminAPI = {
   deleteContest: (id: string) => api.delete(`/admin/contests/${id}`),
   
   // Users
-  getAllUsers: (params?: { page?: number; limit?: number }) =>
+  getAllUsers: (params?: { page?: number; limit?: number; search?: string; role?: string }) =>
     api.get('/admin/users', { params }),
   createUser: (data: any) => api.post('/admin/users', data),
   updateUser: (id: string, data: any) => api.put(`/admin/users/${id}`, data),

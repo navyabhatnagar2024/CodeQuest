@@ -153,13 +153,13 @@ const Submissions: React.FC = () => {
             <div className="text-gray-400 text-8xl mb-6">📝</div>
             <h3 className="text-2xl font-medium text-gray-900 mb-4">No Submissions Yet</h3>
             <p className="text-gray-600 mb-8 max-w-md mx-auto">
-              You haven't submitted any solutions yet. Start solving problems to see your submission history here!
+              You haven't submitted any solutions yet. Start solving practice problems to see your submission history here!
             </p>
             <Link
-              to="/problems"
+              to="/practice"
               className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-primary-600 hover:bg-primary-700 transition-colors"
             >
-              Browse Problems
+              Browse Practice Problems
             </Link>
           </div>
         </div>
@@ -295,7 +295,7 @@ const Submissions: React.FC = () => {
             <div className="text-center py-12">
               <div className="text-gray-400 text-6xl mb-4">📝</div>
               <h3 className="text-xl font-medium text-gray-900 mb-2">No submissions found</h3>
-              <p className="text-gray-600">Try adjusting your filters or start solving problems to see submissions here.</p>
+              <p className="text-gray-600">Try adjusting your filters or start solving practice problems to see submissions here.</p>
             </div>
           )}
         </div>

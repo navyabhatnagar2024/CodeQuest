@@ -225,7 +225,7 @@ const Dashboard: React.FC = () => {
           <h2 className="text-xl font-semibold text-gray-900 mb-4">Quick Actions</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <Link
-              to="/problems"
+              to="/practice"
               className="flex items-center p-4 border border-gray-200 rounded-lg hover:border-primary-300 hover:bg-primary-50 transition-colors"
             >
               <div className="p-2 rounded-full bg-blue-100 text-blue-600 mr-3">
@@ -343,10 +343,10 @@ const Dashboard: React.FC = () => {
             )}
             <div className="mt-4">
               <Link
-                to="/problems"
+                to="/practice"
                 className="text-primary-600 hover:text-primary-700 font-medium text-sm"
               >
-                Browse all problems →
+                Browse all practice problems →
               </Link>
             </div>
           </div>

@@ -22,7 +22,20 @@ const AdminDashboard: React.FC = () => {
       const response = await adminAPI.getSystemStats();
       
       if (response && response.data && response.data.success) {
-        setStats(response.data.stats);
+        // Extract the statistics from the nested structure
+        const { statistics } = response.data;
+        
+        // Create a flat stats object that matches our interface
+        const flatStats = {
+          total_users: statistics.users?.total_users || 0,
+          total_problems: statistics.problems?.total_problems || 0,
+          total_contests: statistics.contests?.total_contests || 0,
+          total_submissions: statistics.submissions?.total_submissions || 0,
+          active_users_today: 0, // Not provided by backend yet
+          problems_solved_today: 0 // Not provided by backend yet
+        };
+        
+        setStats(flatStats);
         setError(null);
       } else {
         console.error('Unexpected admin stats API response format:', response);

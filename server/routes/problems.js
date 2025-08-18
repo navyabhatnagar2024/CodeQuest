@@ -124,13 +124,6 @@ router.get('/:id', optionalAuth, async (req, res) => {
             problem.topic_tags = [];
         }
 
-        // Parse examples
-        try {
-            problem.examples = JSON.parse(problem.examples);
-        } catch (e) {
-            problem.examples = [];
-        }
-
         res.json({
             success: true,
             problem
@@ -189,8 +182,8 @@ router.post('/sync', authenticateToken, async (req, res) => {
     }
 });
 
-// Submit solution to problem
-router.post('/:id/submit', authenticateToken, async (req, res) => {
+// Test code against test cases (without creating submission)
+router.post('/:id/test', authenticateToken, async (req, res) => {
     try {
         const { id } = req.params;
         const { code, language } = req.body;
@@ -228,12 +221,190 @@ router.post('/:id/submit', authenticateToken, async (req, res) => {
             });
         }
 
+        console.log('Testing code against test cases...');
+        console.log('Language:', language);
+        console.log('Code length:', code.length);
+        console.log('Test cases:', testCases.length);
+
+        // Import Judge0 service
+        const judge0Service = require('../services/judge0Service');
+        
+        // Execute code against test cases
+        const executionResults = await judge0Service.executeTestCases(code, language, testCases);
+        
+        console.log('Test execution completed. Results:', executionResults);
+
+        res.json({
+            success: true,
+            message: 'Code tested successfully',
+            results: executionResults
+        });
+
+    } catch (error) {
+        console.error('Test code error:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Failed to test code',
+            error: error.message
+        });
+    }
+});
+
+// Run code without test cases (for raw output)
+router.post('/:id/run', authenticateToken, async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { code, language } = req.body;
+
+        if (!code || !language) {
+            return res.status(400).json({
+                error: 'Missing required fields',
+                message: 'Code and language are required'
+            });
+        }
+
+        // Check if problem exists
+        const problem = await req.app.locals.database.get(
+            'SELECT * FROM problems WHERE id = ? AND is_active = 1',
+            [id]
+        );
+
+        if (!problem) {
+            return res.status(404).json({
+                error: 'Problem not found',
+                message: 'The requested problem does not exist'
+            });
+        }
+
+        console.log('Running code without test cases...');
+        console.log('Language:', language);
+        console.log('Code length:', code.length);
+
+        // Import Judge0 service
+        const judge0Service = require('../services/judge0Service');
+        
+        // Execute code with empty input (just to see output)
+        const result = await judge0Service.executeCode(code, language, '');
+        
+        console.log('Code execution completed. Result:', result);
+
+        res.json({
+            success: true,
+            message: 'Code executed successfully',
+            output: result.stdout,
+            error: result.stderr || result.compile_output,
+            executionTime: result.time,
+            memory: result.memory
+        });
+
+    } catch (error) {
+        console.error('Run code error:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Failed to run code',
+            error: error.message
+        });
+    }
+});
+
+// Test Judge0 service (for debugging)
+router.get('/test/judge0', async (req, res) => {
+    try {
+        const judge0Service = require('../services/judge0Service');
+        
+        // Test with a simple Python code
+        const testCode = 'print("Hello, World!")';
+        const testInput = '';
+        
+        console.log('Testing Judge0 service...');
+        console.log('Base URL:', judge0Service.baseURL);
+        console.log('Using RapidAPI:', judge0Service.useRapidAPI);
+        console.log('API Key present:', !!judge0Service.apiKey);
+        
+        // Try to submit a simple test
+        const token = await judge0Service.submitCode(testCode, 'python', testInput);
+        console.log('Submission token:', token);
+        
+        // Wait for result
+        const result = await judge0Service.waitForSubmission(token, 10000);
+        console.log('Execution result:', result);
+        
+        res.json({
+            success: true,
+            message: 'Judge0 service is working',
+            token: token,
+            result: result,
+            config: {
+                baseURL: judge0Service.baseURL,
+                useRapidAPI: judge0Service.useRapidAPI,
+                hasApiKey: !!judge0Service.apiKey
+            }
+        });
+        
+    } catch (error) {
+        console.error('Judge0 test failed:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Judge0 service test failed',
+            error: error.message,
+            config: {
+                baseURL: process.env.JUDGE0_API_URL || 'https://judge0-ce.p.rapidapi.com',
+                hasApiKey: !!process.env.JUDGE0_API_KEY
+            }
+        });
+    }
+});
+
+// Submit solution to problem
+router.post('/:id/submit', authenticateToken, async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { code, language } = req.body;
+
+        if (!code || !language) {
+            return res.status(400).json({
+                error: 'Missing required fields',
+                message: 'Code and language are required'
+            });
+        }
+
+        // Check if problem exists
+        const problem = await req.app.locals.database.get(
+            'SELECT * FROM problems WHERE id = ? AND is_active = 1',
+            [id]
+        );
+
+        if (!problem) {
+            return res.status(404).json({
+                error: 'Problem not found',
+                message: 'The requested problem does not exist'
+            });
+        }
+
+        // Debug: Log user information
+        console.log('User object:', req.user);
+        console.log('User ID:', req.user?.id);
+        console.log('User ID type:', typeof req.user?.id);
+
+        // Get test cases for the problem
+        const testCases = await req.app.locals.database.all(
+            'SELECT * FROM test_cases WHERE problem_id = ? ORDER BY is_sample DESC, id ASC',
+            [id]
+        );
+
+        if (!testCases || testCases.length === 0) {
+            return res.status(400).json({
+                error: 'No test cases available',
+                message: 'This problem has no test cases to validate against'
+            });
+        }
+
         // Create submission record
         const result = await req.app.locals.database.run(
             `INSERT INTO submissions (
                 user_id, problem_id, language_id, source_code, submission_time, status
             ) VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP, 'Processing')`,
-            [req.user.userId, id, language, code]
+            [req.user.id, id, language, code]
         );
 
         const submissionId = result.lastID;
@@ -242,8 +413,15 @@ router.post('/:id/submit', authenticateToken, async (req, res) => {
             // Import Judge0 service
             const judge0Service = require('../services/judge0Service');
             
+            console.log('Submitting code to Judge0...');
+            console.log('Language:', language);
+            console.log('Code length:', code.length);
+            console.log('Test cases:', testCases.length);
+            
             // Execute code against test cases
             const executionResults = await judge0Service.executeTestCases(code, language, testCases);
+            
+            console.log('Execution completed. Results:', executionResults);
             
             // Calculate overall status
             const passedTests = executionResults.filter(r => r.status === 'PASSED').length;
@@ -302,7 +480,8 @@ router.post('/:id/submit', authenticateToken, async (req, res) => {
                 message: 'Code execution failed',
                 submission_id: submissionId,
                 status: 'RE',
-                error: executionError.message
+                error: executionError.message,
+                details: 'Check the server logs for more information about the Judge0 error'
             });
         }
 
