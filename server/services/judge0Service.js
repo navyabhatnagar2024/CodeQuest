@@ -172,12 +172,8 @@ class Judge0Service {
         try {
             console.log(`Executing ${language} code with input: "${input}"`);
             
-            // Format input for the specific language if it's a test case
-            const formattedInput = this.formatTestCaseInput({ input_data: input }, language);
-            console.log(`Formatted input for ${language}:`, formattedInput);
-            
             // Submit code
-            const token = await this.submitCode(code, language, formattedInput);
+            const token = await this.submitCode(code, language, input);
             console.log('Code submitted, token:', token);
             
             // Wait for result
@@ -212,12 +208,8 @@ class Judge0Service {
                         is_sample: testCase.is_sample
                     });
                     
-                    // Format input for the specific language
-                    const formattedInput = this.formatTestCaseInput(testCase, language);
-                    console.log(`Formatted input for ${language}:`, formattedInput);
-                    
-                    // Submit code with formatted test case input
-                    const token = await this.submitCode(code, language, formattedInput);
+                    // Submit code with test case input
+                    const token = await this.submitCode(code, language, testCase.input_data);
                     console.log(`Test case ${testCase.id} submitted, token:`, token);
                     
                     // Wait for completion
@@ -330,143 +322,6 @@ class Judge0Service {
      */
     getLanguageId(language) {
         return this.languageMap[language.toLowerCase()];
-    }
-
-    /**
-     * Format test case input for different programming languages
-     */
-    formatTestCaseInput(testCase, language) {
-        const input = testCase.input_data || '';
-        const expected = testCase.expected_output || '';
-        
-        // If input is already in a simple format, return as is
-        if (this.isSimpleInput(input)) {
-            return input;
-        }
-        
-        // Parse complex input like "nums1 = [1,2], nums2 = [3,4]" and convert to simple format
-        const parsedInput = this.parseComplexInput(input);
-        
-        // Format based on language
-        switch (language.toLowerCase()) {
-            case 'python':
-                return this.formatForPython(parsedInput);
-            case 'javascript':
-                return this.formatForJavaScript(parsedInput);
-            case 'java':
-                return this.formatForJava(parsedInput);
-            case 'cpp':
-            case 'c':
-                return this.formatForC(parsedInput);
-            default:
-                return parsedInput;
-        }
-    }
-    
-    /**
-     * Check if input is already in a simple, parseable format
-     */
-    isSimpleInput(input) {
-        // Simple inputs like: "2 7 11 15 9", "abcabcbb", "121"
-        return !input.includes('=') && !input.includes('nums') && !input.includes('target');
-    }
-    
-    /**
-     * Parse complex input like "nums1 = [1,2], nums2 = [3,4]" to extract values
-     */
-    parseComplexInput(input) {
-        try {
-            // Handle Two Sum format: "nums = [2,7,11,15], target = 9"
-            if (input.includes('nums') && input.includes('target')) {
-                const numsMatch = input.match(/nums\s*=\s*\[([^\]]+)\]/);
-                const targetMatch = input.match(/target\s*=\s*(\d+)/);
-                
-                if (numsMatch && targetMatch) {
-                    const nums = numsMatch[1].split(',').map(n => n.trim());
-                    const target = targetMatch[1];
-                    return { type: 'two_sum', nums, target };
-                }
-            }
-            
-            // Handle Median format: "nums1 = [1,3], nums2 = [2]"
-            if (input.includes('nums1') && input.includes('nums2')) {
-                const nums1Match = input.match(/nums1\s*=\s*\[([^\]]+)\]/);
-                const nums2Match = input.match(/nums2\s*=\s*\[([^\]]+)\]/);
-                
-                if (nums1Match && nums2Match) {
-                    const nums1 = nums1Match[1].split(',').map(n => n.trim());
-                    const nums2 = nums2Match[1].split(',').map(n => n.trim());
-                    return { type: 'median', nums1, nums2 };
-                }
-            }
-            
-            // Handle palindrome format: "121"
-            if (/^\d+$/.test(input.trim())) {
-                return { type: 'palindrome', value: input.trim() };
-            }
-            
-            // Handle string format: "abcabcbb"
-            if (/^[a-zA-Z]+$/.test(input.trim())) {
-                return { type: 'string', value: input.trim() };
-            }
-            
-            // Default: return as is
-            return { type: 'raw', value: input };
-            
-        } catch (error) {
-            console.warn('Error parsing complex input:', error);
-            return { type: 'raw', value: input };
-        }
-    }
-    
-    /**
-     * Format parsed input for Python
-     */
-    formatForPython(parsed) {
-        switch (parsed.type) {
-            case 'two_sum':
-                return `${parsed.nums.join(' ')} ${parsed.target}`;
-            case 'median':
-                return `${parsed.nums1.join(' ')} ${parsed.nums2.join(' ')}`;
-            case 'palindrome':
-                return parsed.value;
-            case 'string':
-                return parsed.value;
-            default:
-                return parsed.value;
-        }
-    }
-    
-    /**
-     * Format parsed input for JavaScript
-     */
-    formatForJavaScript(parsed) {
-        return this.formatForPython(parsed); // Same format
-    }
-    
-    /**
-     * Format parsed input for Java
-     */
-    formatForJava(parsed) {
-        return this.formatForPython(parsed); // Same format
-    }
-    
-    /**
-     * Format parsed input for C/C++
-     */
-    formatForC(parsed) {
-        switch (parsed.type) {
-            case 'two_sum':
-                return `${parsed.nums.join(' ')} ${parsed.target}`;
-            case 'median':
-                return `${parsed.nums1.join(' ')} ${parsed.nums2.join(' ')}`;
-            case 'palindrome':
-                return parsed.value;
-            case 'string':
-                return parsed.value;
-            default:
-                return parsed.value;
-        }
     }
 }
 

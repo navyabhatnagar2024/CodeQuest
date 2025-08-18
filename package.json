@@ -12,9 +12,7 @@
     "setup": "node setup.js",
     "export-db": "node server/database/export_database.js",
     "test": "jest",
-    "test:watch": "jest --watch",
-    "db:migrate": "node server/database/migrate.js",
-    "db:seed": "node server/database/seed.js"
+    "test:watch": "jest --watch"
   },
   "keywords": [
     "competitive-programming",

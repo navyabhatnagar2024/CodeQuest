@@ -6,7 +6,6 @@ class SetupManager {
     constructor() {
         this.dbPath = path.join(__dirname, 'server', 'database', 'coding_platform.db');
         this.schemaPath = path.join(__dirname, 'server', 'database', 'schema.sql');
-        this.seedPath = path.join(__dirname, 'server', 'database', 'seed.js');
     }
 
     async setup() {
