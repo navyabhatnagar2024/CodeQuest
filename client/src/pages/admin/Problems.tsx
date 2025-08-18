@@ -90,11 +90,11 @@ const AdminProblems: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  }, [search, filter]);
+  }, []); // No dependencies - only runs when explicitly called
 
   useEffect(() => {
     fetchProblems();
-  }, [fetchProblems]);
+  }, []); // Empty dependency array - only runs once on mount
 
   const handleCreateProblem = () => {
     setShowCreateModal(true);
@@ -231,6 +231,9 @@ const AdminProblems: React.FC = () => {
     }
   };
 
+  const handleSearch = () => {
+    fetchProblems();
+  };
 
 
   const filteredProblems = problems.filter(problem => {
@@ -341,13 +344,22 @@ const AdminProblems: React.FC = () => {
           {/* Search */}
           <div className="flex gap-4">
             <div className="flex-1">
-              <input
-                type="text"
-                placeholder="Search problems by title or description..."
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
-              />
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  placeholder="Search problems by title or description..."
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
+                  className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+                />
+                <button
+                  onClick={handleSearch}
+                  className="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 transition-colors"
+                >
+                  🔍
+                </button>
+              </div>
             </div>
             <button
               onClick={() => setSearch('')}

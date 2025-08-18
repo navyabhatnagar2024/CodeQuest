@@ -1,162 +1,202 @@
 # 🚀 Competitive Programming Platform
 
-A modern competitive programming platform built with Node.js, Express, SQLite, and React. This platform provides a complete solution for hosting programming contests, managing problems, and tracking user progress.
+A comprehensive competitive programming platform with real-time contests, code execution, and LeetCode integration.
 
-## ✨ **Current Features**
+## ✨ Features
 
-### 🎯 **Core Functionality**
-- **User Authentication**: JWT-based authentication with role-based access control
-- **Problem Management**: Create, edit, and manage programming problems with test cases
-- **Code Execution**: Integration with Judge0 API for secure code compilation and execution
-- **Contest System**: Create and manage competitive programming contests with real-time leaderboards
-- **Submission System**: Track and evaluate code submissions with detailed results
-- **Leaderboards**: Global and contest-specific leaderboards
-- **User Profiles**: Comprehensive user profiles with statistics
+- **🏆 Real-time Contests** - Create and participate in coding competitions
+- **💻 Code Execution** - Run code in multiple programming languages using Judge0
+- **📚 Problem Library** - Extensive collection of coding problems
+- **🔍 LeetCode Integration** - Import problems directly from LeetCode
+- **📊 Leaderboards** - Track performance and rankings
+- **👥 User Management** - User registration, authentication, and profiles
+- **📱 Responsive UI** - Modern, mobile-friendly interface
 
-### 🔧 **Admin Features**
-- **Problem Management**: Full CRUD operations for problems
-- **LeetCode Integration**: Manual script to populate problems from LeetCode
-- **User Management**: Admin panel for user administration
-- **Contest Management**: Create and manage contests
+## 🛠️ Tech Stack
 
-### 💻 **Technical Features**
-- **RESTful API**: Comprehensive REST API with proper error handling
-- **Database**: SQLite with proper indexing and query optimization
-- **Security**: Input validation, SQL injection prevention, XSS protection
-- **Real-time Updates**: WebSocket integration for live contest updates
+- **Frontend**: React + TypeScript + Tailwind CSS
+- **Backend**: Node.js + Express + Socket.io
+- **Database**: SQLite
+- **Code Execution**: Judge0 API
+- **Authentication**: JWT
+- **Real-time**: Socket.io
 
-## 🛠 **Technology Stack**
+## 🚀 Quick Start
 
-### **Backend**
-- **Node.js**: Runtime environment
-- **Express.js**: Web framework
-- **SQLite**: Database with proper indexing
-- **Socket.io**: Real-time communication
-- **JWT**: Authentication and authorization
-- **Judge0 API**: Code execution service
-
-### **Frontend**
-- **React.js**: Frontend framework with TypeScript
-- **Monaco Editor**: Code editor (VS Code in browser)
-- **Tailwind CSS**: Styling framework
-- **Socket.io Client**: Real-time updates
-
-## 📋 **Prerequisites**
-
+### Prerequisites
 - Node.js (v16 or higher)
 - npm or yarn
-- Python 3.11+ (for LeetCode integration)
-- Judge0 API key (from RapidAPI)
 
-## 🚀 **Quick Start**
-
-### **1. Clone and Setup**
+### 1. Clone the Repository
 ```bash
-# Clone the repository
-git clone <repository-url>
-cd competitive-programming-platform
-
-# Install dependencies
-npm install
-cd server && npm install
-cd ../client && npm install
-cd ..
+git clone <your-repo-url>
+cd coding-platform
 ```
 
-### **2. Environment Setup**
+### 2. Run Setup
 ```bash
-# Copy environment template
-cp env.example .env
-
-# Edit .env file with your settings:
-# - JUDGE0_API_KEY: Your Judge0 API key from RapidAPI
-# - JWT_SECRET: A secure random string for JWT signing
+npm run setup
 ```
 
-### **3. Database Setup**
+This will:
+- Install all dependencies
+- Create the database
+- Populate with initial data
+- Set up environment variables
+
+### 3. Start the Platform
 ```bash
-# Run the automated setup script
-node setup.js
+npm run dev
 ```
 
-### **4. Start Development Servers**
-```bash
-# Terminal 1: Start backend
-cd server && npm start
+The platform will be available at:
+- **Frontend**: http://localhost:3000
+- **Backend**: http://localhost:5000
 
-# Terminal 2: Start frontend
-cd client && npm start
-```
+### 4. Access Admin Panel
+- **Username**: admin
+- **Password**: admin123
 
-## 📚 **LeetCode Integration**
-
-### **Populate Problems from LeetCode**
-```bash
-# Navigate to scripts directory
-cd server/scripts
-
-# Activate Python virtual environment
-C:\Users\ahaan\CODE\Coding Platform\server\venv311\Scripts\activate
-
-# Run the manual script
-python manual_leetscrape.py
-```
-
-The script will:
-- Connect to your database
-- Create necessary tables
-- Ask how many problems to fetch
-- Show real-time progress
-- Insert problems into the database
-
-### **Use in Admin Panel**
-1. Go to **Admin → Manage Problems**
-2. Click **"+ Add More (LeetCode)"**
-3. Browse and add problems from suggestions
-
-## 🔑 **Default Admin Account**
-
-After running `setup.js`, you'll have:
-- **Username**: `admin`
-- **Password**: `admin123`
-
-## 📁 **Project Structure**
+## 📁 Project Structure
 
 ```
+coding-platform/
 ├── client/                 # React frontend
 │   ├── src/
 │   │   ├── components/    # Reusable components
 │   │   ├── pages/         # Page components
 │   │   ├── services/      # API services
 │   │   └── contexts/      # React contexts
+│   └── package.json
 ├── server/                 # Node.js backend
+│   ├── database/          # Database files
 │   ├── routes/            # API routes
 │   ├── services/          # Business logic
-│   ├── database/          # Database files
-│   └── scripts/           # Python scripts
-└── README.md              # This file
+│   └── package.json
+├── setup.js               # Setup script
+└── package.json           # Root package.json
 ```
 
-## 🚨 **Troubleshooting**
+## 🔧 Configuration
 
-### **Common Issues**
-- **Python Import Error**: Make sure you're using the correct virtual environment
-- **Database Connection**: Check that the database file exists and is accessible
-- **Judge0 API**: Verify your API key and RapidAPI subscription
+### Environment Variables
+Create a `.env` file in the root directory:
 
-### **Getting Help**
-- Check the server console for error messages
-- Verify all environment variables are set correctly
-- Ensure Python dependencies are installed in the correct venv
+```env
+# Judge0 API Configuration
+JUDGE0_API_KEY=your_judge0_api_key
+JUDGE0_API_HOST=judge0-ce.p.rapidapi.com
+JUDGE0_API_URL=https://judge0-ce.p.rapidapi.com
 
-## 📝 **Contributing**
+# JWT Configuration
+JWT_SECRET=your-super-secret-jwt-key
+
+# Database Configuration
+DATABASE_PATH=./server/database/coding_platform.db
+```
+
+### Judge0 API Setup
+1. Sign up at [RapidAPI](https://rapidapi.com)
+2. Subscribe to [Judge0 CE](https://rapidapi.com/judge0-official/api/judge0-ce)
+3. Get your API key and add it to `.env`
+
+## 📊 Database Setup
+
+The platform uses SQLite for simplicity. The database is automatically created with:
+
+- **Users table** - User accounts and profiles
+- **Problems table** - Coding problems and descriptions
+- **Test cases table** - Problem test cases
+- **Contests table** - Contest information
+- **Submissions table** - User code submissions
+- **LeetCode suggestions** - Imported LeetCode problems
+
+## 🎯 Adding Problems
+
+### From LeetCode
+1. Go to Admin Panel → Problems → LeetCode Suggestions
+2. Browse available problems
+3. Click "Add Problem" to import with test cases
+
+### Manually
+1. Go to Admin Panel → Problems → Add Problem
+2. Fill in problem details
+3. Add test cases manually
+
+## 🏃‍♂️ Running Code
+
+The platform supports multiple programming languages:
+
+- **Python** (3.8+)
+- **JavaScript** (Node.js)
+- **Java** (OpenJDK 13)
+- **C/C++** (GCC 9.2)
+- **And many more...**
+
+Code execution is handled by Judge0 API with:
+- Real-time compilation and execution
+- Test case validation
+- Performance metrics (time, memory)
+- Error handling and debugging
+
+## 🧪 Testing
+
+```bash
+# Run all tests
+npm test
+
+# Run tests in watch mode
+npm run test:watch
+
+# Run specific test files
+npm test -- --testPathPattern=auth
+```
+
+## 📝 API Documentation
+
+### Authentication
+- `POST /api/auth/register` - User registration
+- `POST /api/auth/login` - User login
+- `GET /api/auth/profile` - Get user profile
+
+### Problems
+- `GET /api/problems` - List all problems
+- `GET /api/problems/:id` - Get problem details
+- `POST /api/problems/:id/submit` - Submit solution
+- `POST /api/problems/:id/test` - Test code against test cases
+
+### Contests
+- `GET /api/contests` - List all contests
+- `POST /api/contests/:id/register` - Register for contest
+- `GET /api/contests/:id/leaderboard` - Get contest leaderboard
+
+## 🤝 Contributing
 
 1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Test thoroughly
-5. Submit a pull request
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
-## 📄 **License**
+## 📄 License
 
-This project is licensed under the MIT License.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🆘 Support
+
+If you encounter any issues:
+
+1. Check the [Issues](https://github.com/yourusername/coding-platform/issues) page
+2. Create a new issue with detailed information
+3. Include error logs and steps to reproduce
+
+## 🙏 Acknowledgments
+
+- [Judge0](https://judge0.com) - Code execution service
+- [LeetCode](https://leetcode.com) - Problem database
+- [Tailwind CSS](https://tailwindcss.com) - CSS framework
+- [React](https://reactjs.org) - Frontend library
+
+---
+
+**Happy Coding! 🎉**

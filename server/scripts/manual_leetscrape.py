@@ -42,45 +42,46 @@ def create_table_if_not_exists(conn):
     print("✅ Table created/verified successfully")
 
 def get_question_details(title_slug):
-    """Get detailed information for a specific question including test cases"""
+    """Get detailed information about a specific question including test cases"""
     try:
         from leetscrape import GetQuestion, GenerateCodeStub
+        
+        # Get the question details
+        question = GetQuestion(title_slug).scrape()
+        
+        # Generate code stub to get test cases
+        code_stub = GenerateCodeStub(title_slug)
+        
+        # Create a temporary directory for the generated files
         import tempfile
         import os
-        import re
         
-        # Get question details
-        question = GetQuestion(titleSlug=title_slug).scrape()
+        test_cases = []
         
-        # Generate code stub and test cases
-        fcs = GenerateCodeStub(titleSlug=title_slug)
-        
-        # Create temporary directory for generated files
         with tempfile.TemporaryDirectory() as temp_dir:
-            fcs.generate(directory=temp_dir)
-            
-            # Look for test file
-            test_file = None
-            for file in os.listdir(temp_dir):
-                if file.startswith('test_') and file.endswith('.py'):
-                    test_file = os.path.join(temp_dir, file)
-                    break
-            
-            # Parse test cases from the generated test file
-            test_cases = []
-            if test_file and os.path.exists(test_file):
-                with open(test_file, 'r') as f:
-                    content = f.read()
+            try:
+                # Generate the code stub files
+                code_stub.generate(directory=temp_dir)
+                
+                # Look for the test file
+                test_files = [f for f in os.listdir(temp_dir) if f.startswith('test_') and f.endswith('.py')]
+                
+                if test_files:
+                    test_file_path = os.path.join(temp_dir, test_files[0])
                     
-                    # Extract test cases using regex patterns
-                    # Look for patterns like: assert function_name(input) == expected_output
-                    function_patterns = [
-                        r'assert\s+(\w+)\(([^)]+)\)\s*==\s*([^\n]+)',  # assert func(input) == output
-                        r'assert\s+(\w+)\(([^)]+\))\s*==\s*([^\n]+)',  # assert func(input) == output (with nested parens)
+                    with open(test_file_path, 'r', encoding='utf-8') as f:
+                        content = f.read()
+                    
+                    # Extract test cases from the test file content
+                    # Look for patterns like: assert solution.functionName(input) == expected_output
+                    test_patterns = [
+                        r'assert\s+solution\.(\w+)\(([^)]+)\)\s*==\s*([^\n]+)',  # assert solution.func(input) == output
+                        r'solution\.(\w+)\(([^)]+)\)\s*==\s*([^\n]+)',  # solution.func(input) == output (without assert)
                         r'(\w+)\(([^)]+)\)\s*==\s*([^\n]+)',  # func(input) == output (without assert)
+                        r'assert\s+(\w+)\(([^)]+)\)\s*==\s*([^\n]+)',  # assert func(input) == output
                     ]
                     
-                    for pattern in function_patterns:
+                    for pattern in test_patterns:
                         matches = re.findall(pattern, content)
                         for match in matches:
                             if len(match) == 3:
@@ -91,7 +92,11 @@ def get_question_details(title_slug):
                                 expected_clean = expected_output.strip()
                                 
                                 # Skip if it looks like a comment or invalid
-                                if input_clean and expected_clean and not input_clean.startswith('#'):
+                                if (input_clean and expected_clean and 
+                                    not input_clean.startswith('#') and 
+                                    not input_clean.startswith('"') and
+                                    len(input_clean) > 2 and len(expected_clean) > 2):
+                                    
                                     test_cases.append({
                                         "input_data": input_clean,
                                         "expected_output": expected_clean,
@@ -109,11 +114,24 @@ def get_question_details(title_slug):
                                 r'<strong>Input:</strong>\s*<code>([^<]+)</code>',
                                 r'<strong>Output:</strong>\s*<code>([^<]+)</code>',
                                 r'Input:\s*`([^`]+)`',
-                                r'Output:\s*`([^`]+)`'
+                                r'Output:\s*`([^`]+)`',
+                                r'Input:\s*([^\n]+)',
+                                r'Output:\s*([^\n]+)'
                             ]
                             
-                            inputs = re.findall(example_patterns[0], body) or re.findall(example_patterns[2], body)
-                            outputs = re.findall(example_patterns[1], body) or re.findall(example_patterns[3], body)
+                            inputs = []
+                            outputs = []
+                            
+                            # Try different patterns
+                            for pattern in example_patterns:
+                                if 'Input' in pattern:
+                                    inputs = re.findall(pattern, body)
+                                    if inputs:
+                                        break
+                                elif 'Output' in pattern:
+                                    outputs = re.findall(pattern, body)
+                                    if outputs:
+                                        break
                             
                             if inputs and outputs:
                                 for i, (input_val, output_val) in enumerate(zip(inputs, outputs)):
@@ -123,39 +141,42 @@ def get_question_details(title_slug):
                                         "is_sample": True,
                                         "description": f"Example {i + 1}"
                                     })
-            
-            # If still no test cases, create basic ones based on problem type
-            if not test_cases:
-                # Create basic test cases based on common patterns
-                if 'climbing' in title_slug.lower() or 'stairs' in title_slug.lower():
-                    test_cases = [
-                        {"input_data": "2", "expected_output": "2", "is_sample": True, "description": "Example 1"},
-                        {"input_data": "3", "expected_output": "3", "is_sample": True, "description": "Example 2"},
-                        {"input_data": "4", "expected_output": "5", "is_sample": False, "description": "Edge case 1"},
-                        {"input_data": "1", "expected_output": "1", "is_sample": False, "description": "Edge case 2"}
-                    ]
-                elif 'two' in title_slug.lower() and 'sum' in title_slug.lower():
-                    test_cases = [
-                        {"input_data": "[2, 7, 11, 15], 9", "expected_output": "[0, 1]", "is_sample": True, "description": "Example 1"},
-                        {"input_data": "[3, 2, 4], 6", "expected_output": "[1, 2]", "is_sample": True, "description": "Example 2"},
-                        {"input_data": "[3, 3], 6", "expected_output": "[0, 1]", "is_sample": False, "description": "Edge case"}
-                    ]
-                else:
-                    # Generic test cases
-                    test_cases = [
-                        {"input_data": "test_input", "expected_output": "expected_output", "is_sample": True, "description": "Basic test case"}
-                    ]
-            
-            return {
-                'QID': getattr(question, 'QID', 'Unknown'),
-                'title': getattr(question, 'title', 'Unknown'),
-                'difficulty': getattr(question, 'difficulty', 'Medium'),
-                'topics': getattr(question, 'topics', []),
-                'Body': getattr(question, 'Body', 'No description available'),
-                'Hints': getattr(question, 'Hints', []),
-                'test_cases': test_cases
-            }
-            
+            except Exception as e:
+                print(f"⚠️ Error processing test cases for {title_slug}: {str(e)}")
+                # Continue with fallback test cases
+        
+        # If still no test cases, create basic ones based on problem type
+        if not test_cases:
+            # Create basic test cases based on common patterns
+            if 'climbing' in title_slug.lower() or 'stairs' in title_slug.lower():
+                test_cases = [
+                    {"input_data": "2", "expected_output": "2", "is_sample": True, "description": "Example 1"},
+                    {"input_data": "3", "expected_output": "3", "is_sample": True, "description": "Example 2"},
+                    {"input_data": "4", "expected_output": "5", "is_sample": False, "description": "Edge case 1"},
+                    {"input_data": "1", "expected_output": "1", "is_sample": False, "description": "Edge case 2"}
+                ]
+            elif 'two' in title_slug.lower() and 'sum' in title_slug.lower():
+                test_cases = [
+                    {"input_data": "[2, 7, 11, 15], 9", "expected_output": "[0, 1]", "is_sample": True, "description": "Example 1"},
+                    {"input_data": "[3, 2, 4], 6", "expected_output": "[1, 2]", "is_sample": True, "description": "Example 2"},
+                    {"input_data": "[3, 3], 6", "expected_output": "[0, 1]", "is_sample": False, "description": "Edge case"}
+                ]
+            else:
+                # Generic test cases
+                test_cases = [
+                    {"input_data": "test_input", "expected_output": "expected_output", "is_sample": True, "description": "Basic test case"}
+                ]
+        
+        return {
+            'QID': getattr(question, 'QID', 'Unknown'),
+            'title': getattr(question, 'title', 'Unknown'),
+            'difficulty': getattr(question, 'difficulty', 'Medium'),
+            'topics': getattr(question, 'topics', []),
+            'Body': getattr(question, 'Body', 'No description available'),
+            'Hints': getattr(question, 'Hints', []),
+            'test_cases': test_cases
+        }
+        
     except Exception as e:
         print(f"⚠️ Error getting details for {title_slug}: {str(e)}")
         return None
@@ -196,6 +217,9 @@ def fetch_and_insert_problems(conn, max_problems=100):
                 topic_tags = problem.get('topicTags', 'array')
                 title_slug = problem.get('titleSlug', '')
                 
+                # Debug topic tags
+                print(f"🔍 Topic tags for {title}: {topic_tags} (type: {type(topic_tags)})")
+                
                 # Get detailed question information including test cases
                 print(f"🔍 Getting details for: {title}")
                 question_details = get_question_details(title_slug)
@@ -215,8 +239,14 @@ def fetch_and_insert_problems(conn, max_problems=100):
                 # Parse topic tags
                 if isinstance(topic_tags, str):
                     topic_list = [tag.strip() for tag in topic_tags.split(',')]
+                elif isinstance(topic_tags, list):
+                    topic_list = topic_tags
                 else:
-                    topic_list = question_details.get('topics', ["General"])
+                    topic_list = ["General"]
+                
+                # Ensure we have at least one topic
+                if not topic_list or len(topic_list) == 0:
+                    topic_list = ["General"]
                 
                 # Use the detailed problem statement from leetscrape
                 problem_statement = question_details.get('Body', f"LeetCode Problem {qid}: {title}")

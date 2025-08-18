@@ -131,10 +131,7 @@ const LeetCodeSuggestionsModal: React.FC<LeetCodeSuggestionsModalProps> = ({
     }
   }, [isOpen, fetchSuggestions, fetchTopics]);
 
-  useEffect(() => {
-    setPage(1);
-    fetchSuggestions();
-  }, [search, difficulty, topics]);
+  // Removed auto-search useEffect - now only searches when button is clicked
 
   if (!isOpen) return null;
 
@@ -165,13 +162,22 @@ const LeetCodeSuggestionsModal: React.FC<LeetCodeSuggestionsModalProps> = ({
             {/* Search */}
             <div className="flex gap-4">
               <div className="flex-1">
-                <input
-                  type="text"
-                  placeholder="Search problems by title or description..."
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    placeholder="Search problems by title or description..."
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                    onKeyPress={(e) => e.key === 'Enter' && fetchSuggestions()}
+                    className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                  <button
+                    onClick={fetchSuggestions}
+                    className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
+                  >
+                    🔍
+                  </button>
+                </div>
               </div>
               <button
                 onClick={() => setSearch('')}

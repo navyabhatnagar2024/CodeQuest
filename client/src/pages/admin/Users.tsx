@@ -192,6 +192,12 @@ const AdminUsers: React.FC = () => {
     return new Date(dateString).toLocaleDateString();
   };
 
+  const handleSearch = () => {
+    // The search is already handled by the filteredUsers logic
+    // This function is just for the button click and Enter key
+    // The filtering happens automatically when searchTerm changes
+  };
+
   if (loading) {
     return (
       <div className="flex justify-center items-center min-h-screen">
@@ -240,13 +246,22 @@ const AdminUsers: React.FC = () => {
         {/* Search and Filters */}
         <div className="mb-6 flex flex-wrap gap-4">
           <div className="flex-1 min-w-64">
-            <input
-              type="text"
-              placeholder="Search users by username, name, or email..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-            />
+            <div className="flex gap-2">
+              <input
+                type="text"
+                placeholder="Search users by username, name, or email..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
+                className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+              />
+              <button
+                onClick={handleSearch}
+                className="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 transition-colors"
+              >
+                🔍
+              </button>
+            </div>
           </div>
           <div className="flex gap-2">
             {[

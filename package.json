@@ -9,6 +9,8 @@
     "client": "cd client && npm start",
     "build": "cd client && npm run build",
     "install-all": "npm install && cd client && npm install",
+    "setup": "node setup.js",
+    "export-db": "node server/database/export_database.js",
     "test": "jest",
     "test:watch": "jest --watch",
     "db:migrate": "node server/database/migrate.js",

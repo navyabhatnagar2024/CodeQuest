@@ -50,8 +50,7 @@ const Practice: React.FC = () => {
         page,
         limit: 20,
         difficulty: difficulty || undefined,
-        topics: selectedTopics.length > 0 ? JSON.stringify(selectedTopics) : undefined,
-        search: searchTerm || undefined
+        topics: selectedTopics.length > 0 ? JSON.stringify(selectedTopics) : undefined
       };
 
       const response = await problemsAPI.getAll(params);
@@ -70,7 +69,7 @@ const Practice: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  }, [page, difficulty, selectedTopics, searchTerm]);
+  }, [page]); // Only depend on page, not on filters
 
   const fetchAvailableTopics = useCallback(async () => {
     try {
@@ -91,9 +90,10 @@ const Practice: React.FC = () => {
     fetchAvailableTopics();
   }, [fetchAvailableTopics]);
 
+  // Initial load only - no auto-search
   useEffect(() => {
     fetchProblems();
-  }, [fetchProblems]);
+  }, []); // Empty dependency array - only runs once on mount
 
   // Timer functionality
   useEffect(() => {
@@ -139,7 +139,7 @@ const Practice: React.FC = () => {
         return [...prev, topicName];
       }
     });
-    setPage(1); // Reset to first page when filters change
+    // Don't auto-search - user must click search button
   };
 
   const clearFilters = () => {
@@ -147,6 +147,7 @@ const Practice: React.FC = () => {
     setSelectedTopics([]);
     setSearchTerm('');
     setPage(1);
+    // Don't auto-search - user must click search button
   };
 
   const getDifficultyColor = (difficulty: string) => {
@@ -158,6 +159,40 @@ const Practice: React.FC = () => {
     }
   };
 
+  const handleSearch = useCallback(() => {
+    setPage(1);
+    // Create a new fetch function with current searchTerm
+    const searchWithCurrentTerm = async () => {
+      try {
+        setLoading(true);
+        const params: any = {
+          page: 1,
+          limit: 20,
+          difficulty: difficulty || undefined,
+          topics: selectedTopics.length > 0 ? JSON.stringify(selectedTopics) : undefined,
+          search: searchTerm || undefined
+        };
+
+        const response = await problemsAPI.getAll(params);
+        
+        if (response.data.success) {
+          setProblems(response.data.problems);
+          setTotalPages(response.data.pagination.pages);
+          setTotalProblems(response.data.pagination.total);
+          setError(null);
+        } else {
+          setError('Failed to fetch problems');
+        }
+      } catch (err: any) {
+        console.error('Error fetching problems:', err);
+        setError('Failed to fetch problems');
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    searchWithCurrentTerm();
+  }, [difficulty, selectedTopics, searchTerm]);
 
 
   if (loading && problems.length === 0) {
@@ -201,13 +236,26 @@ const Practice: React.FC = () => {
             {/* Search */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">Search</label>
-              <input
-                type="text"
-                placeholder="Search practice problems..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-primary-500 focus:border-primary-500"
-              />
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  placeholder="Search practice problems..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
+                  className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-primary-500 focus:border-primary-500"
+                />
+                <button
+                  onClick={handleSearch}
+                  disabled={loading}
+                  className="px-4 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {loading ? '⏳' : '🔍'}
+                </button>
+              </div>
+              <p className="text-xs text-gray-500 mt-1">
+                Press Enter or click the search button to search
+              </p>
             </div>
 
             {/* Difficulty */}
