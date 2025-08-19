@@ -252,13 +252,4 @@ CREATE INDEX IF NOT EXISTS idx_user_sessions_user ON user_sessions(user_id);
 CREATE INDEX IF NOT EXISTS idx_notifications_user ON notifications(user_id);
 CREATE INDEX IF NOT EXISTS idx_notifications_read ON notifications(is_read);
 
--- Insert default system settings
-INSERT OR IGNORE INTO system_settings (setting_key, setting_value, description) VALUES
-('judge0_api_url', 'https://judge0-ce.p.rapidapi.com', 'Judge0 API endpoint'),
-('judge0_api_key', '', 'Judge0 API key for RapidAPI'),
-('max_submission_length', '50000', 'Maximum characters allowed in code submission'),
-('default_time_limit', '1000', 'Default time limit in milliseconds'),
-('default_memory_limit', '256', 'Default memory limit in MB'),
-('contest_registration_deadline_hours', '24', 'Hours before contest start when registration closes'),
-('max_concurrent_submissions', '5', 'Maximum concurrent submissions per user'),
-('rate_limit_submissions_per_minute', '10', 'Rate limit for submissions per minute per user');
+
