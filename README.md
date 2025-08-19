@@ -33,18 +33,44 @@ git clone <your-repo-url>
 cd coding-platform
 ```
 
-### 2. Run Setup
+### 2. Run Setup (Two-Step Process)
+
+#### Step 1: Initial Setup
 ```bash
 npm run setup
 ```
 
 This will:
-- Install all dependencies
-- Create the database
-- Populate with initial data
-- Set up environment variables
+- ✅ Create the database and tables
+- ✅ Populate with your problems, test cases, and contests
+- ✅ Create environment file template
+- ✅ Set up basic structure
 
-### 3. Start the Platform
+#### Step 2: Add Your Configuration
+1. **Add your `.env` file** to the root directory with your actual API keys and configuration
+2. **Run final setup** to import system settings:
+```bash
+npm run setup-final
+```
+
+This will:
+- ✅ Import your custom system settings and branding
+- ✅ Configure platform with your environment variables
+- ✅ Complete the platform setup
+
+### 3. Install Dependencies
+```bash
+# Install server dependencies
+cd server && npm install
+
+# Install client dependencies  
+cd ../client && npm install
+
+# Go back to root
+cd ..
+```
+
+### 4. Start the Platform
 ```bash
 npm run dev
 ```

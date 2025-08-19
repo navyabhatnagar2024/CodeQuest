@@ -18,18 +18,23 @@ class SetupManager {
             // 2. Initialize database and create tables
             await this.initializeDatabase();
             
-            // 3. Populate with sample data
-            await this.populateSampleData();
+            // 3. Populate with content data (excluding system settings)
+            await this.populateContentData();
             
             // 4. Create environment file
             await this.createEnvironmentFile();
             
-            console.log('\n✅ Setup completed successfully!');
+            console.log('\n✅ Step 1 Setup completed successfully!');
             console.log('\n📋 Next steps:');
-            console.log('1. cd server && npm install');
-            console.log('2. cd ../client && npm install');
-            console.log('3. cd .. && npm run dev');
+            console.log('1. Add your .env file to the root directory');
+            console.log('2. Run: npm run setup-final');
+            console.log('3. cd server && npm install');
+            console.log('4. cd ../client && npm install');
+            console.log('5. cd .. && npm run dev');
             console.log('\n🌐 The platform will be available at http://localhost:3000');
+            console.log('\n💡 Note: This is a two-step setup process to avoid conflicts.');
+            console.log('   Step 1: Database + Content ✅');
+            console.log('   Step 2: System Settings + Configuration (coming next)');
             
         } catch (error) {
             console.error('❌ Setup failed:', error);
@@ -67,13 +72,13 @@ class SetupManager {
         });
     }
 
-    async populateSampleData() {
-        console.log('🌱 Populating database with initial data...');
+    async populateContentData() {
+        console.log('🌱 Populating database with content data...');
         
         const initialDataPath = path.join(__dirname, 'server', 'database', 'initial_data.sql');
         
         if (fs.existsSync(initialDataPath)) {
-            // Import and run the initial data
+            // Import and run the initial data (content only - no system settings)
             const initialData = fs.readFileSync(initialDataPath, 'utf8');
             
             return new Promise((resolve, reject) => {
@@ -81,12 +86,16 @@ class SetupManager {
                 
                 db.exec(initialData, (err) => {
                     if (err) {
-                        console.error('❌ Error importing data:', err.message);
+                        console.error('❌ Error importing content data:', err.message);
                         reject(err);
                         return;
                     }
                     
-                    console.log('✅ Initial data populated from exported database');
+                    console.log('✅ Content data populated successfully');
+                    console.log('   - Users and admin accounts');
+                    console.log('   - Problems and test cases');
+                    console.log('   - Contests and competitions');
+                    console.log('   - LeetCode suggestions');
                     db.close();
                     resolve();
                 });
