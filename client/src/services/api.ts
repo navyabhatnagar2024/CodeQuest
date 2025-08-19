@@ -68,6 +68,12 @@ export const problemsAPI = {
   getTestCases: (id: string) => api.get(`/problems/${id}/test-cases`),
   submit: (id: string, data: { code: string; language: string }) =>
     api.post(`/problems/${id}/submit`, data),
+  test: (id: string, data: { code: string; language: string }) =>
+    api.post(`/problems/${id}/test`, data),
+  testWithLLM: (id: string, data: { code: string; language: string }) =>
+    api.post(`/problems/${id}/test-llm`, data),
+  run: (id: string, data: { code: string; language: string }) =>
+    api.post(`/problems/${id}/run`, data),
   delete: (id: string) => api.delete(`/admin/problems/${id}`),
   getAvailableTopics: () => api.get('/problems/topics/available'),
 };

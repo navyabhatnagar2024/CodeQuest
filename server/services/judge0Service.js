@@ -1,4 +1,5 @@
 const axios = require('axios');
+const llmService = require('./llmService');
 
 class Judge0Service {
     constructor() {
@@ -13,22 +14,7 @@ class Judge0Service {
             'cpp': 54,         // C++ (GCC 9.2.0)
             'java': 62,        // Java (OpenJDK 13.0.1)
             'python': 71,      // Python (3.8.1)
-            'javascript': 63,  // JavaScript (Node.js 12.14.0)
-            'ruby': 72,        // Ruby (2.7.0)
-            'csharp': 51,      // C# (Mono 6.6.0.161)
-            'go': 60,          // Go (1.13.5)
-            'rust': 73,        // Rust (1.40.0)
-            'swift': 83,       // Swift (5.2.3)
-            'php': 68,         // PHP (7.4.1)
-            'kotlin': 78,      // Kotlin (1.3.70)
-            'scala': 81,       // Scala (2.13.2)
-            'haskell': 61,     // Haskell (GHC 8.8.1)
-            'perl': 85,        // Perl (5.28.1)
-            'bash': 46,        // Bash (5.0.0)
-            'r': 80,           // R (4.0.0)
-            'dart': 87,        // Dart (2.7.0)
-            'elixir': 57,      // Elixir (1.9.4)
-            'clojure': 86      // Clojure (1.10.1)
+            'javascript': 63   // JavaScript (Node.js 12.14.0)
         };
     }
 
@@ -293,6 +279,143 @@ class Judge0Service {
             return results;
         } catch (error) {
             console.error('Error executing test cases:', error);
+            throw error;
+        }
+    }
+
+    /**
+     * Execute code against test cases with LLM interpretation
+     */
+    async executeTestCasesWithLLM(code, language, testCases, problemContext = '') {
+        try {
+            console.log('Starting test case execution with LLM interpretation...');
+            console.log('Language:', language);
+            console.log('Code length:', code.length);
+            console.log('Number of test cases:', testCases.length);
+            
+            // First, interpret all test cases using LLM
+            console.log('Interpreting test cases with LLM...');
+            const interpretedTestCases = await llmService.interpretTestCases(testCases, language, problemContext);
+            
+            console.log('LLM interpretation results:', interpretedTestCases);
+            
+            const results = [];
+            
+            for (let i = 0; i < testCases.length; i++) {
+                const testCase = testCases[i];
+                const interpretation = interpretedTestCases[i];
+                
+                try {
+                    console.log(`Processing test case ${testCase.id} with LLM interpretation:`, {
+                        original_input: testCase.input_data,
+                        interpreted_input: interpretation.formatted_input,
+                        expected_output: testCase.expected_output,
+                        is_sample: testCase.is_sample,
+                        interpretation_success: interpretation.success
+                    });
+                    
+                    // Use interpreted input if available, otherwise fallback to original
+                    const inputToUse = interpretation.success && interpretation.formatted_input 
+                        ? interpretation.formatted_input 
+                        : testCase.input_data;
+                    
+                    // Submit code with interpreted test case input
+                    const token = await this.submitCode(code, language, inputToUse);
+                    console.log(`Test case ${testCase.id} submitted, token:`, token);
+                    
+                    // Wait for completion
+                    const result = await this.waitForSubmission(token);
+                    console.log(`Test case ${testCase.id} completed:`, {
+                        status_id: result.status?.id,
+                        status_description: result.status?.description,
+                        stdout: result.stdout,
+                        stderr: result.stderr,
+                        compile_output: result.compile_output
+                    });
+                    
+                    // Check if execution was successful
+                    if (result.status && result.status.id === 3) { // Accepted
+                        const isCorrect = this.compareOutput(result.stdout, testCase.expected_output);
+                        
+                        results.push({
+                            testCase: testCase,
+                            status: isCorrect ? 'PASSED' : 'FAILED',
+                            output: result.stdout,
+                            expected: testCase.expected_output,
+                            executionTime: result.time,
+                            memory: result.memory,
+                            error: null,
+                            llmInterpretation: interpretation,
+                            usedInput: inputToUse
+                        });
+                    } else if (result.status && result.status.id === 4) { // Wrong Answer
+                        results.push({
+                            testCase: testCase,
+                            status: 'FAILED',
+                            output: result.stdout,
+                            expected: testCase.expected_output,
+                            executionTime: result.time,
+                            memory: result.memory,
+                            error: null,
+                            llmInterpretation: interpretation,
+                            usedInput: inputToUse
+                        });
+                    } else if (result.status && result.status.id === 5) { // Time Limit Exceeded
+                        results.push({
+                            testCase: testCase,
+                            status: 'TLE',
+                            output: null,
+                            expected: testCase.expected_output,
+                            executionTime: null,
+                            memory: null,
+                            error: 'Time Limit Exceeded',
+                            llmInterpretation: interpretation,
+                            usedInput: inputToUse
+                        });
+                    } else if (result.status && result.status.id === 6) { // Compilation Error
+                        results.push({
+                            testCase: testCase,
+                            status: 'CE',
+                            output: null,
+                            expected: testCase.expected_output,
+                            executionTime: null,
+                            memory: null,
+                            error: result.compile_output || 'Compilation Error',
+                            llmInterpretation: interpretation,
+                            usedInput: inputToUse
+                        });
+                    } else {
+                        results.push({
+                            testCase: testCase,
+                            status: 'ERROR',
+                            output: null,
+                            expected: testCase.expected_output,
+                            executionTime: null,
+                            memory: null,
+                            error: result.status?.description || 'Unknown Error',
+                            llmInterpretation: interpretation,
+                            usedInput: inputToUse
+                        });
+                    }
+                } catch (error) {
+                    results.push({
+                        testCase: testCase,
+                        status: 'ERROR',
+                        output: null,
+                        expected: testCase.expected_output,
+                        executionTime: null,
+                        memory: null,
+                        error: error.message,
+                        llmInterpretation: interpretation,
+                        usedInput: testCase.input_data
+                    });
+                }
+            }
+            
+            console.log('Test case execution with LLM completed. Results:', results);
+            return results;
+        } catch (error) {
+            console.error('Error executing test cases with LLM:', error);
             throw error;
         }
     }

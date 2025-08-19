@@ -11,6 +11,7 @@
     "install-all": "npm install && npm --prefix client install",
     "setup": "node setup.js",
     "setup-final": "node setup_final.js",
+    "setup-llm": "node setup_llm.js",
     "export-db": "node server/database/export_database.js",
     "test": "jest",
     "test:watch": "jest --watch"

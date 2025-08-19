@@ -22,6 +22,7 @@ const CodeEditor: React.FC<CodeEditorProps> = ({
 
   const getLanguageId = (language: string): string => {
     const languageMap: { [key: string]: string } = {
+      'c': 'c',
       'cpp': 'cpp',
       'java': 'java',
       'python': 'python',

@@ -36,7 +36,7 @@ const ProblemDetail: React.FC = () => {
   const [submitting, setSubmitting] = useState(false);
   const [submissionResult, setSubmissionResult] = useState<any>(null);
   const [testResults, setTestResults] = useState<any[]>([]);
-  const [testingCode, setTestingCode] = useState(false);
+  const [testingWithLLM, setTestingWithLLM] = useState(false);
   const [combinedResults, setCombinedResults] = useState<any>(null);
   const [rawOutput, setRawOutput] = useState<string>('');
 
@@ -50,22 +50,7 @@ const ProblemDetail: React.FC = () => {
     { id: 'cpp', name: 'C++', extension: '.cpp' },
     { id: 'java', name: 'Java', extension: '.java' },
     { id: 'python', name: 'Python', extension: '.py' },
-    { id: 'javascript', name: 'JavaScript', extension: '.js' },
-    { id: 'ruby', name: 'Ruby', extension: '.rb' },
-    { id: 'csharp', name: 'C#', extension: '.cs' },
-    { id: 'go', name: 'Go', extension: '.go' },
-    { id: 'rust', name: 'Rust', extension: '.rs' },
-    { id: 'swift', name: 'Swift', extension: '.swift' },
-    { id: 'php', name: 'PHP', extension: '.php' },
-    { id: 'kotlin', name: 'Kotlin', extension: '.kt' },
-    { id: 'scala', name: 'Scala', extension: '.scala' },
-    { id: 'haskell', name: 'Haskell', extension: '.hs' },
-    { id: 'perl', name: 'Perl', extension: '.pl' },
-    { id: 'bash', name: 'Bash', extension: '.sh' },
-    { id: 'r', name: 'R', extension: '.r' },
-    { id: 'dart', name: 'Dart', extension: '.dart' },
-    { id: 'elixir', name: 'Elixir', extension: '.ex' },
-    { id: 'clojure', name: 'Clojure', extension: '.clj' }
+    { id: 'javascript', name: 'JavaScript', extension: '.js' }
   ];
 
   // Timer functionality
@@ -186,14 +171,16 @@ const ProblemDetail: React.FC = () => {
     }
   };
 
-  const handleRunAndTestCode = async () => {
+
+
+  const handleRunAndTestWithLLM = async () => {
     if (!code.trim()) {
       alert('Please write some code before running');
       return;
     }
 
     try {
-      setTestingCode(true);
+      setTestingWithLLM(true);
       setTestResults([]);
       setCombinedResults(null);
 
@@ -223,10 +210,10 @@ const ProblemDetail: React.FC = () => {
         console.log('Run error:', runResult.error);
       }
 
-      // Then, test against test cases
-      console.log('Testing code against test cases...');
+      // Then, test against test cases with LLM interpretation
+      console.log('Testing code against test cases with LLM...');
       
-      const testResponse = await fetch(`http://localhost:5000/api/problems/${id}/test`, {
+      const testResponse = await fetch(`http://localhost:5000/api/problems/${id}/test-llm`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -242,9 +229,9 @@ const ProblemDetail: React.FC = () => {
       
       if (testResult.success) {
         setTestResults(testResult.results);
-        console.log('Test results:', testResult.results);
+        console.log('Test results with LLM:', testResult.results);
       } else {
-        console.log('Test failed:', testResult.error);
+        console.log('Test with LLM failed:', testResult.error);
         // If test fails, still show the raw output
         if (testResult.error === 'No test cases available') {
           console.log('No test cases available for this problem');
@@ -255,11 +242,12 @@ const ProblemDetail: React.FC = () => {
       setCombinedResults({
         rawOutput: runResult.success ? runResult.output : null,
         testResults: testResult.success ? testResult.results : [],
-        hasErrors: !runResult.success || (testResult.success === false && testResult.error && testResult.error !== 'No test cases available')
+        hasErrors: !runResult.success || (testResult.success === false && testResult.error && testResult.error !== 'No test cases available'),
+        llmEnabled: true
       });
       
     } catch (err: any) {
-      console.error('Run and test error:', err);
+      console.error('Run and test with LLM error:', err);
       setRawOutput(`Error: ${err.message}`);
       setCombinedResults({
         rawOutput: null,
@@ -268,7 +256,7 @@ const ProblemDetail: React.FC = () => {
         error: err.message
       });
     } finally {
-      setTestingCode(false);
+      setTestingWithLLM(false);
     }
   };
 
@@ -350,42 +338,7 @@ const ProblemDetail: React.FC = () => {
                 }}
               />
             </div>
-
-            {/* Constraints */}
-            {problem.constraints && problem.constraints.trim() !== '' && problem.constraints !== 'Standard constraints for easy level problems' && (
-              <div className="mt-8 pt-6 border-t border-gray-100">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">Constraints</h3>
-                <div 
-                  className="bg-gray-50 rounded-lg p-4 problem-content"
-                  dangerouslySetInnerHTML={{ __html: problem.constraints }}
-                />
-              </div>
-            )}
-
-            {/* Sample Test Cases */}
-            {testCases.filter(tc => tc.is_sample).length > 0 && (
-              <div className="mt-8 pt-6 border-t border-gray-100">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">Sample Test Cases</h3>
-                {testCases.filter(tc => tc.is_sample).map((testCase, index) => (
-                  <div key={testCase.id} className="bg-gray-50 rounded-lg p-4 mb-4 border border-gray-200">
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <h4 className="font-bold text-gray-900 mb-2 text-sm uppercase tracking-wide">Input {index + 1}</h4>
-                        <pre className="bg-gray-900 text-white p-3 rounded border text-sm overflow-x-auto font-mono">
-                          {testCase.input_data}
-                        </pre>
-                      </div>
-                      <div>
-                        <h4 className="font-bold text-gray-900 mb-2 text-sm uppercase tracking-wide">Expected Output</h4>
-                        <pre className="bg-gray-900 text-white p-3 rounded border text-sm overflow-x-auto font-mono">
-                          {testCase.expected_output}
-                        </pre>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
+            
           </div>
 
           {/* Code Editor */}
@@ -457,12 +410,12 @@ const ProblemDetail: React.FC = () => {
                 Clear
               </button>
               <button
-                onClick={handleRunAndTestCode}
-                disabled={testingCode}
+                onClick={handleRunAndTestWithLLM}
+                disabled={testingWithLLM}
                 className="px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg font-medium hover:from-blue-600 hover:to-blue-700 disabled:opacity-50 transition-all duration-200 shadow-sm"
-                title="Run code to see output and test against test cases"
+                title="Run code to see output and test against test cases with LLM interpretation"
               >
-                {testingCode ? 'Running & Testing...' : 'Run & Test Code'}
+                {testingWithLLM ? 'Running & Testing...' : 'Run & Test Code'}
               </button>
             </div>
 
@@ -494,6 +447,11 @@ const ProblemDetail: React.FC = () => {
                     <h3 className="text-lg font-semibold text-blue-900 mb-4 flex items-center">
                       <span className="mr-2">🧪</span>
                       Test Results
+                      {combinedResults.llmEnabled && (
+                        <span className="ml-2 px-2 py-1 bg-purple-100 text-purple-800 text-xs font-medium rounded-full border border-purple-200">
+                          🧠 LLM Enhanced
+                        </span>
+                      )}
                     </h3>
                     <div className="space-y-4">
                       {testResults.map((result, index) => (
@@ -509,12 +467,29 @@ const ProblemDetail: React.FC = () => {
                             </span>
                           </div>
                           
-                          <div className="grid grid-cols-2 gap-4 text-sm">
+                          <div className="grid grid-cols-3 gap-4 text-sm">
                             <div>
-                              <span className="font-medium text-gray-700 text-xs uppercase tracking-wide">Input:</span>
+                              <span className="font-medium text-gray-700 text-xs uppercase tracking-wide">Original Input:</span>
                               <pre className="mt-1 bg-gray-50 p-3 rounded border text-xs overflow-x-auto font-mono border-gray-200">
                                 {result.testCase.input_data}
                               </pre>
+                            </div>
+                            <div>
+                              <span className="font-medium text-gray-700 text-xs uppercase tracking-wide">Compiler Input:</span>
+                              <pre className="mt-1 bg-purple-50 p-3 rounded border text-xs overflow-x-auto font-mono border-purple-200">
+                                {result.usedInput || result.testCase.input_data}
+                              </pre>
+                              {result.llmInterpretation && result.llmInterpretation.success && (
+                                <div className="mt-2 p-2 bg-purple-100 border border-purple-300 rounded text-xs">
+                                  <div className="font-medium text-purple-800 mb-1">🧠 LLM Enhanced</div>
+                                  <div className="text-purple-700">
+                                    <div><strong>Format:</strong> {result.llmInterpretation.input_format}</div>
+                                    {result.llmInterpretation.language_specific_notes && (
+                                      <div><strong>Notes:</strong> {result.llmInterpretation.language_specific_notes}</div>
+                                    )}
+                                  </div>
+                                </div>
+                              )}
                             </div>
                             <div>
                               <span className="font-medium text-gray-700 text-xs uppercase tracking-wide">Expected Output:</span>

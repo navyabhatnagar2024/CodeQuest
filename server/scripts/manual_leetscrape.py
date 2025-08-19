@@ -8,6 +8,7 @@ import sqlite3
 import json
 import os
 from datetime import datetime
+import re
 
 def connect_to_database():
     """Connect to the SQLite database"""

@@ -13,6 +13,7 @@ require('dotenv').config();
 const database = require('./database/connection');
 const authService = require('./services/authService');
 const judge0Service = require('./services/judge0Service');
+const llmService = require('./services/llmService');
 const { 
     authenticateToken, 
     requireAdmin, 
@@ -89,13 +90,15 @@ app.get('/health', async (req, res) => {
     try {
         const dbHealth = await database.healthCheck();
         const judge0Health = await judge0Service.healthCheck();
+        const llmHealth = await llmService.healthCheck();
         
         res.json({
             status: 'healthy',
             timestamp: new Date().toISOString(),
             services: {
                 database: dbHealth ? 'healthy' : 'unhealthy',
-                judge0: judge0Health ? 'healthy' : 'unhealthy'
+                judge0: judge0Health ? 'healthy' : 'unhealthy',
+                llm: llmHealth ? 'healthy' : 'unhealthy'
             }
         });
     } catch (error) {

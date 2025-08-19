@@ -250,6 +250,78 @@ router.post('/:id/test', authenticateToken, async (req, res) => {
     }
 });
 
+// Test code against test cases with LLM interpretation
+router.post('/:id/test-llm', authenticateToken, async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { code, language } = req.body;
+
+        if (!code || !language) {
+            return res.status(400).json({
+                error: 'Missing required fields',
+                message: 'Code and language are required'
+            });
+        }
+
+        // Check if problem exists
+        const problem = await req.app.locals.database.get(
+            'SELECT * FROM problems WHERE id = ? AND is_active = 1',
+            [id]
+        );
+
+        if (!problem) {
+            return res.status(404).json({
+                error: 'Problem not found',
+                message: 'The requested problem does not exist'
+            });
+        }
+
+        // Get test cases for the problem
+        const testCases = await req.app.locals.database.all(
+            'SELECT * FROM test_cases WHERE problem_id = ? ORDER BY is_sample DESC, id ASC',
+            [id]
+        );
+
+        if (!testCases || testCases.length === 0) {
+            return res.status(400).json({
+                error: 'No test cases available',
+                message: 'This problem has no test cases to validate against'
+            });
+        }
+
+        console.log('Testing code against test cases with LLM interpretation...');
+        console.log('Language:', language);
+        console.log('Code length:', code.length);
+        console.log('Test cases:', testCases.length);
+
+        // Import Judge0 service
+        const judge0Service = require('../services/judge0Service');
+        
+        // Build problem context for LLM
+        const problemContext = `Problem: ${problem.title}\nDifficulty: ${problem.difficulty_level}\nDescription: ${problem.problem_statement}`;
+        
+        // Execute code against test cases with LLM interpretation
+        const executionResults = await judge0Service.executeTestCasesWithLLM(code, language, testCases, problemContext);
+        
+        console.log('Test execution with LLM completed. Results:', executionResults);
+
+        res.json({
+            success: true,
+            message: 'Code tested successfully with LLM interpretation',
+            results: executionResults,
+            llmEnabled: true
+        });
+
+    } catch (error) {
+        console.error('Test code with LLM error:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Failed to test code with LLM',
+            error: error.message
+        });
+    }
+});
+
 // Run code without test cases (for raw output)
 router.post('/:id/run', authenticateToken, async (req, res) => {
     try {
