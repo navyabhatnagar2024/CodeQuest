@@ -26,7 +26,7 @@ const Contests: React.FC = () => {
     try {
       setLoading(true);
       const response = await contestsAPI.getAll();
-      
+
       // Handle the correct API response structure
       if (response && response.data && response.data.success) {
         const contestsArray = response.data.contests || [];
@@ -105,7 +105,7 @@ const Contests: React.FC = () => {
           <div className="text-red-600 text-6xl mb-4">⚠️</div>
           <h2 className="text-2xl font-bold text-gray-800 mb-2">Error Loading Contests</h2>
           <p className="text-gray-600 mb-4">{error}</p>
-          <button 
+          <button
             onClick={fetchContests}
             className="bg-primary-600 text-white px-6 py-2 rounded-lg hover:bg-primary-700 transition-colors"
           >
@@ -117,7 +117,7 @@ const Contests: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">Programming Contests</h1>
@@ -135,11 +135,10 @@ const Contests: React.FC = () => {
             <button
               key={key}
               onClick={() => setFilter(key)}
-              className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-                filter === key
+              className={`px-4 py-2 rounded-lg font-medium transition-colors ${filter === key
                   ? 'bg-primary-600 text-white'
                   : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-300'
-              }`}
+                }`}
             >
               {label}
             </button>
@@ -163,7 +162,7 @@ const Contests: React.FC = () => {
                     {contest.status.charAt(0).toUpperCase() + contest.status.slice(1)}
                   </span>
                 </div>
-                
+
                 <p className="text-gray-600 text-sm mb-4 line-clamp-3">
                   {contest.description || 'No description available.'}
                 </p>

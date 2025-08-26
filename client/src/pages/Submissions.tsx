@@ -31,7 +31,7 @@ const Submissions: React.FC = () => {
       setLoading(true);
       // Fetch recent submissions
       const submissionsResponse = await submissionsAPI.getMySubmissions();
-      
+
       // Handle the correct API response structure
       if (submissionsResponse && submissionsResponse.data && submissionsResponse.data.success) {
         const submissionsArray = submissionsResponse.data.submissions || [];
@@ -174,7 +174,7 @@ const Submissions: React.FC = () => {
           <div className="text-red-600 text-6xl mb-4">⚠️</div>
           <h2 className="text-2xl font-bold text-gray-800 mb-2">Error Loading Submissions</h2>
           <p className="text-gray-600 mb-4">{error}</p>
-          <button 
+          <button
             onClick={fetchSubmissions}
             className="bg-primary-600 text-white px-6 py-2 rounded-lg hover:bg-primary-700 transition-colors"
           >
@@ -186,7 +186,7 @@ const Submissions: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">My Submissions</h1>
@@ -206,11 +206,10 @@ const Submissions: React.FC = () => {
             <button
               key={key}
               onClick={() => setFilter(key)}
-              className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-                filter === key
+              className={`px-4 py-2 rounded-lg font-medium transition-colors ${filter === key
                   ? 'bg-primary-600 text-white'
                   : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-300'
-              }`}
+                }`}
             >
               {label}
             </button>
@@ -318,11 +317,10 @@ const Submissions: React.FC = () => {
                 <button
                   key={page}
                   onClick={() => handlePageChange(page)}
-                  className={`px-3 py-2 border rounded-md text-sm font-medium ${
-                    currentPage === page
+                  className={`px-3 py-2 border rounded-md text-sm font-medium ${currentPage === page
                       ? 'bg-primary-600 text-white border-primary-600'
                       : 'border-gray-300 text-gray-700 bg-white hover:bg-gray-50'
-                  }`}
+                    }`}
                 >
                   {page}
                 </button>

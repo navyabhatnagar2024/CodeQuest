@@ -28,12 +28,12 @@ const Practice: React.FC = () => {
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [totalProblems, setTotalProblems] = useState(0);
-  
+
   // Filters
   const [difficulty, setDifficulty] = useState<string>('');
   const [selectedTopics, setSelectedTopics] = useState<string[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
-  
+
   // Available topics
   const [availableTopics, setAvailableTopics] = useState<Topic[]>([]);
   const [showTopicSelector, setShowTopicSelector] = useState(false);
@@ -54,7 +54,7 @@ const Practice: React.FC = () => {
       };
 
       const response = await problemsAPI.getAll(params);
-      
+
       if (response.data.success) {
         setProblems(response.data.problems);
         setTotalPages(response.data.pagination.pages);
@@ -174,7 +174,7 @@ const Practice: React.FC = () => {
         };
 
         const response = await problemsAPI.getAll(params);
-        
+
         if (response.data.success) {
           setProblems(response.data.problems);
           setTotalPages(response.data.pagination.pages);
@@ -190,7 +190,7 @@ const Practice: React.FC = () => {
         setLoading(false);
       }
     };
-    
+
     searchWithCurrentTerm();
   }, [difficulty, selectedTopics, searchTerm]);
 
@@ -210,7 +210,7 @@ const Practice: React.FC = () => {
           <div className="text-red-600 text-6xl mb-4">⚠️</div>
           <h2 className="text-2xl font-bold text-gray-800 mb-2">Error Loading Practice Problems</h2>
           <p className="text-gray-600 mb-4">{error}</p>
-          <button 
+          <button
             onClick={fetchProblems}
             className="bg-primary-600 text-white px-6 py-2 rounded-lg hover:bg-primary-700 transition-colors"
           >
@@ -222,7 +222,7 @@ const Practice: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="mb-8">
@@ -282,7 +282,7 @@ const Practice: React.FC = () => {
                 onClick={() => setShowTopicSelector(!showTopicSelector)}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-primary-500 focus:border-primary-500 text-left"
               >
-                {selectedTopics.length > 0 
+                {selectedTopics.length > 0
                   ? `${selectedTopics.length} topic(s) selected`
                   : 'Select topics...'
                 }
@@ -381,9 +381,8 @@ const Practice: React.FC = () => {
                       </div>
                     </td>
 
-                    <td className={`px-6 py-4 whitespace-nowrap ${
-                      activeTimer === problem.id ? 'bg-green-50' : ''
-                    }`}>
+                    <td className={`px-6 py-4 whitespace-nowrap ${activeTimer === problem.id ? 'bg-green-50' : ''
+                      }`}>
                       <div className="text-sm text-gray-500">
                         {problem.test_cases && problem.test_cases.length > 0 ? (
                           `${problem.test_cases.length} test case(s)`
@@ -434,15 +433,14 @@ const Practice: React.FC = () => {
                               }
                             }
                           }}
-                          title={activeTimer === problem.id 
-                            ? 'Continue solving with active timer' 
+                          title={activeTimer === problem.id
+                            ? 'Continue solving with active timer'
                             : 'Click to solve - you can choose to start a timer'
                           }
-                          className={`${
-                            activeTimer === problem.id 
-                              ? 'text-green-600 hover:text-green-900' 
+                          className={`${activeTimer === problem.id
+                              ? 'text-green-600 hover:text-green-900'
                               : 'text-primary-600 hover:text-primary-900'
-                          }`}
+                            }`}
                         >
                           {activeTimer === problem.id ? 'Continue' : 'Solve'}
                         </button>
@@ -486,11 +484,10 @@ const Practice: React.FC = () => {
                       <button
                         key={pageNum}
                         onClick={() => setPage(pageNum)}
-                        className={`relative inline-flex items-center px-4 py-2 border text-sm font-medium ${
-                          pageNum === page
+                        className={`relative inline-flex items-center px-4 py-2 border text-sm font-medium ${pageNum === page
                             ? 'z-10 bg-primary-50 border-primary-500 text-primary-600'
                             : 'bg-white border-gray-300 text-gray-500 hover:bg-gray-50'
-                        }`}
+                          }`}
                       >
                         {pageNum}
                       </button>

@@ -20,11 +20,11 @@ const Leaderboard: React.FC = () => {
     try {
       setLoading(true);
       const response = await usersAPI.getLeaderboard({ timeFrame });
-      
+
       if (response && response.data && response.data.success) {
         const usersArray = response.data.users || [];
         // Sort by problems solved (descending)
-        const sortedUsers = usersArray.sort((a: LeaderboardUser, b: LeaderboardUser) => 
+        const sortedUsers = usersArray.sort((a: LeaderboardUser, b: LeaderboardUser) =>
           (b.total_problems_solved || 0) - (a.total_problems_solved || 0)
         );
         setUsers(sortedUsers);
@@ -89,7 +89,7 @@ const Leaderboard: React.FC = () => {
           <div className="text-red-600 text-6xl mb-4">⚠️</div>
           <h2 className="text-2xl font-bold text-gray-800 mb-2">Error Loading Leaderboard</h2>
           <p className="text-gray-600 mb-4">{error}</p>
-          <button 
+          <button
             onClick={fetchLeaderboard}
             className="bg-primary-600 text-white px-6 py-2 rounded-lg hover:bg-primary-700 transition-colors"
           >
@@ -129,7 +129,7 @@ const Leaderboard: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="mb-8">
@@ -149,11 +149,10 @@ const Leaderboard: React.FC = () => {
                 <button
                   key={key}
                   onClick={() => setTimeFrame(key as 'all' | 'weekly' | 'monthly')}
-                  className={`py-2 px-1 border-b-2 font-medium text-sm ${
-                    timeFrame === key
+                  className={`py-2 px-1 border-b-2 font-medium text-sm ${timeFrame === key
                       ? 'border-primary-500 text-primary-600'
                       : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                  }`}
+                    }`}
                 >
                   {label}
                 </button>

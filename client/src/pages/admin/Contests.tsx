@@ -29,7 +29,7 @@ const AdminContests: React.FC = () => {
     try {
       setLoading(true);
       const response = await contestsAPI.getAll();
-      
+
       if (response && response.data && response.data.success) {
         const contestsArray = response.data.contests || [];
         setContests(contestsArray);
@@ -68,7 +68,7 @@ const AdminContests: React.FC = () => {
 
   const confirmDeleteContest = async () => {
     if (!deletingContest) return;
-    
+
     try {
       await contestsAPI.delete(deletingContest.id.toString());
       await fetchContests();
@@ -109,8 +109,8 @@ const AdminContests: React.FC = () => {
   };
 
   const getVisibilityColor = (isPublic: boolean) => {
-    return isPublic 
-      ? 'text-green-600 bg-green-100' 
+    return isPublic
+      ? 'text-green-600 bg-green-100'
       : 'text-purple-600 bg-purple-100';
   };
 
@@ -142,7 +142,7 @@ const AdminContests: React.FC = () => {
           <div className="text-red-600 text-6xl mb-4">⚠️</div>
           <h2 className="text-2xl font-bold text-gray-800 mb-2">Error Loading Contests</h2>
           <p className="text-gray-600 mb-4">{error}</p>
-          <button 
+          <button
             onClick={fetchContests}
             className="bg-primary-600 text-white px-6 py-2 rounded-lg hover:bg-primary-700 transition-colors"
           >
@@ -154,7 +154,7 @@ const AdminContests: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="mb-8">
@@ -163,7 +163,7 @@ const AdminContests: React.FC = () => {
               <h1 className="text-3xl font-bold text-gray-900 mb-2">Manage Contests</h1>
               <p className="text-gray-600">Create and manage programming contests</p>
             </div>
-            <button 
+            <button
               onClick={handleCreateContest}
               className="bg-primary-600 text-white px-6 py-3 rounded-lg hover:bg-primary-700 transition-colors"
             >
@@ -184,11 +184,10 @@ const AdminContests: React.FC = () => {
             <button
               key={key}
               onClick={() => setFilter(key)}
-              className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-                filter === key
+              className={`px-4 py-2 rounded-lg font-medium transition-colors ${filter === key
                   ? 'bg-primary-600 text-white'
                   : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-300'
-              }`}
+                }`}
             >
               {label}
             </button>
@@ -251,13 +250,13 @@ const AdminContests: React.FC = () => {
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                           <div className="flex space-x-2">
-                            <button 
+                            <button
                               onClick={() => handleEditContest(contest)}
                               className="text-primary-600 hover:text-primary-900"
                             >
                               Edit
                             </button>
-                            <button 
+                            <button
                               onClick={() => handleDeleteContest(contest)}
                               className="text-red-600 hover:text-red-900"
                             >

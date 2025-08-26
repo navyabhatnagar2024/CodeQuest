@@ -74,7 +74,7 @@ const AdminProblems: React.FC = () => {
         difficulty: filter !== 'all' ? filter : undefined,
         status: filter === 'active' ? 'active' : filter === 'inactive' ? 'inactive' : undefined
       });
-      
+
       if (response && response.data && response.data.success) {
         setProblems(response.data.problems || []);
         setError(null);
@@ -142,12 +142,12 @@ const AdminProblems: React.FC = () => {
     try {
       setSubmitting(true);
       const newActiveState = !problem.is_active;
-      
+
       await adminAPI.updateProblem(problem.id.toString(), {
         ...problem,
         is_active: newActiveState
       });
-      
+
       await fetchProblems();
       alert(`Problem ${newActiveState ? 'activated' : 'deactivated'} successfully`);
     } catch (err: any) {
@@ -164,11 +164,11 @@ const AdminProblems: React.FC = () => {
 
   const confirmDeleteProblem = async () => {
     if (!deletingProblem) return;
-    
+
     try {
       setSubmitting(true);
       const response = await adminAPI.deleteProblem(deletingProblem.id.toString());
-      
+
       // Check if deletion was successful
       if (response.data.success) {
         await fetchProblems();
@@ -189,10 +189,10 @@ const AdminProblems: React.FC = () => {
 
   const handleCreateSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     try {
       setSubmitting(true);
-      
+
       if (showEditModal && editingProblem) {
         // Update existing problem
         await adminAPI.updateProblem(editingProblem.id.toString(), createForm);
@@ -203,7 +203,7 @@ const AdminProblems: React.FC = () => {
         await adminAPI.createProblem(createForm);
         setShowCreateModal(false);
       }
-      
+
       // Reset form
       setCreateForm({
         title: '',
@@ -219,10 +219,10 @@ const AdminProblems: React.FC = () => {
         memory_limit_mb: 256,
         topic_tags: []
       });
-      
+
       // Refresh problems list
       await fetchProblems();
-      
+
     } catch (err: any) {
       console.error('Error saving problem:', err);
       alert(err.response?.data?.message || 'Failed to save problem');
@@ -256,8 +256,8 @@ const AdminProblems: React.FC = () => {
   };
 
   const getStatusColor = (isActive: boolean) => {
-    return isActive 
-      ? 'text-green-600 bg-green-100' 
+    return isActive
+      ? 'text-green-600 bg-green-100'
       : 'text-red-600 bg-red-100';
   };
 
@@ -301,7 +301,7 @@ const AdminProblems: React.FC = () => {
           <div className="text-red-600 text-6xl mb-4">⚠️</div>
           <h2 className="text-2xl font-bold text-gray-800 mb-2">Error Loading Problems</h2>
           <p className="text-gray-600 mb-4">{error}</p>
-          <button 
+          <button
             onClick={fetchProblems}
             className="bg-primary-600 text-white px-6 py-2 rounded-lg hover:bg-primary-700 transition-colors"
           >
@@ -313,7 +313,7 @@ const AdminProblems: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="mb-8">
@@ -323,13 +323,13 @@ const AdminProblems: React.FC = () => {
               <p className="text-gray-600">Create, edit, and manage coding problems</p>
             </div>
             <div className="flex gap-3">
-              <button 
+              <button
                 onClick={handleShowLeetCodeModal}
                 className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors"
               >
                 + Add More (LeetCode)
               </button>
-              <button 
+              <button
                 onClick={handleCreateProblem}
                 className="bg-primary-600 text-white px-6 py-3 rounded-lg hover:bg-primary-700 transition-colors"
               >
@@ -382,11 +382,10 @@ const AdminProblems: React.FC = () => {
               <button
                 key={key}
                 onClick={() => setFilter(key)}
-                className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-                  filter === key
+                className={`px-4 py-2 rounded-lg font-medium transition-colors ${filter === key
                     ? 'bg-primary-600 text-white'
                     : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-300'
-                }`}
+                  }`}
               >
                 {label}
               </button>
@@ -459,20 +458,20 @@ const AdminProblems: React.FC = () => {
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                         <div className="flex space-x-2">
-                          <button 
+                          <button
                             onClick={() => handleEditProblem(problem)}
                             className="text-primary-600 hover:text-primary-900"
                           >
                             Edit
                           </button>
-                                                     <button 
-                             onClick={() => handleDeactivateProblem(problem)}
-                             className={problem.is_active ? "text-yellow-600 hover:text-yellow-900" : "text-green-600 hover:text-green-900"}
-                             title={problem.is_active ? "Deactivate problem (hide from users)" : "Activate problem (show to users)"}
-                           >
-                             {problem.is_active ? 'Deactivate' : 'Activate'}
-                           </button>
-                          <button 
+                          <button
+                            onClick={() => handleDeactivateProblem(problem)}
+                            className={problem.is_active ? "text-yellow-600 hover:text-yellow-900" : "text-green-600 hover:text-green-900"}
+                            title={problem.is_active ? "Deactivate problem (hide from users)" : "Activate problem (show to users)"}
+                          >
+                            {problem.is_active ? 'Deactivate' : 'Activate'}
+                          </button>
+                          <button
                             onClick={() => handleDeleteProblem(problem)}
                             className="text-red-600 hover:text-red-900"
                           >
@@ -512,7 +511,7 @@ const AdminProblems: React.FC = () => {
                 <h3 className="text-lg font-medium text-gray-900 mb-4">
                   {showEditModal ? 'Edit Problem' : 'Create New Problem'}
                 </h3>
-                
+
                 <form onSubmit={handleCreateSubmit} className="space-y-4">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
@@ -525,7 +524,7 @@ const AdminProblems: React.FC = () => {
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
                       />
                     </div>
-                    
+
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">Difficulty *</label>
                       <select
@@ -577,7 +576,7 @@ const AdminProblems: React.FC = () => {
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
                       />
                     </div>
-                    
+
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">Memory Limit (MB) *</label>
                       <input
@@ -643,7 +642,7 @@ const AdminProblems: React.FC = () => {
           </div>
         )}
 
-                {/* LeetCode Suggestions Modal */}
+        {/* LeetCode Suggestions Modal */}
         <LeetCodeSuggestionsModal
           isOpen={showLeetCodeModal}
           onClose={() => setShowLeetCodeModal(false)}
@@ -658,9 +657,9 @@ const AdminProblems: React.FC = () => {
                 <h3 className="text-lg font-medium text-gray-900 mb-4">Delete Problem</h3>
                 <p className="text-sm text-gray-500 mb-4">Are you sure you want to delete "{deletingProblem.title}"?</p>
                 <p className="text-sm text-red-500 mb-4">This action cannot be undone.</p>
-                                 <p className="text-xs text-red-500 mb-4">
-                   ⚠️ WARNING: This will permanently delete the problem and ALL related data including test cases and submissions!
-                 </p>
+                <p className="text-xs text-red-500 mb-4">
+                  ⚠️ WARNING: This will permanently delete the problem and ALL related data including test cases and submissions!
+                </p>
                 <div className="flex justify-end space-x-3">
                   <button
                     onClick={() => setShowDeleteModal(false)}

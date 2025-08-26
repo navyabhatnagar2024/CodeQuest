@@ -27,7 +27,7 @@ const AdminUsers: React.FC = () => {
   const [editingUser, setEditingUser] = useState<AdminUser | null>(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deletingUser, setDeletingUser] = useState<AdminUser | null>(null);
-  
+
   // Form states for add/edit
   const [formData, setFormData] = useState({
     username: '',
@@ -41,7 +41,7 @@ const AdminUsers: React.FC = () => {
     try {
       setLoading(true);
       const response = await adminAPI.getAllUsers();
-      
+
       if (response && response.data && response.data.success) {
         const usersArray = response.data.users || [];
         setUsers(usersArray);
@@ -107,12 +107,12 @@ const AdminUsers: React.FC = () => {
         alert('Please fill in all required fields');
         return;
       }
-      
+
       if (!editingUser && !formData.password.trim()) {
         alert('Password is required for new users');
         return;
       }
-      
+
       if (editingUser) {
         // Update existing user
         const updateData: any = {
@@ -121,11 +121,11 @@ const AdminUsers: React.FC = () => {
           full_name: formData.full_name,
           is_admin: formData.is_admin
         };
-        
+
         if (formData.password) {
           updateData.password = formData.password;
         }
-        
+
         await adminAPI.updateUser(editingUser.id.toString(), updateData);
         setShowEditModal(false);
         setEditingUser(null);
@@ -134,7 +134,7 @@ const AdminUsers: React.FC = () => {
         await adminAPI.createUser(formData);
         setShowAddUserModal(false);
       }
-      
+
       await fetchUsers();
       setFormData({
         username: '',
@@ -151,7 +151,7 @@ const AdminUsers: React.FC = () => {
 
   const confirmDeleteUser = async () => {
     if (!deletingUser) return;
-    
+
     try {
       await adminAPI.deleteUser(deletingUser.id.toString());
       await fetchUsers();
@@ -167,13 +167,13 @@ const AdminUsers: React.FC = () => {
     // Apply search filter
     if (searchTerm) {
       const searchLower = searchTerm.toLowerCase();
-      const matchesSearch = 
+      const matchesSearch =
         user.username.toLowerCase().includes(searchLower) ||
         user.full_name.toLowerCase().includes(searchLower) ||
         user.email.toLowerCase().includes(searchLower);
       if (!matchesSearch) return false;
     }
-    
+
     // Apply role filter
     if (filter === 'all') return true;
     if (filter === 'admins') return user.is_admin;
@@ -182,8 +182,8 @@ const AdminUsers: React.FC = () => {
   });
 
   const getRoleColor = (isAdmin: boolean) => {
-    return isAdmin 
-      ? 'text-purple-600 bg-purple-100' 
+    return isAdmin
+      ? 'text-purple-600 bg-purple-100'
       : 'text-gray-600 bg-gray-100';
   };
 
@@ -213,7 +213,7 @@ const AdminUsers: React.FC = () => {
           <div className="text-red-600 text-6xl mb-4">⚠️</div>
           <h2 className="text-2xl font-bold text-gray-800 mb-2">Error Loading Users</h2>
           <p className="text-gray-600 mb-4">{error}</p>
-          <button 
+          <button
             onClick={fetchUsers}
             className="bg-primary-600 text-white px-6 py-2 rounded-lg hover:bg-primary-700 transition-colors"
           >
@@ -225,7 +225,7 @@ const AdminUsers: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="mb-8">
@@ -234,7 +234,7 @@ const AdminUsers: React.FC = () => {
               <h1 className="text-3xl font-bold text-gray-900 mb-2">Manage Users</h1>
               <p className="text-gray-600">View and manage user accounts</p>
             </div>
-            <button 
+            <button
               onClick={handleAddUser}
               className="bg-primary-600 text-white px-6 py-3 rounded-lg hover:bg-primary-700 transition-colors"
             >
@@ -272,11 +272,10 @@ const AdminUsers: React.FC = () => {
               <button
                 key={key}
                 onClick={() => setFilter(key)}
-                className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-                  filter === key
+                className={`px-4 py-2 rounded-lg font-medium transition-colors ${filter === key
                     ? 'bg-primary-600 text-white'
                     : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-300'
-                }`}
+                  }`}
               >
                 {label}
               </button>
@@ -340,13 +339,13 @@ const AdminUsers: React.FC = () => {
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                         <div className="flex space-x-2">
-                          <button 
+                          <button
                             onClick={() => handleEditUser(user)}
                             className="text-primary-600 hover:text-primary-900"
                           >
                             Edit
                           </button>
-                          <button 
+                          <button
                             onClick={() => handleDeleteUser(user)}
                             className="text-red-600 hover:text-red-900"
                           >

@@ -7,24 +7,42 @@
   html {
     font-family: 'Inter', system-ui, sans-serif;
   }
-  
+
   body {
-    @apply bg-gray-50 text-gray-900;
+    @apply bg-white text-black dark:bg-black dark:text-white;
+  }
+
+  html,
+  body,
+  #root,
+  .App,
+  * {
+    background-color: white;
+    color: black;
+  }
+
+  html.dark,
+  body.dark,
+  #root.dark,
+  .App.dark,
+  .dark * {
+    background-color: black !important;
+    color: white !important;
   }
 }
 
 /* Custom component classes */
 @layer components {
   .btn-primary {
-    @apply bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700 transition-colors;
+    @apply bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700 transition-colors dark:bg-primary-500 dark:text-gray-100 dark:hover:bg-primary-600;
   }
-  
+
   .btn-secondary {
-    @apply bg-white text-gray-700 px-4 py-2 rounded-lg border border-gray-300 hover:bg-gray-50 transition-colors;
+    @apply bg-white text-gray-700 px-4 py-2 rounded-lg border border-gray-300 hover:bg-gray-50 transition-colors dark:bg-gray-800 dark:text-gray-100 dark:border-gray-700 dark:hover:bg-gray-700;
   }
-  
+
   .card {
-    @apply bg-white rounded-lg shadow-sm border border-gray-200 p-6;
+    @apply bg-white rounded-lg shadow-sm border border-gray-200 p-6 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-100;
   }
 }
 
@@ -36,14 +54,14 @@
     -webkit-box-orient: vertical;
     overflow: hidden;
   }
-  
+
   .line-clamp-3 {
     display: -webkit-box;
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
   }
-  
+
   .text-balance {
     text-wrap: balance;
   }
@@ -51,11 +69,11 @@
 
 /* Monaco Editor custom styles */
 .monaco-editor {
-  @apply rounded-md border border-gray-300;
+  @apply rounded-md border border-gray-300 dark:border-gray-700 dark:bg-gray-900;
 }
 
 .monaco-editor .margin {
-  @apply bg-gray-50;
+  @apply bg-gray-50 dark:bg-gray-900;
 }
 
 /* Code syntax highlighting */
@@ -81,54 +99,54 @@
 
 /* Problem content HTML rendering */
 .problem-content {
-  @apply text-gray-900 leading-relaxed;
+  @apply leading-relaxed text-gray-900 dark:text-gray-100;
 }
 
 .problem-content p {
-  @apply mb-4 text-gray-900;
+  @apply mb-4 text-gray-900 dark:text-gray-100;
 }
 
 .problem-content code {
-  @apply bg-gray-100 text-gray-900 px-2 py-1 rounded text-sm font-mono border font-semibold;
+  @apply bg-gray-100 text-gray-900 px-2 py-1 rounded text-sm font-mono border font-semibold dark:bg-gray-900 dark:text-gray-100 dark:border-gray-700;
 }
 
 .problem-content pre {
-  @apply bg-gray-50 border border-gray-200 p-4 rounded-lg overflow-x-auto text-sm mb-4 font-mono text-gray-900;
+  @apply bg-gray-50 border border-gray-200 p-4 rounded-lg overflow-x-auto text-sm mb-4 font-mono text-gray-900 dark:bg-gray-900 dark:border-gray-700 dark:text-gray-100;
 }
 
 .problem-content ul {
-  @apply list-disc list-inside mb-4 space-y-2 ml-4 text-gray-900;
+  @apply list-disc list-inside mb-4 space-y-2 ml-4 text-gray-900 dark:text-gray-100;
 }
 
 .problem-content li {
-  @apply text-gray-900;
+  @apply text-gray-900 dark:text-gray-100;
 }
 
 .problem-content strong {
-  @apply font-bold text-gray-900;
+  @apply font-bold text-gray-900 dark:text-gray-100;
 }
 
 .problem-content .example {
-  @apply bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4;
+  @apply bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4 dark:bg-blue-900 dark:border-blue-700 dark:text-blue-100;
 }
 
 /* Specific styling for LeetCode-style examples */
 .problem-content p strong.example {
-  @apply inline-block bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium mb-3;
+  @apply inline-block bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium mb-3 dark:bg-blue-900 dark:text-blue-100;
 }
 
 /* Style for input/output blocks */
 .problem-content pre strong {
-  @apply text-blue-600 font-bold;
+  @apply text-blue-600 font-bold dark:text-blue-300;
 }
 
 /* Better spacing for lists */
 .problem-content ol {
-  @apply list-decimal list-inside mb-4 space-y-2 ml-4 text-gray-900;
+  @apply list-decimal list-inside mb-4 space-y-2 ml-4 text-gray-900 dark:text-gray-100;
 }
 
 .problem-content ol li {
-  @apply text-gray-900;
+  @apply text-gray-900 dark:text-gray-100;
 }
 
 /* Style for explanation text */
@@ -151,12 +169,12 @@
 /* Style for the numbered list items in explanations */
 .problem-content ol li,
 .problem-content ul li {
-  @apply text-gray-900 font-normal;
+  @apply text-gray-900 font-normal dark:text-gray-100;
 }
 
 /* Ensure all text in problem content is readable */
 .problem-content * {
-  @apply text-gray-900;
+  @apply text-gray-900 dark:text-gray-100;
 }
 
 /* Target specific LeetCode HTML patterns */
@@ -172,18 +190,18 @@
 .problem-content p,
 .problem-content div,
 .problem-content span {
-  @apply text-gray-900;
+  @apply text-gray-900 dark:text-gray-100;
 }
 
 /* Style for the explanation lists specifically */
 .problem-content ol,
 .problem-content ul {
-  @apply text-gray-900;
+  @apply text-gray-900 dark:text-gray-100;
 }
 
 .problem-content ol li,
 .problem-content ul li {
-  @apply text-gray-900 font-normal;
+  @apply text-gray-900 font-normal dark:text-gray-100;
 }
 
 /* Force override any inline styles from LeetCode HTML */
@@ -197,14 +215,39 @@
 .problem-content ul,
 .problem-content ol,
 .problem-content li {
-  color: #111827 !important; /* text-gray-900 */
+  color: #111827 !important;
+  /* text-gray-900 */
 }
+
+@media (prefers-color-scheme: dark) {
+
+  .problem-content p,
+  .problem-content div,
+  .problem-content span,
+  .problem-content strong,
+  .problem-content em,
+  .problem-content code,
+  .problem-content pre,
+  .problem-content ul,
+  .problem-content ol,
+  .problem-content li {
+    color: #f3f4f6 !important;
+    /* text-gray-100 */
+  }
+}
+
 
 /* Make strong elements (like Input:, Output:, Explanation:) extra bold */
 .problem-content strong {
   font-weight: 700 !important;
-  color: #111827 !important;
 }
+
+@media (prefers-color-scheme: dark) {
+  .problem-content strong {
+    color: #f3f4f6 !important;
+  }
+}
+
 
 /* Ensure list items are readable */
 .problem-content li {
@@ -212,8 +255,21 @@
   font-weight: 400 !important;
 }
 
+@media (prefers-color-scheme: dark) {
+  .problem-content li {
+    color: #f3f4f6 !important;
+  }
+}
+
+
 /* Make sure paragraphs are readable */
 .problem-content p {
   color: #111827 !important;
   font-weight: 400 !important;
+}
+
+@media (prefers-color-scheme: dark) {
+  .problem-content p {
+    color: #f3f4f6 !important;
+  }
 }
