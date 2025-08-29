@@ -357,44 +357,71 @@ console.log("Area:", circleArea);  // Missing closing parenthesis
   }, []);
 
   const renderMainMenu = () => (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
-      {/* Header */}
-      <div className="text-center py-12">
-        <div className="flex items-center justify-center mb-6">
-          <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center mr-4">
-            <TrophyIcon className="h-8 w-8 text-white" />
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 dark:from-gray-900 dark:via-slate-800 dark:to-gray-900">
+      {/* Enhanced Header */}
+      <div className="relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-r from-blue-600/10 to-purple-600/10"></div>
+        <div className="relative text-center py-16 px-4">
+          <div className="flex items-center justify-center mb-8">
+            <div className="relative">
+              <div className="w-20 h-20 bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 rounded-2xl flex items-center justify-center shadow-2xl transform rotate-3 hover:rotate-0 transition-transform duration-300">
+                <TrophyIcon className="h-10 w-10 text-white" />
+              </div>
+              <div className="absolute -top-2 -right-2 w-6 h-6 bg-yellow-400 rounded-full flex items-center justify-center">
+                <span className="text-xs font-bold text-white">✨</span>
+              </div>
+            </div>
+            <div className="ml-6">
+              <h1 className="text-6xl font-black bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent leading-tight">
+                Code Learning Hub
+              </h1>
+              <div className="h-1 w-24 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full mx-auto mt-2"></div>
+            </div>
           </div>
-          <h1 className="text-5xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-            Code Learning Hub
-          </h1>
+          <p className="text-xl text-gray-700 dark:text-gray-200 max-w-3xl mx-auto leading-relaxed font-medium">
+            Master programming through interactive games, AI assistance, peer coaching, and comprehensive flashcards
+          </p>
+          <div className="mt-8 flex justify-center space-x-4">
+            <div className="flex items-center text-sm text-gray-600 dark:text-gray-300">
+              <div className="w-2 h-2 bg-green-500 rounded-full mr-2 animate-pulse"></div>
+              Live Learning
+            </div>
+            <div className="flex items-center text-sm text-gray-600 dark:text-gray-300">
+              <div className="w-2 h-2 bg-blue-500 rounded-full mr-2 animate-pulse"></div>
+              AI Powered
+            </div>
+            <div className="flex items-center text-sm text-gray-600 dark:text-gray-300">
+              <div className="w-2 h-2 bg-purple-500 rounded-full mr-2 animate-pulse"></div>
+              Community Driven
+            </div>
+          </div>
         </div>
-        <p className="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-          Master programming through interactive games, AI assistance, peer coaching, and comprehensive flashcards
-        </p>
       </div>
 
-      {/* Navigation Tabs */}
-      <div className="max-w-6xl mx-auto px-4 mb-8">
-        <div className="flex flex-wrap justify-center gap-4 mb-8">
-          {[
-            { id: 'games', label: 'Games', icon: PlayIcon, color: 'bg-blue-500' },
-            { id: 'flashcards', label: 'Flashcards', icon: BookOpenIcon, color: 'bg-green-500' },
-            { id: 'ai_assistant', label: 'AI Assistant', icon: SparklesIcon, color: 'bg-purple-500' },
-            { id: 'peer_coaching', label: 'Peer Coaching', icon: UserGroupIcon, color: 'bg-orange-500' }
-          ].map((tab) => (
-            <button
-              key={tab.id}
-              onClick={() => setCurrentView(tab.id as any)}
-              className={`flex items-center px-6 py-3 rounded-full font-semibold transition-all transform hover:scale-105 ${
-                currentView === tab.id
-                  ? `${tab.color} text-white shadow-lg`
-                  : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:shadow-md'
-              }`}
-            >
-              <tab.icon className="h-5 w-5 mr-2" />
-              {tab.label}
-            </button>
-          ))}
+      {/* Enhanced Navigation Tabs */}
+      <div className="max-w-7xl mx-auto px-6 mb-12">
+        <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl p-2 shadow-xl border border-gray-200/50 dark:border-gray-700/50">
+          <div className="flex flex-wrap justify-center gap-2">
+            {[
+              { id: 'games', label: 'Games', icon: PlayIcon, color: 'from-blue-500 to-blue-600', bgColor: 'bg-blue-500' },
+              { id: 'flashcards', label: 'Flashcards', icon: BookOpenIcon, color: 'from-green-500 to-green-600', bgColor: 'bg-green-500' },
+              { id: 'ai_assistant', label: 'AI Assistant', icon: SparklesIcon, color: 'from-purple-500 to-purple-600', bgColor: 'bg-purple-500' },
+              { id: 'peer_coaching', label: 'Peer Coaching', icon: UserGroupIcon, color: 'from-orange-500 to-orange-600', bgColor: 'bg-orange-500' }
+            ].map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => setCurrentView(tab.id as any)}
+                className={`flex items-center px-8 py-4 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 hover:shadow-lg ${
+                  currentView === tab.id
+                    ? `bg-gradient-to-r ${tab.color} text-white shadow-lg scale-105`
+                    : 'bg-white/50 dark:bg-gray-700/50 text-gray-700 dark:text-gray-300 hover:bg-white dark:hover:bg-gray-700'
+                }`}
+              >
+                <tab.icon className={`h-6 w-6 mr-3 ${currentView === tab.id ? 'animate-pulse' : ''}`} />
+                <span className="text-lg">{tab.label}</span>
+              </button>
+            ))}
+          </div>
         </div>
       </div>
 
