@@ -446,6 +446,26 @@ class Judge0Service {
     getLanguageId(language) {
         return this.languageMap[language.toLowerCase()];
     }
+
+    /**
+     * Health check for the service
+     */
+    async healthCheck() {
+        try {
+            // Try to make a simple request to check if the service is available
+            const response = await axios.get(`${this.baseURL}/languages`, {
+                timeout: 5000,
+                headers: this.useRapidAPI && this.apiKey ? {
+                    'X-RapidAPI-Key': this.apiKey,
+                    'X-RapidAPI-Host': 'judge0-ce.p.rapidapi.com'
+                } : {}
+            });
+            return response.status === 200;
+        } catch (error) {
+            console.warn('Judge0 health check failed:', error.message);
+            return false;
+        }
+    }
 }
 
 module.exports = new Judge0Service();

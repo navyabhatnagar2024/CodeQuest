@@ -150,4 +150,53 @@ export const adminAPI = {
   updateSystemSettings: (data: any) => api.put('/admin/settings', data),
 };
 
+// Gamification API
+export const gamificationAPI = {
+  // Stats and XP
+  getStats: () => api.get('/gamification/stats'),
+  getLeaderboard: (params?: { limit?: number }) => api.get('/gamification/leaderboard', { params }),
+  getXPHistory: (params?: { limit?: number }) => api.get('/gamification/xp-history', { params }),
+  
+  // Achievements and Badges
+  getAchievements: () => api.get('/gamification/achievements'),
+  getBadges: () => api.get('/gamification/badges'),
+  
+  // Daily Challenges
+  getDailyChallenge: (params?: { date?: string }) => api.get('/gamification/daily-challenge', { params }),
+  completeDailyChallenge: (challengeId: number) => api.post(`/gamification/daily-challenge/${challengeId}/complete`),
+  
+  // Code Reviews
+  createCodeReview: (submissionId: number, reviewText: string, rating: number) =>
+    api.post('/gamification/code-reviews', { submissionId, reviewText, rating }),
+  getCodeReviews: (submissionId: number) => api.get(`/gamification/submissions/${submissionId}/reviews`),
+  voteCodeReview: (reviewId: number, helpful: boolean) =>
+    api.post(`/gamification/code-reviews/${reviewId}/vote`, { helpful }),
+  
+  // Mentorship
+  requestMentorship: (mentorId: number, problemId: number, requestMessage: string) =>
+    api.post('/gamification/mentorship/request', { mentorId, problemId, requestMessage }),
+  getMentorshipRequests: (params?: { role?: 'mentor' | 'mentee'; status?: string }) =>
+    api.get('/gamification/mentorship/requests', { params }),
+  updateMentorshipRequest: (requestId: number, data: { status: string; responseMessage?: string }) =>
+    api.patch(`/gamification/mentorship/requests/${requestId}`, data),
+  
+  // Study Groups
+  createStudyGroup: (name: string, description: string, maxMembers: number, isPublic: boolean) =>
+    api.post('/gamification/study-groups', { name, description, maxMembers, isPublic }),
+  getStudyGroups: (params?: { type?: 'my' | 'public' | 'joined' }) =>
+    api.get('/gamification/study-groups', { params }),
+  getStudyGroupDetails: (groupId: number) => api.get(`/gamification/study-groups/${groupId}`),
+  joinStudyGroup: (groupId: number) => api.post(`/gamification/study-groups/${groupId}/join`),
+  createStudySession: (groupId: number, data: any) =>
+    api.post(`/gamification/study-groups/${groupId}/sessions`, data),
+  joinStudySession: (sessionId: number) => api.post(`/gamification/study-sessions/${sessionId}/join`),
+  
+  // Initialize user XP (internal use)
+  initializeUserXP: () => api.post('/gamification/initialize-xp'),
+  
+  // Add XP
+  addXP: (amount: number, type: string, description: string) =>
+    api.post('/gamification/add-xp', { amount, type, description }),
+};
+
 export default api;

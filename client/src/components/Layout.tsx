@@ -12,6 +12,7 @@ import {
   XMarkIcon,
   ChartBarIcon,
   UsersIcon,
+  PuzzlePieceIcon,
 } from '@heroicons/react/24/outline';
 
 interface LayoutProps {
@@ -33,6 +34,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   const navigation = [
     { name: 'Dashboard', href: '/', icon: HomeIcon },
     { name: 'Practice', href: '/practice', icon: CodeBracketIcon },
+    { name: 'Code Games', href: '/code-games', icon: PuzzlePieceIcon },
     { name: 'Contests', href: '/contests', icon: TrophyIcon },
     { name: 'Leaderboard', href: '/leaderboard', icon: ChartBarIcon },
     { name: 'Submissions', href: '/submissions', icon: CodeBracketIcon },

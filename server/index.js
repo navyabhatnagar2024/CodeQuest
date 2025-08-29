@@ -30,6 +30,7 @@ const submissionRoutes = require('./routes/submissions');
 const contestRoutes = require('./routes/contests');
 const userRoutes = require('./routes/users');
 const adminRoutes = require('./routes/admin');
+const gamificationRoutes = require('./routes/gamification');
 
 const app = express();
 const server = http.createServer(app);
@@ -117,6 +118,7 @@ app.use('/api/submissions', submissionRoutes);
 app.use('/api/contests', contestRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/gamification', gamificationRoutes);
 
 // Serve static files from React build
 if (process.env.NODE_ENV === 'production') {

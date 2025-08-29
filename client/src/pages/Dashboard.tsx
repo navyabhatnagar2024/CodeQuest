@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { usersAPI, submissionsAPI } from '../services/api';
+import GamifiedDashboard from '../components/GamifiedDashboard';
 
 interface UserStats {
   total_problems_solved: number;
@@ -158,6 +159,9 @@ const Dashboard: React.FC = () => {
           </h1>
           <p className="text-gray-600 dark:text-gray-300">Here's your competitive programming progress</p>
         </div>
+
+        {/* Gamified Dashboard */}
+        <GamifiedDashboard />
 
         {/* Statistics Grid */}
         {stats && (

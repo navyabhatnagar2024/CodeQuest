@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
+import { GamificationProvider } from './contexts/GamificationContext';
 import Layout from './components/Layout';
 import Login from './pages/Login';
 import Register from './pages/Register';
@@ -12,6 +13,7 @@ import ContestDetail from './pages/ContestDetail';
 import Leaderboard from './pages/Leaderboard';
 import Submissions from './pages/Submissions';
 import Profile from './pages/Profile';
+import CodeGames from './pages/CodeGames';
 import AdminDashboard from './pages/admin/Dashboard';
 import AdminProblems from './pages/admin/Problems';
 import AdminContests from './pages/admin/Contests';
@@ -84,6 +86,16 @@ const AppRoutes: React.FC = () => {
             <ProtectedRoute>
               <Layout>
                 <Practice />
+              </Layout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/code-games"
+          element={
+            <ProtectedRoute>
+              <Layout>
+                <CodeGames />
               </Layout>
             </ProtectedRoute>
           }
@@ -201,7 +213,9 @@ const AppRoutes: React.FC = () => {
 const App: React.FC = () => {
   return (
     <AuthProvider>
-      <AppRoutes />
+      <GamificationProvider>
+        <AppRoutes />
+      </GamificationProvider>
     </AuthProvider>
   );
 };
