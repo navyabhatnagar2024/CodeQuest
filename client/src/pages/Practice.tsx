@@ -214,7 +214,7 @@ const Practice: React.FC = () => {
   if (loading && problems.length === 0) {
     return (
       <div className="flex justify-center items-center min-h-screen">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary-600"></div>
+        <div className="loading-spinner"></div>
       </div>
     );
   }
@@ -223,13 +223,14 @@ const Practice: React.FC = () => {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <div className="text-red-600 text-6xl mb-4">⚠️</div>
-          <h2 className="text-2xl font-bold text-gray-800 mb-2">Error Loading Practice Problems</h2>
-          <p className="text-gray-600 mb-4">{error}</p>
+          <div className="text-6xl mb-4">😔</div>
+          <h2 className="text-2xl font-bold text-white mb-2">Error Loading Practice Problems</h2>
+          <p className="text-purple-200 mb-4">{error}</p>
           <button
             onClick={fetchProblems}
-            className="bg-primary-600 text-white px-6 py-2 rounded-lg hover:bg-primary-700 transition-colors"
+            className="btn-primary inline-flex items-center glow-purple hover-lift"
           >
+            <span className="mr-2">🔄</span>
             Try Again
           </button>
         </div>
@@ -238,54 +239,63 @@ const Practice: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-8">
+    <div className="min-h-screen py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Practice Problems</h1>
-          <p className="text-gray-600">Solve problems from LeetCode to improve your skills</p>
+        <div className="gamified-card border-b border-purple-200 mb-8">
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-3xl font-bold text-white mb-2">💻 Practice Problems</h1>
+              <p className="text-purple-200">Sharpen your coding skills with our curated collection of problems</p>
+            </div>
+            <div className="flex items-center space-x-4">
+              <div className="xp-counter">
+                <div className="text-sm text-purple-200">Total Problems</div>
+                <div className="text-2xl font-bold">{totalProblems}</div>
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* Filters */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
+        <div className="gamified-card mb-6">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {/* Search */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Search</label>
+              <label className="block text-sm font-medium text-purple-200 mb-2">🔍 Search</label>
               <div className="flex gap-2">
                 <input
                   type="text"
                   placeholder="Search practice problems..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  // onKeyPress={(e) => e.key === 'Enter' && handleSearch()} // not needed ad using debounce, kept for future need
-                  className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-primary-500 focus:border-primary-500"
+                  className="flex-1 px-3 py-2 border border-purple-300/30 rounded-md focus:outline-none focus:ring-purple-500 focus:border-purple-500 bg-purple-500/10 text-white placeholder-purple-300"
                 />
                 <button
                   onClick={handleSearch}
                   disabled={loading}
-                  className="px-4 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="px-4 py-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-md hover:from-purple-600 hover:to-pink-600 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 transition-all duration-300 transform hover:scale-105 glow-purple disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {loading ? '⏳' : '🔍'}
                 </button>
               </div>
-              <p className="text-xs text-gray-500 mt-1">
+              <p className="text-xs text-purple-300 mt-1">
                 Press Enter or click the search button to search
               </p>
             </div>
 
             {/* Difficulty */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Difficulty</label>
+              <label className="block text-sm font-medium text-purple-200 mb-2">🎯 Difficulty</label>
               <select
                 value={difficulty}
                 onChange={(e) => setDifficulty(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-primary-500 focus:border-primary-500"
+                className="w-full px-3 py-2 border border-purple-300/30 rounded-md focus:outline-none focus:ring-purple-500 focus:border-purple-500 bg-purple-500/10 text-white"
               >
                 <option value="">All Difficulties</option>
-                <option value="Easy">Easy</option>
-                <option value="Medium">Medium</option>
-                <option value="Hard">Hard</option>
+                <option value="Easy">🌱 Easy</option>
+                <option value="Medium">⚡ Medium</option>
+                <option value="Hard">🚀 Hard</option>
               </select>
             </div>
 

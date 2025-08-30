@@ -1,7 +1,7 @@
 {
-  "name": "competitive-programming-platform",
+  "name": "codequest-platform",
   "version": "1.0.0",
-  "description": "A comprehensive competitive programming platform with real-time contests and code execution",
+  "description": "CodeQuest - A comprehensive interactive coding platform with gamification, real-time contests, and collaborative learning features",
   "main": "server/index.js",
   "scripts": {
     "dev": "concurrently \"npm run server\" \"npm run client\"",
@@ -17,14 +17,18 @@
     "test:watch": "jest --watch"
   },
   "keywords": [
+    "codequest",
+    "coding-platform",
+    "gamification",
     "competitive-programming",
     "leetcode",
     "codeforces",
     "judge0",
     "contests",
-    "real-time"
+    "real-time",
+    "collaborative-learning"
   ],
-  "author": "Competitive Programming Platform",
+  "author": "CodeQuest Platform",
   "license": "MIT",
   "dependencies": {
     "axios": "^1.6.2",

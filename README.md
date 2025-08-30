@@ -1,228 +1,173 @@
-# 🚀 Competitive Programming Platform
+# 🚀 CodeQuest - Interactive Coding Platform
 
-A comprehensive competitive programming platform with real-time contests, code execution, and LeetCode integration.
+**CodeQuest** is a comprehensive, gamified coding platform designed to make learning programming engaging, interactive, and collaborative. Built with modern web technologies, it combines competitive programming, interactive learning games, and social features to create an immersive coding experience.
 
 ## ✨ Features
 
-- **🏆 Real-time Contests** - Create and participate in coding competitions
-- **💻 Code Execution** - Run code in multiple programming languages using Judge0
-- **📚 Problem Library** - Extensive collection of coding problems
-- **🔍 LeetCode Integration** - Import problems directly from LeetCode
-- **📊 Leaderboards** - Track performance and rankings
-- **👥 User Management** - User registration, authentication, and profiles
-- **📱 Responsive UI** - Modern, mobile-friendly interface
+### 🎮 Gamification System
+- **XP & Leveling**: Earn experience points and level up as you code
+- **Achievements & Badges**: Unlock achievements for completing challenges
+- **Activity Streaks**: Maintain daily coding habits with streak tracking
+- **Leaderboards**: Compete with other coders on global and topic-specific leaderboards
+
+### 💻 Interactive Learning
+- **Code Games**: Fun, educational games like Syntax Hunt, Code Golf, and Memory Match
+- **Practice Problems**: Extensive problem library with multiple difficulty levels
+- **Real-time Code Execution**: Run code instantly with Judge0 integration
+- **AI Programming Assistant**: Get help and explanations from AI
+
+### 🏆 Competitive Programming
+- **Live Contests**: Participate in real-time coding competitions
+- **Problem Categories**: Problems organized by difficulty and topic
+- **Performance Analytics**: Track your progress and improvement over time
+
+### 👥 Collaborative Features
+- **Study Groups**: Join topic-specific learning groups (Graph Theory, Dynamic Programming, etc.)
+- **Peer Coaching**: Learn from top performers and help others
+- **Code Reviews**: Collaborative code improvement and learning
+- **Study Sessions**: Group learning and problem-solving sessions
+
+### 🎨 Modern UI/UX
+- **Responsive Design**: Works seamlessly on all devices
+- **Beautiful Gradients**: Custom color palette with smooth transitions
+- **Interactive Elements**: Hover effects, animations, and smooth transitions
+- **Dark Theme**: Easy on the eyes for extended coding sessions
 
 ## 🛠️ Tech Stack
 
-- **Frontend**: React + TypeScript + Tailwind CSS
-- **Backend**: Node.js + Express + Socket.io
-- **Database**: SQLite
-- **Code Execution**: Judge0 API
-- **Authentication**: JWT
-- **Real-time**: Socket.io
+### Frontend
+- **React 19** - Modern React with hooks and context
+- **TypeScript** - Type-safe development
+- **Tailwind CSS** - Utility-first CSS framework
+- **Heroicons** - Beautiful SVG icons
+- **React Router** - Client-side routing
 
-## 🚀 Quick Start
+### Backend
+- **Node.js** - JavaScript runtime
+- **Express.js** - Web application framework
+- **SQLite** - Lightweight database
+- **JWT** - Authentication and authorization
+- **Socket.io** - Real-time communication
+
+### External Services
+- **Judge0** - Code execution and testing
+- **LLM Integration** - AI-powered programming assistance
+
+## 🚀 Getting Started
 
 ### Prerequisites
-- Node.js (v16 or higher)
+- Node.js 16+ 
 - npm or yarn
 
-### 1. Clone the Repository
-```bash
-git clone <your-repo-url>
-cd coding-platform
-```
+### Installation
 
-### 2. Run Setup (Two-Step Process)
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/navyabhatnagar2024/CodeX.git
+   cd CodeX
+   ```
 
-#### Step 1: Initial Setup
-```bash
-npm run setup
-```
+2. **Install dependencies**
+   ```bash
+   npm run install-all
+   ```
 
-This will:
-- ✅ Create the database and tables
-- ✅ Populate with your problems, test cases, and contests
-- ✅ Create environment file template
-- ✅ Set up basic structure
+3. **Set up the database**
+   ```bash
+   npm run setup
+   ```
 
-#### Step 2: Add Your Configuration
-1. **Add your `.env` file** to the root directory with your actual API keys and configuration
-2. **Run final setup** to import system settings:
-```bash
-npm run setup-final
-```
+4. **Start the development servers**
+   ```bash
+   npm run dev
+   ```
 
-This will:
-- ✅ Import your custom system settings and branding
-- ✅ Configure platform with your environment variables
-- ✅ Complete the platform setup
+5. **Access the application**
+   - Frontend: http://localhost:3000
+   - Backend: http://localhost:5000
 
-### 3. Install Dependencies
-```bash
-# Install server dependencies
-cd server && npm install
-
-# Install client dependencies  
-cd ../client && npm install
-
-# Go back to root
-cd ..
-```
-
-### 4. Start the Platform
-```bash
-npm run dev
-```
-
-The platform will be available at:
-- **Frontend**: http://localhost:3000
-- **Backend**: http://localhost:5000
-
-### 4. Access Admin Panel
-- **Username**: admin
-- **Password**: admin123
+### Default Admin Account
+- **Username**: `admin`
+- **Password**: `admin123`
 
 ## 📁 Project Structure
 
 ```
-coding-platform/
+Coding-Platform/
 ├── client/                 # React frontend
 │   ├── src/
-│   │   ├── components/    # Reusable components
+│   │   ├── components/    # Reusable UI components
 │   │   ├── pages/         # Page components
-│   │   ├── services/      # API services
-│   │   └── contexts/      # React contexts
-│   └── package.json
+│   │   ├── contexts/      # React contexts
+│   │   └── services/      # API services
 ├── server/                 # Node.js backend
-│   ├── database/          # Database files
 │   ├── routes/            # API routes
 │   ├── services/          # Business logic
-│   └── package.json
-├── setup.js               # Setup script
-└── package.json           # Root package.json
+│   ├── database/          # Database setup and migrations
+│   └── middleware/        # Express middleware
+└── docs/                  # Documentation
 ```
+
+## 🎯 Key Components
+
+- **Dashboard**: Personalized overview with progress tracking
+- **Practice**: Problem library with filtering and search
+- **Code Games**: Interactive learning games
+- **Contests**: Live programming competitions
+- **Study Groups**: Collaborative learning spaces
+- **Profile**: User settings and achievements
+- **Leaderboard**: Global and topic-specific rankings
 
 ## 🔧 Configuration
 
-### Environment Variables
-Create a `.env` file in the root directory:
+The platform can be configured through environment variables:
 
 ```env
-# Judge0 API Configuration
-JUDGE0_API_KEY=your_judge0_api_key
-JUDGE0_API_HOST=judge0-ce.p.rapidapi.com
-JUDGE0_API_URL=https://judge0-ce.p.rapidapi.com
+# Server Configuration
+PORT=5000
+NODE_ENV=development
 
-# JWT Configuration
-JWT_SECRET=your-super-secret-jwt-key
+# Database
+DATABASE_PATH=./database.sqlite
 
-# Database Configuration
-DATABASE_PATH=./server/database/coding_platform.db
+# JWT
+JWT_SECRET=your-secret-key
+
+# External Services
+JUDGE0_URL=https://judge0-ce.p.rapidapi.com
+LLM_API_KEY=your-llm-api-key
 ```
-
-### Judge0 API Setup
-1. Sign up at [RapidAPI](https://rapidapi.com)
-2. Subscribe to [Judge0 CE](https://rapidapi.com/judge0-official/api/judge0-ce)
-3. Get your API key and add it to `.env`
-
-## 📊 Database Setup
-
-The platform uses SQLite for simplicity. The database is automatically created with:
-
-- **Users table** - User accounts and profiles
-- **Problems table** - Coding problems and descriptions
-- **Test cases table** - Problem test cases
-- **Contests table** - Contest information
-- **Submissions table** - User code submissions
-- **LeetCode suggestions** - Imported LeetCode problems
-
-## 🎯 Adding Problems
-
-### From LeetCode
-1. Go to Admin Panel → Problems → LeetCode Suggestions
-2. Browse available problems
-3. Click "Add Problem" to import with test cases
-
-### Manually
-1. Go to Admin Panel → Problems → Add Problem
-2. Fill in problem details
-3. Add test cases manually
-
-## 🏃‍♂️ Running Code
-
-The platform supports multiple programming languages:
-
-- **Python** (3.8+)
-- **JavaScript** (Node.js)
-- **Java** (OpenJDK 13)
-- **C/C++** (GCC 9.2)
-- **And many more...**
-
-Code execution is handled by Judge0 API with:
-- Real-time compilation and execution
-- Test case validation
-- Performance metrics (time, memory)
-- Error handling and debugging
-
-## 🧪 Testing
-
-```bash
-# Run all tests
-npm test
-
-# Run tests in watch mode
-npm run test:watch
-
-# Run specific test files
-npm test -- --testPathPattern=auth
-```
-
-## 📝 API Documentation
-
-### Authentication
-- `POST /api/auth/register` - User registration
-- `POST /api/auth/login` - User login
-- `GET /api/auth/profile` - Get user profile
-
-### Problems
-- `GET /api/problems` - List all problems
-- `GET /api/problems/:id` - Get problem details
-- `POST /api/problems/:id/submit` - Submit solution
-- `POST /api/problems/:id/test` - Test code against test cases
-
-### Contests
-- `GET /api/contests` - List all contests
-- `POST /api/contests/:id/register` - Register for contest
-- `GET /api/contests/:id/leaderboard` - Get contest leaderboard
 
 ## 🤝 Contributing
 
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+We welcome contributions! Please see our contributing guidelines for details on:
+
+- Code style and standards
+- Pull request process
+- Development setup
+- Testing requirements
 
 ## 📄 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 🆘 Support
-
-If you encounter any issues:
-
-1. Check the [Issues](https://github.com/yourusername/coding-platform/issues) page
-2. Create a new issue with detailed information
-3. Include error logs and steps to reproduce
-
 ## 🙏 Acknowledgments
 
-- [Judge0](https://judge0.com) - Code execution service
-- [LeetCode](https://leetcode.com) - Problem database
-- [Tailwind CSS](https://tailwindcss.com) - CSS framework
-- [React](https://reactjs.org) - Frontend library
+- **Judge0** for code execution services
+- **Tailwind CSS** for the beautiful UI framework
+- **React Team** for the amazing frontend library
+- **Express.js** for the robust backend framework
+
+## 📞 Support
+
+If you have questions or need help:
+
+- Create an issue on GitHub
+- Check our documentation
+- Join our community discussions
 
 ---
 
-**Happy Coding! 🎉**
+**Made with ❤️ by the CodeQuest Team**
+
+*Transform your coding journey with gamification, collaboration, and interactive learning!*

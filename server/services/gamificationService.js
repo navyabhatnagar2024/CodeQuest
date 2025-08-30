@@ -402,6 +402,9 @@ class GamificationService {
 
     async getLeaderboard(timeFrame = 'all', limit = 50) {
         try {
+            // Ensure all users have XP records
+            await this.ensureAllUsersHaveXP();
+            
             let dateFilter = '';
             let params = [];
 
@@ -414,11 +417,12 @@ class GamificationService {
             const query = `
                 SELECT 
                     u.username,
+                    u.full_name,
                     ux.current_level,
                     ux.current_xp,
                     ux.total_xp,
                     ux.streak_days,
-                    (SELECT COUNT(*) FROM user_achievements ua WHERE ua.user_id = u.id) as achievement_count
+                    COALESCE((SELECT COUNT(*) FROM user_achievements ua WHERE ua.user_id = u.id), 0) as achievements_count
                 FROM users u
                 JOIN user_xp ux ON u.id = ux.user_id
                 ${dateFilter}
@@ -431,11 +435,36 @@ class GamificationService {
 
             return leaderboard.map((user, index) => ({
                 rank: index + 1,
-                ...user
+                username: user.username,
+                full_name: user.full_name || user.username,
+                current_level: user.current_level || 0,
+                current_xp: user.current_xp || 0,
+                total_xp: user.total_xp || 0,
+                streak_days: user.streak_days || 0,
+                achievements_count: user.achievements_count || 0
             }));
         } catch (error) {
             console.error('Error getting leaderboard:', error);
             throw error;
+        }
+    }
+
+    async ensureAllUsersHaveXP() {
+        try {
+            // Get all users who don't have XP records
+            const usersWithoutXP = await db.all(`
+                SELECT u.id FROM users u 
+                LEFT JOIN user_xp ux ON u.id = ux.user_id 
+                WHERE ux.user_id IS NULL
+            `);
+            
+            // Initialize XP for users who don't have it
+            for (const user of usersWithoutXP) {
+                await this.initializeUserXP(user.id);
+            }
+        } catch (error) {
+            console.error('Error ensuring all users have XP:', error);
+            // Don't throw error, just log it
         }
     }
 

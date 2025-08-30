@@ -125,23 +125,24 @@ const Dashboard: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center min-h-screen bg-gray-50 dark:bg-gray-900">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary-600 dark:border-primary-400"></div>
+      <div className="flex justify-center items-center min-h-screen">
+        <div className="loading-spinner"></div>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900">
+      <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <div className="text-red-600 dark:text-red-400 text-6xl mb-4">⚠️</div>
-          <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-100 mb-2">Error Loading Dashboard</h2>
-          <p className="text-gray-600 dark:text-gray-300 mb-4">{error}</p>
+          <div className="text-6xl mb-4">😔</div>
+          <h2 className="text-2xl font-bold text-white mb-2">Error Loading Dashboard</h2>
+          <p className="text-purple-200 mb-4">{error}</p>
           <button
             onClick={fetchDashboardData}
-            className="bg-primary-600 text-white px-6 py-2 rounded-lg hover:bg-primary-700 transition-colors dark:bg-primary-700 dark:hover:bg-primary-800"
+            className="btn-primary inline-flex items-center glow-purple hover-lift"
           >
+            <span className="mr-2">🔄</span>
             Try Again
           </button>
         </div>
@@ -150,14 +151,22 @@ const Dashboard: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-8">
+    <div className="min-h-screen py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Welcome Header */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6 mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">
-            Welcome back, {user?.username}!
-          </h1>
-          <p className="text-gray-600 dark:text-gray-300">Here's your competitive programming progress</p>
+        <div className="gamified-card border-b border-purple-200 mb-8">
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-3xl font-bold text-white mb-2">🎉 Welcome back, {user?.username}!</h1>
+              <p className="text-purple-200">Here's your competitive programming progress</p>
+            </div>
+            <div className="flex items-center space-x-4">
+              <div className="xp-counter">
+                <div className="text-sm text-purple-200">Current Rank</div>
+                <div className="text-2xl font-bold">#{stats?.rank || 1}</div>
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* Gamified Dashboard */}
@@ -166,58 +175,58 @@ const Dashboard: React.FC = () => {
         {/* Statistics Grid */}
         {stats && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+            <div className="interactive-card hover-lift">
               <div className="flex items-center">
-                <div className="p-3 rounded-full bg-blue-100 text-blue-600 dark:bg-blue-900 dark:text-blue-200">
+                <div className="p-3 rounded-full bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg">
                   <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                 </div>
                 <div className="ml-4">
-                  <p className="text-sm font-medium text-gray-600 dark:text-gray-300">Problems Solved</p>
-                  <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">{stats.total_problems_solved}</p>
+                  <p className="text-sm font-medium text-purple-200">Problems Solved</p>
+                  <p className="text-2xl font-bold text-white">{stats.total_problems_solved}</p>
                 </div>
               </div>
             </div>
 
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+            <div className="interactive-card hover-lift">
               <div className="flex items-center">
-                <div className="p-3 rounded-full bg-green-100 text-green-600 dark:bg-green-900 dark:text-green-200">
+                <div className="p-3 rounded-full bg-gradient-to-r from-green-500 to-green-600 text-white shadow-lg">
                   <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
                   </svg>
                 </div>
                 <div className="ml-4">
-                  <p className="text-sm font-medium text-gray-600 dark:text-gray-300">Total Submissions</p>
-                  <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">{stats.total_submissions}</p>
+                  <p className="text-sm font-medium text-purple-200">Total Submissions</p>
+                  <p className="text-2xl font-bold text-white">{stats.total_submissions}</p>
                 </div>
               </div>
             </div>
 
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+            <div className="interactive-card hover-lift">
               <div className="flex items-center">
-                <div className="p-3 rounded-full bg-purple-100 text-purple-600 dark:bg-purple-900 dark:text-purple-200">
+                <div className="p-3 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg">
                   <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
                   </svg>
                 </div>
                 <div className="ml-4">
-                  <p className="text-sm font-medium text-gray-600 dark:text-gray-300">Accuracy</p>
-                  <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">{stats.accuracy_percentage}%</p>
+                  <p className="text-sm font-medium text-purple-200">Accuracy</p>
+                  <p className="text-2xl font-bold text-white">{stats.accuracy_percentage}%</p>
                 </div>
               </div>
             </div>
 
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+            <div className="interactive-card hover-lift">
               <div className="flex items-center">
-                <div className="p-3 rounded-full bg-yellow-100 text-yellow-600 dark:bg-yellow-900 dark:text-yellow-200">
+                <div className="p-3 rounded-full bg-gradient-to-r from-yellow-500 to-orange-500 text-white shadow-lg">
                   <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                   </svg>
                 </div>
                 <div className="ml-4">
-                  <p className="text-sm font-medium text-gray-600 dark:text-gray-300">Rank</p>
-                  <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">{stats.rank}</p>
+                  <p className="text-sm font-medium text-purple-200">Rank</p>
+                  <p className="text-2xl font-bold text-white">{stats.rank}</p>
                 </div>
               </div>
             </div>
@@ -225,36 +234,43 @@ const Dashboard: React.FC = () => {
         )}
 
         {/* Quick Actions */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6 mb-8">
-          <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-4">Quick Actions</h2>
+        <div className="gamified-card mb-8">
+          <h2 className="text-xl font-semibold text-white mb-4 flex items-center">
+            <span className="mr-2">⚡</span>
+            Quick Actions
+          </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <Link
               to="/practice"
-              className="flex items-center p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:border-primary-300 hover:bg-primary-50 dark:hover:border-primary-700 dark:hover:bg-primary-900 transition-colors"
+              className="interactive-card hover-lift p-4"
             >
-              <div className="p-2 rounded-full bg-blue-100 text-blue-600 dark:bg-blue-900 dark:text-blue-200 mr-3">
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
-                </svg>
-              </div>
-              <div>
-                <h3 className="font-medium text-gray-900 dark:text-gray-100">Practice Problems</h3>
-                <p className="text-sm text-gray-600 dark:text-gray-300">Solve coding challenges</p>
+              <div className="flex items-center">
+                <div className="p-2 rounded-full bg-gradient-to-r from-blue-500 to-blue-600 text-white mr-3 shadow-lg">
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                  </svg>
+                </div>
+                <div>
+                  <h3 className="font-medium text-white">Practice Problems</h3>
+                  <p className="text-sm text-purple-200">Solve coding challenges</p>
+                </div>
               </div>
             </Link>
 
             <Link
               to="/contests"
-              className="flex items-center p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:border-primary-300 hover:bg-primary-50 dark:hover:border-primary-700 dark:hover:bg-primary-900 transition-colors"
+              className="interactive-card hover-lift p-4"
             >
-              <div className="p-2 rounded-full bg-green-100 text-green-600 dark:bg-green-900 dark:text-green-200 mr-3">
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12z" />
-                </svg>
-              </div>
-              <div>
-                <h3 className="font-medium text-gray-900 dark:text-gray-100">Join Contests</h3>
-                <p className="text-sm text-gray-600 dark:text-gray-300">Compete with others</p>
+              <div className="flex items-center">
+                <div className="p-2 rounded-full bg-gradient-to-r from-green-500 to-green-600 text-white mr-3 shadow-lg">
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12z" />
+                  </svg>
+                </div>
+                <div>
+                  <h3 className="font-medium text-white">Join Contests</h3>
+                  <p className="text-sm text-purple-200">Compete with others</p>
+                </div>
               </div>
             </Link>
 

@@ -3,7 +3,7 @@
 const fs = require('fs');
 const path = require('path');
 
-console.log('🧠 Setting up LLM Integration for Coding Platform\n');
+console.log('🧠 Setting up LLM Integration for CodeQuest Platform\n');
 
 // Check if .env file exists
 const envPath = path.join(__dirname, '.env');

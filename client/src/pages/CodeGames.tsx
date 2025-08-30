@@ -357,42 +357,43 @@ console.log("Area:", circleArea);  // Missing closing parenthesis
   }, []);
 
   const renderMainMenu = () => (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 dark:from-gray-900 dark:via-slate-800 dark:to-gray-900">
+    <div className="min-h-screen">
       {/* Enhanced Header */}
       <div className="relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-blue-600/10 to-purple-600/10"></div>
-        <div className="relative text-center py-16 px-4">
-          <div className="flex items-center justify-center mb-8">
-            <div className="relative">
-              <div className="w-20 h-20 bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 rounded-2xl flex items-center justify-center shadow-2xl transform rotate-3 hover:rotate-0 transition-transform duration-300">
-                <TrophyIcon className="h-10 w-10 text-white" />
+        <div className="gamified-card border-b border-purple-200 mb-8">
+          <div className="text-center py-16 px-4">
+            <div className="flex items-center justify-center mb-8">
+              <div className="relative">
+                <div className="w-20 h-20 bg-gradient-to-r from-purple-500 to-pink-500 rounded-2xl flex items-center justify-center shadow-2xl transform rotate-3 hover:rotate-0 transition-transform duration-300">
+                  <TrophyIcon className="h-10 w-10 text-white" />
+                </div>
+                <div className="absolute -top-2 -right-2 w-6 h-6 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full flex items-center justify-center">
+                  <span className="text-xs font-bold text-white">✨</span>
+                </div>
               </div>
-              <div className="absolute -top-2 -right-2 w-6 h-6 bg-yellow-400 rounded-full flex items-center justify-center">
-                <span className="text-xs font-bold text-white">✨</span>
+              <div className="ml-6">
+                <h1 className="text-6xl font-black text-white leading-tight">
+                  Code Learning Hub
+                </h1>
+                <div className="h-1 w-24 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full mx-auto mt-2"></div>
               </div>
             </div>
-            <div className="ml-6">
-              <h1 className="text-6xl font-black bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent leading-tight">
-                Code Learning Hub
-              </h1>
-              <div className="h-1 w-24 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full mx-auto mt-2"></div>
-            </div>
-          </div>
-          <p className="text-xl text-gray-700 dark:text-gray-200 max-w-3xl mx-auto leading-relaxed font-medium">
-            Master programming through interactive games, AI assistance, peer coaching, and comprehensive flashcards
-          </p>
-          <div className="mt-8 flex justify-center space-x-4">
-            <div className="flex items-center text-sm text-gray-600 dark:text-gray-300">
-              <div className="w-2 h-2 bg-green-500 rounded-full mr-2 animate-pulse"></div>
-              Live Learning
-            </div>
-            <div className="flex items-center text-sm text-gray-600 dark:text-gray-300">
-              <div className="w-2 h-2 bg-blue-500 rounded-full mr-2 animate-pulse"></div>
-              AI Powered
-            </div>
-            <div className="flex items-center text-sm text-gray-600 dark:text-gray-300">
-              <div className="w-2 h-2 bg-purple-500 rounded-full mr-2 animate-pulse"></div>
-              Community Driven
+            <p className="text-xl text-purple-200 max-w-3xl mx-auto leading-relaxed font-medium">
+              Master programming through interactive games, AI assistance, peer coaching, and comprehensive flashcards
+            </p>
+            <div className="mt-8 flex justify-center space-x-4">
+              <div className="flex items-center text-sm text-purple-200">
+                <div className="w-2 h-2 bg-green-500 rounded-full mr-2 animate-pulse"></div>
+                Live Learning
+              </div>
+              <div className="flex items-center text-sm text-purple-200">
+                <div className="w-2 h-2 bg-blue-500 rounded-full mr-2 animate-pulse"></div>
+                AI Powered
+              </div>
+              <div className="flex items-center text-sm text-purple-200">
+                <div className="w-2 h-2 bg-purple-500 rounded-full mr-2 animate-pulse"></div>
+                Community Driven
+              </div>
             </div>
           </div>
         </div>
@@ -400,7 +401,7 @@ console.log("Area:", circleArea);  // Missing closing parenthesis
 
       {/* Enhanced Navigation Tabs */}
       <div className="max-w-7xl mx-auto px-6 mb-12">
-        <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl p-2 shadow-xl border border-gray-200/50 dark:border-gray-700/50">
+        <div className="gamified-card p-2">
           <div className="flex flex-wrap justify-center gap-2">
             {[
               { id: 'games', label: 'Games', icon: PlayIcon, color: 'from-blue-500 to-blue-600', bgColor: 'bg-blue-500' },
@@ -414,7 +415,7 @@ console.log("Area:", circleArea);  // Missing closing parenthesis
                 className={`flex items-center px-8 py-4 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 hover:shadow-lg ${
                   currentView === tab.id
                     ? `bg-gradient-to-r ${tab.color} text-white shadow-lg scale-105`
-                    : 'bg-white/50 dark:bg-gray-700/50 text-gray-700 dark:text-gray-300 hover:bg-white dark:hover:bg-gray-700'
+                    : 'bg-purple-500/20 text-purple-200 hover:bg-purple-500/30 hover:text-white'
                 }`}
               >
                 <tab.icon className={`h-6 w-6 mr-3 ${currentView === tab.id ? 'animate-pulse' : ''}`} />
@@ -434,64 +435,92 @@ console.log("Area:", circleArea);  // Missing closing parenthesis
   );
 
   const renderGamesSection = () => (
-    <div className="max-w-6xl mx-auto px-4">
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+    <div className="max-w-7xl mx-auto px-6">
+      <div className="text-center mb-12">
+        <h2 className="text-4xl font-bold text-white mb-4">
+          🎮 Interactive Learning Games
+        </h2>
+        <p className="text-lg text-purple-200 max-w-2xl mx-auto">
+          Choose your challenge and start earning XP while mastering programming concepts
+        </p>
+      </div>
+      
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {challenges.filter(c => ['puzzle', 'syntax', 'golf', 'memory', 'speed'].includes(c.type)).map((challenge) => (
           <div
             key={challenge.id}
-            className={`group relative bg-white dark:bg-gray-800 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 overflow-hidden ${
+            className={`group relative interactive-card hover-lift rounded-3xl overflow-hidden ${
               challenge.completed 
-                ? 'ring-2 ring-green-500 ring-opacity-50' 
-                : 'hover:ring-2 hover:ring-blue-500 hover:ring-opacity-50'
+                ? 'ring-4 ring-green-500/30 shadow-green-500/20' 
+                : 'hover:ring-4 hover:ring-purple-500/30 hover:shadow-purple-500/20'
             }`}
           >
-            {/* Background gradient */}
-            <div className={`absolute inset-0 bg-gradient-to-br ${challenge.color} opacity-10 group-hover:opacity-20 transition-opacity`} />
+            {/* Enhanced Background */}
+            <div className={`absolute inset-0 bg-gradient-to-br ${challenge.color} opacity-5 group-hover:opacity-15 transition-all duration-500`} />
+            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-white/20 to-transparent transform -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
             
-            <div className="relative p-6">
-              <div className="flex items-center justify-between mb-4">
-                <div className={`w-14 h-14 ${challenge.color} rounded-xl flex items-center justify-center shadow-lg`}>
-                  {challenge.icon && <challenge.icon className="h-7 w-7 text-white" />}
+            <div className="relative p-8">
+              {/* Header */}
+              <div className="flex items-center justify-between mb-6">
+                <div className={`w-16 h-16 ${challenge.color} rounded-2xl flex items-center justify-center shadow-xl transform group-hover:scale-110 transition-transform duration-300`}>
+                  {challenge.icon && <challenge.icon className="h-8 w-8 text-white" />}
                 </div>
                 <div className="text-right">
-                  <div className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">
+                  <div className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider bg-gray-100 dark:bg-gray-700 px-3 py-1 rounded-full">
                     {challenge.difficulty}
                   </div>
-                  <div className="text-lg font-bold text-primary-600 dark:text-primary-400">
+                  <div className="text-xl font-bold bg-gradient-to-r from-yellow-500 to-orange-500 bg-clip-text text-transparent mt-1">
                     +{challenge.xpReward} XP
                   </div>
                 </div>
               </div>
 
-              <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-3">
+              {/* Content */}
+              <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4 leading-tight">
                 {challenge.title}
               </h3>
-              <p className="text-gray-600 dark:text-gray-400 mb-4 text-sm leading-relaxed">
+              <p className="text-gray-600 dark:text-gray-300 mb-6 text-base leading-relaxed">
                 {challenge.description}
               </p>
 
-              {challenge.timeLimit && (
-                <div className="flex items-center text-sm text-gray-500 dark:text-gray-400 mb-4">
-                  <ClockIcon className="h-4 w-4 mr-2" />
-                  {challenge.timeLimit}s time limit
-                </div>
-              )}
+              {/* Features */}
+              <div className="space-y-3 mb-6">
+                {challenge.timeLimit && (
+                  <div className="flex items-center text-sm text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-700/50 px-3 py-2 rounded-lg">
+                    <ClockIcon className="h-4 w-4 mr-2 text-blue-500" />
+                    {challenge.timeLimit}s time limit
+                  </div>
+                )}
+                {challenge.bestScore && (
+                  <div className="flex items-center text-sm text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-900/20 px-3 py-2 rounded-lg">
+                    <span className="text-lg mr-2">🏆</span>
+                    Best Score: {challenge.bestScore}
+                  </div>
+                )}
+              </div>
 
-              {challenge.bestScore && (
-                <div className="text-sm text-green-600 dark:text-green-400 mb-4 font-medium">
-                  🏆 Best Score: {challenge.bestScore}
-                </div>
-              )}
-
+              {/* Action Button */}
               <button
                 onClick={() => startGame(challenge)}
-                className={`w-full py-3 px-4 rounded-xl font-semibold transition-all transform hover:scale-105 ${
+                className={`w-full py-4 px-6 rounded-2xl font-bold text-lg transition-all duration-300 transform hover:scale-105 active:scale-95 ${
                   challenge.completed
-                    ? 'bg-gradient-to-r from-green-500 to-green-600 text-white hover:from-green-600 hover:to-green-700'
-                    : 'bg-gradient-to-r from-blue-500 to-purple-600 text-white hover:from-blue-600 hover:to-purple-700'
-                } shadow-lg hover:shadow-xl`}
+                    ? 'bg-gradient-to-r from-green-500 via-green-600 to-emerald-600 text-white hover:from-green-600 hover:via-green-700 hover:to-emerald-700 shadow-lg hover:shadow-xl shadow-green-500/25'
+                    : 'bg-gradient-to-r from-blue-500 via-purple-600 to-indigo-600 text-white hover:from-blue-600 hover:via-purple-700 hover:to-indigo-700 shadow-lg hover:shadow-xl shadow-blue-500/25'
+                }`}
               >
-                {challenge.completed ? '🎮 Play Again' : '🚀 Start Game'}
+                <span className="flex items-center justify-center">
+                  {challenge.completed ? (
+                    <>
+                      <span className="mr-2">🎮</span>
+                      Play Again
+                    </>
+                  ) : (
+                    <>
+                      <span className="mr-2">🚀</span>
+                      Start Game
+                    </>
+                  )}
+                </span>
               </button>
             </div>
           </div>
@@ -501,58 +530,71 @@ console.log("Area:", circleArea);  // Missing closing parenthesis
   );
 
   const renderFlashcardsSection = () => (
-    <div className="max-w-4xl mx-auto px-4">
-      <div className="text-center mb-8">
-        <h2 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-4">
+    <div className="max-w-5xl mx-auto px-6">
+      <div className="text-center mb-12">
+        <h2 className="text-4xl font-bold text-gray-900 dark:text-gray-100 mb-4">
           📚 Interactive Flashcards
         </h2>
-        <p className="text-lg text-gray-600 dark:text-gray-300">
+        <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
           Master programming concepts with our comprehensive flashcard system
         </p>
       </div>
 
       {flashCards.length > 0 && (
-        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8">
-          <div className="flex items-center justify-between mb-6">
-            <div className="text-sm text-gray-500 dark:text-gray-400">
-              Card {currentFlashCard + 1} of {flashCards.length}
+        <div className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-3xl shadow-2xl p-10 border border-gray-200/50 dark:border-gray-700/50">
+          {/* Progress Bar */}
+          <div className="mb-8">
+            <div className="flex items-center justify-between mb-4">
+              <div className="text-sm font-medium text-gray-600 dark:text-gray-300">
+                Progress: {currentFlashCard + 1} of {flashCards.length}
+              </div>
+              <div className="flex items-center space-x-3">
+                <span className={`px-4 py-2 rounded-full text-sm font-bold ${
+                  flashCards[currentFlashCard]?.difficulty === 'beginner' ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300' :
+                  flashCards[currentFlashCard]?.difficulty === 'intermediate' ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300' :
+                  'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300'
+                }`}>
+                  {flashCards[currentFlashCard]?.difficulty}
+                </span>
+                <span className="px-4 py-2 rounded-full text-sm font-bold bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300">
+                  {flashCards[currentFlashCard]?.category}
+                </span>
+              </div>
             </div>
-            <div className="flex items-center space-x-2">
-              <span className={`px-3 py-1 rounded-full text-xs font-medium ${
-                flashCards[currentFlashCard]?.difficulty === 'beginner' ? 'bg-green-100 text-green-800' :
-                flashCards[currentFlashCard]?.difficulty === 'intermediate' ? 'bg-yellow-100 text-yellow-800' :
-                'bg-red-100 text-red-800'
-              }`}>
-                {flashCards[currentFlashCard]?.difficulty}
-              </span>
-              <span className="px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                {flashCards[currentFlashCard]?.category}
-              </span>
-            </div>
-          </div>
-
-          <div className="text-center mb-8">
-            <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">
-              {flashCards[currentFlashCard]?.concept}
-            </h3>
-            <p className="text-lg text-gray-600 dark:text-gray-300 mb-6">
-              {flashCards[currentFlashCard]?.definition}
-            </p>
-            <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
-              <h4 className="font-semibold text-gray-900 dark:text-gray-100 mb-2">Example:</h4>
-              <code className="text-sm font-mono text-blue-600 dark:text-blue-400">
-                {flashCards[currentFlashCard]?.example}
-              </code>
+            <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+              <div 
+                className="bg-gradient-to-r from-blue-500 to-purple-600 h-2 rounded-full transition-all duration-500"
+                style={{ width: `${((currentFlashCard + 1) / flashCards.length) * 100}%` }}
+              ></div>
             </div>
           </div>
 
-          <div className="flex justify-center space-x-4">
+          {/* Flashcard Content */}
+          <div className="text-center mb-10">
+            <div className="bg-gradient-to-br from-blue-50 to-purple-50 dark:from-gray-700 dark:to-gray-800 rounded-3xl p-8 mb-8 border border-gray-200/50 dark:border-gray-600/50">
+              <h3 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-6">
+                {flashCards[currentFlashCard]?.concept}
+              </h3>
+              <p className="text-xl text-gray-600 dark:text-gray-300 mb-8 leading-relaxed">
+                {flashCards[currentFlashCard]?.definition}
+              </p>
+              <div className="bg-white/80 dark:bg-gray-800/80 rounded-2xl p-6 border border-gray-200/50 dark:border-gray-600/50">
+                <h4 className="font-bold text-gray-900 dark:text-gray-100 mb-4 text-lg">💡 Example:</h4>
+                <div className="bg-gray-900 text-green-400 p-4 rounded-xl font-mono text-sm overflow-x-auto">
+                  <code>{flashCards[currentFlashCard]?.example}</code>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Navigation Controls */}
+          <div className="flex justify-center space-x-6">
             <button
               onClick={() => setCurrentFlashCard(Math.max(0, currentFlashCard - 1))}
               disabled={currentFlashCard === 0}
-              className="px-6 py-3 bg-gray-500 text-white rounded-lg font-semibold hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex items-center px-8 py-4 bg-gray-500 text-white rounded-2xl font-bold hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 transform hover:scale-105 active:scale-95"
             >
-              <ArrowLeftIcon className="h-5 w-5 inline mr-2" />
+              <ArrowLeftIcon className="h-6 w-6 mr-2" />
               Previous
             </button>
             <button
@@ -560,17 +602,18 @@ console.log("Area:", circleArea);  // Missing closing parenthesis
                 addXP(5, 'flashcard', `Studied ${flashCards[currentFlashCard]?.concept}`);
                 setCurrentFlashCard(Math.min(flashCards.length - 1, currentFlashCard + 1));
               }}
-              className="px-6 py-3 bg-green-500 text-white rounded-lg font-semibold hover:bg-green-600"
+              className="flex items-center px-8 py-4 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-2xl font-bold hover:from-green-600 hover:to-emerald-700 transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl"
             >
+              <span className="mr-2">✅</span>
               Mark as Studied
             </button>
             <button
               onClick={() => setCurrentFlashCard(Math.min(flashCards.length - 1, currentFlashCard + 1))}
               disabled={currentFlashCard === flashCards.length - 1}
-              className="px-6 py-3 bg-gray-500 text-white rounded-lg font-semibold hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex items-center px-8 py-4 bg-gray-500 text-white rounded-2xl font-bold hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 transform hover:scale-105 active:scale-95"
             >
               Next
-              <ArrowRightIcon className="h-5 w-5 inline ml-2" />
+              <ArrowRightIcon className="h-6 w-6 ml-2" />
             </button>
           </div>
         </div>
@@ -579,52 +622,90 @@ console.log("Area:", circleArea);  // Missing closing parenthesis
   );
 
   const renderAIAssistantSection = () => (
-    <div className="max-w-4xl mx-auto px-4">
-      <div className="text-center mb-8">
-        <h2 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-4">
+    <div className="max-w-5xl mx-auto px-6">
+      <div className="text-center mb-12">
+        <h2 className="text-4xl font-bold text-gray-900 dark:text-gray-100 mb-4">
           🤖 AI Programming Assistant
         </h2>
-        <p className="text-lg text-gray-600 dark:text-gray-300">
+        <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
           Get instant help with your coding questions from our AI tutor
         </p>
       </div>
 
-      <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6">
-        <div className="h-96 overflow-y-auto mb-4 p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
+      <div className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-3xl shadow-2xl p-8 border border-gray-200/50 dark:border-gray-700/50">
+        {/* Chat Header */}
+        <div className="flex items-center justify-center mb-6 pb-6 border-b border-gray-200 dark:border-gray-700">
+          <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center mr-4">
+            <SparklesIcon className="h-6 w-6 text-white" />
+          </div>
+          <div>
+            <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100">AI Programming Tutor</h3>
+            <p className="text-sm text-gray-500 dark:text-gray-400">Always here to help you learn</p>
+          </div>
+        </div>
+
+        {/* Chat Messages */}
+        <div className="h-96 overflow-y-auto mb-6 p-4 bg-gradient-to-br from-gray-50 to-blue-50 dark:from-gray-700 dark:to-gray-800 rounded-2xl border border-gray-200/50 dark:border-gray-600/50">
           {aiConversation.messages.length === 0 ? (
-            <div className="text-center text-gray-500 dark:text-gray-400 py-8">
-              <SparklesIcon className="h-12 w-12 mx-auto mb-4 text-purple-500" />
-              <p>Ask me anything about programming! I'm here to help you learn.</p>
+            <div className="text-center text-gray-500 dark:text-gray-400 py-12">
+              <div className="w-16 h-16 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                <SparklesIcon className="h-8 w-8 text-white" />
+              </div>
+              <h3 className="text-lg font-semibold mb-2">Welcome to AI Programming Tutor!</h3>
+              <p className="text-sm">Ask me anything about programming, algorithms, or coding concepts.</p>
+              <div className="mt-4 text-xs text-gray-400">
+                💡 Try asking: "How do I implement a binary search?" or "Explain async/await in JavaScript"
+              </div>
             </div>
           ) : (
-            aiConversation.messages.map((message, index) => (
-              <div key={index} className={`mb-4 ${message.role === 'user' ? 'text-right' : 'text-left'}`}>
-                <div className={`inline-block max-w-xs lg:max-w-md px-4 py-2 rounded-lg ${
-                  message.role === 'user' 
-                    ? 'bg-blue-500 text-white' 
-                    : 'bg-gray-200 dark:bg-gray-600 text-gray-900 dark:text-gray-100'
-                }`}>
-                  {message.content}
+            <div className="space-y-4">
+              {aiConversation.messages.map((message, index) => (
+                <div key={index} className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+                  <div className={`max-w-xs lg:max-w-md px-6 py-4 rounded-2xl shadow-lg ${
+                    message.role === 'user' 
+                      ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white' 
+                      : 'bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border border-gray-200 dark:border-gray-600'
+                  }`}>
+                    <div className="flex items-start">
+                      {message.role === 'assistant' && (
+                        <div className="w-6 h-6 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center mr-3 mt-1">
+                          <SparklesIcon className="h-3 w-3 text-white" />
+                        </div>
+                      )}
+                      <div className="text-sm leading-relaxed">
+                        {message.content}
+                      </div>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            ))
+              ))}
+            </div>
           )}
         </div>
 
+        {/* Input Area */}
         <div className="flex space-x-4">
-          <input
-            type="text"
-            value={aiInput}
-            onChange={(e) => setAiInput(e.target.value)}
-            placeholder="Ask a programming question..."
-            className="flex-1 px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent dark:bg-gray-700 dark:text-gray-100"
-            onKeyPress={(e) => e.key === 'Enter' && handleAISubmit()}
-          />
+          <div className="flex-1 relative">
+            <input
+              type="text"
+              value={aiInput}
+              onChange={(e) => setAiInput(e.target.value)}
+              placeholder="Ask a programming question..."
+              className="w-full px-6 py-4 border-2 border-gray-300 dark:border-gray-600 rounded-2xl focus:ring-2 focus:ring-purple-500 focus:border-transparent dark:bg-gray-700 dark:text-gray-100 text-lg transition-all duration-300"
+              onKeyPress={(e) => e.key === 'Enter' && handleAISubmit()}
+            />
+            <div className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+              Press Enter to send
+            </div>
+          </div>
           <button
             onClick={handleAISubmit}
-            className="px-6 py-3 bg-purple-500 text-white rounded-lg font-semibold hover:bg-purple-600"
+            className="px-8 py-4 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-2xl font-bold hover:from-purple-600 hover:to-pink-600 transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl"
           >
-            Send
+            <span className="flex items-center">
+              <span className="mr-2">🚀</span>
+              Send
+            </span>
           </button>
         </div>
       </div>
@@ -632,68 +713,106 @@ console.log("Area:", circleArea);  // Missing closing parenthesis
   );
 
   const renderPeerCoachingSection = () => (
-    <div className="max-w-6xl mx-auto px-4">
-      <div className="text-center mb-8">
-        <h2 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-4">
+    <div className="max-w-7xl mx-auto px-6">
+      <div className="text-center mb-12">
+        <h2 className="text-4xl font-bold text-gray-900 dark:text-gray-100 mb-4">
           👥 Peer Coaching Network
         </h2>
-        <p className="text-lg text-gray-600 dark:text-gray-300">
-          Learn from top performers and experienced developers
+        <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+          Learn from top performers and experienced developers in our community
         </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {peerCoaches.map((coach) => (
-          <div key={coach.id} className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300">
-            <div className="p-6">
-              <div className="flex items-center mb-4">
-                <div className="text-3xl mr-4">{coach.avatar}</div>
+          <div key={coach.id} className="group relative bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 overflow-hidden border border-gray-200/50 dark:border-gray-700/50">
+            {/* Status Indicator */}
+            <div className={`absolute top-4 right-4 w-4 h-4 rounded-full ${coach.available ? 'bg-green-500 animate-pulse' : 'bg-red-500'} shadow-lg`}></div>
+            
+            <div className="p-8">
+              {/* Coach Header */}
+              <div className="flex items-center mb-6">
+                <div className="text-4xl mr-4 transform group-hover:scale-110 transition-transform duration-300">
+                  {coach.avatar}
+                </div>
                 <div>
-                  <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100">
+                  <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">
                     {coach.username}
                   </h3>
-                  <div className="flex items-center space-x-2">
-                    <span className="text-sm text-gray-500 dark:text-gray-400">Level {coach.level}</span>
-                    <span className="text-sm text-yellow-600">⭐ {coach.rating}</span>
+                  <div className="flex items-center space-x-3">
+                    <span className="text-sm font-medium text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-700 px-3 py-1 rounded-full">
+                      Level {coach.level}
+                    </span>
+                    <div className="flex items-center">
+                      <span className="text-yellow-500 mr-1">⭐</span>
+                      <span className="text-sm font-bold text-gray-900 dark:text-gray-100">{coach.rating}</span>
+                    </div>
                   </div>
                 </div>
               </div>
 
-              <div className="mb-4">
-                <h4 className="font-semibold text-gray-900 dark:text-gray-100 mb-2">Expertise:</h4>
+              {/* Stats */}
+              <div className="grid grid-cols-2 gap-4 mb-6">
+                <div className="bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 rounded-2xl p-4 text-center">
+                  <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">{coach.xp.toLocaleString()}</div>
+                  <div className="text-xs text-gray-600 dark:text-gray-400">Total XP</div>
+                </div>
+                <div className="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 rounded-2xl p-4 text-center">
+                  <div className="text-2xl font-bold text-green-600 dark:text-green-400">${coach.hourlyRate}</div>
+                  <div className="text-xs text-gray-600 dark:text-gray-400">per hour</div>
+                </div>
+              </div>
+
+              {/* Expertise */}
+              <div className="mb-6">
+                <h4 className="font-bold text-gray-900 dark:text-gray-100 mb-3 text-lg">Expertise:</h4>
                 <div className="flex flex-wrap gap-2">
                   {coach.expertise.map((skill) => (
-                    <span key={skill} className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">
+                    <span key={skill} className="px-3 py-1 bg-gradient-to-r from-blue-500 to-purple-500 text-white text-xs font-bold rounded-full shadow-md">
                       {skill}
                     </span>
                   ))}
                 </div>
               </div>
 
-              <div className="flex items-center justify-between mb-4">
-                <span className="text-sm text-gray-500 dark:text-gray-400">
-                  ${coach.hourlyRate}/hour
-                </span>
-                <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                  coach.available ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+              {/* Availability Status */}
+              <div className="mb-6">
+                <span className={`inline-flex items-center px-4 py-2 rounded-full text-sm font-bold ${
+                  coach.available 
+                    ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300' 
+                    : 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300'
                 }`}>
-                  {coach.available ? 'Available' : 'Busy'}
+                  <div className={`w-2 h-2 rounded-full mr-2 ${coach.available ? 'bg-green-500' : 'bg-red-500'}`}></div>
+                  {coach.available ? 'Available Now' : 'Currently Busy'}
                 </span>
               </div>
 
+              {/* Action Button */}
               <button
                 onClick={() => {
                   setSelectedCoach(coach);
                   setCoachingSession(true);
                 }}
                 disabled={!coach.available}
-                className={`w-full py-3 px-4 rounded-lg font-semibold transition-colors ${
+                className={`w-full py-4 px-6 rounded-2xl font-bold text-lg transition-all duration-300 transform hover:scale-105 active:scale-95 ${
                   coach.available
-                    ? 'bg-orange-500 text-white hover:bg-orange-600'
+                    ? 'bg-gradient-to-r from-orange-500 to-red-500 text-white hover:from-orange-600 hover:to-red-600 shadow-lg hover:shadow-xl'
                     : 'bg-gray-300 text-gray-500 cursor-not-allowed'
                 }`}
               >
-                {coach.available ? 'Book Session' : 'Not Available'}
+                <span className="flex items-center justify-center">
+                  {coach.available ? (
+                    <>
+                      <span className="mr-2">📅</span>
+                      Book Session
+                    </>
+                  ) : (
+                    <>
+                      <span className="mr-2">⏰</span>
+                      Not Available
+                    </>
+                  )}
+                </span>
               </button>
             </div>
           </div>

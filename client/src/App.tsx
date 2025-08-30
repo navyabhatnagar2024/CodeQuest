@@ -14,6 +14,7 @@ import Leaderboard from './pages/Leaderboard';
 import Submissions from './pages/Submissions';
 import Profile from './pages/Profile';
 import CodeGames from './pages/CodeGames';
+import StudyGroups from './pages/StudyGroups';
 import AdminDashboard from './pages/admin/Dashboard';
 import AdminProblems from './pages/admin/Problems';
 import AdminContests from './pages/admin/Contests';
@@ -96,6 +97,16 @@ const AppRoutes: React.FC = () => {
             <ProtectedRoute>
               <Layout>
                 <CodeGames />
+              </Layout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/study-groups"
+          element={
+            <ProtectedRoute>
+              <Layout>
+                <StudyGroups />
               </Layout>
             </ProtectedRoute>
           }

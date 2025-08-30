@@ -1,6 +1,6 @@
 # 🎮 Gamification System
 
-Welcome to the enhanced coding platform with a comprehensive gamification system! This system transforms learning to code into an engaging, rewarding experience with XP, levels, achievements, and collaborative features.
+Welcome to CodeQuest - the enhanced coding platform with a comprehensive gamification system! This system transforms learning to code into an engaging, rewarding experience with XP, levels, achievements, and collaborative features.
 
 ## 🚀 Features Overview
 

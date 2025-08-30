@@ -13,10 +13,22 @@ const GamifiedLeaderboard: React.FC = () => {
   const { leaderboard, leaderboardLoading, refreshLeaderboard } = useGamification();
   const [timeFrame, setTimeFrame] = useState<'all' | 'weekly' | 'monthly'>('all');
   const [showTopUsers, setShowTopUsers] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
+  // Load leaderboard data once on component mount
   useEffect(() => {
-    refreshLeaderboard();
-  }, [refreshLeaderboard]);
+    const loadLeaderboard = async () => {
+      try {
+        setError(null);
+        await refreshLeaderboard();
+      } catch (err) {
+        setError('Failed to load leaderboard data');
+        console.error('Leaderboard loading error:', err);
+      }
+    };
+    
+    loadLeaderboard();
+  }, []); // Remove refreshLeaderboard from dependencies to prevent infinite re-renders
 
   const getRankIcon = (rank: number) => {
     switch (rank) {
@@ -39,18 +51,74 @@ const GamifiedLeaderboard: React.FC = () => {
     return 'text-gray-600 bg-gray-100 dark:bg-gray-700';
   };
 
-  const getStreakEmoji = (streak: number) => {
-    if (streak >= 30) return '🔥🔥🔥';
-    if (streak >= 14) return '🔥🔥';
-    if (streak >= 7) return '🔥';
-    if (streak >= 3) return '⚡';
-    return '💪';
+  const getStreakText = (streak: number) => {
+    if (streak >= 30) return '30+';
+    if (streak >= 14) return '14+';
+    if (streak >= 7) return '7+';
+    if (streak >= 3) return '3+';
+    return '1';
   };
 
+  const handleRefresh = async () => {
+    try {
+      setError(null);
+      await refreshLeaderboard();
+    } catch (err) {
+      setError('Failed to refresh leaderboard');
+      console.error('Leaderboard refresh error:', err);
+    }
+  };
+
+  // Show error state
+  if (error) {
+    return (
+      <div className="space-y-6">
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+          <div className="text-center">
+            <div className="text-red-500 text-lg mb-4">⚠️ {error}</div>
+            <button
+              onClick={handleRefresh}
+              className="px-6 py-3 bg-primary-500 text-white rounded-lg hover:bg-primary-600 transition-colors"
+            >
+              Try Again
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Show loading state
   if (leaderboardLoading) {
     return (
-      <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-500"></div>
+      <div className="space-y-6">
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+          <div className="flex items-center justify-center h-64">
+            <div className="text-center">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-500 mx-auto mb-4"></div>
+              <p className="text-gray-600 dark:text-gray-400">Loading leaderboard...</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Show empty state
+  if (!leaderboard || leaderboard.length === 0) {
+    return (
+      <div className="space-y-6">
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+          <div className="text-center">
+            <div className="text-gray-500 text-lg mb-4">📊 No leaderboard data available</div>
+            <button
+              onClick={handleRefresh}
+              className="px-6 py-3 bg-primary-500 text-white rounded-lg hover:bg-primary-600 transition-colors"
+            >
+              Refresh
+            </button>
+          </div>
+        </div>
       </div>
     );
   }
@@ -61,7 +129,7 @@ const GamifiedLeaderboard: React.FC = () => {
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center space-x-3">
-            <ChartBarIcon className="h-8 w-8 text-primary-500" />
+            <ChartBarIcon className="h-8 w-8 text-gray-600 dark:text-gray-400" />
             <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">Leaderboard</h1>
           </div>
           <div className="flex items-center space-x-2">
@@ -100,7 +168,7 @@ const GamifiedLeaderboard: React.FC = () => {
           </select>
           
           <button
-            onClick={refreshLeaderboard}
+            onClick={handleRefresh}
             className="px-4 py-2 bg-primary-500 text-white rounded-lg hover:bg-primary-600 transition-colors"
           >
             Refresh
@@ -115,9 +183,7 @@ const GamifiedLeaderboard: React.FC = () => {
           <div className="order-2 md:order-1">
             <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 text-center relative">
               <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-                <div className="w-12 h-12 bg-gray-400 rounded-full flex items-center justify-center">
-                  <HeartIcon className="h-6 w-6 text-white" />
-                </div>
+                <HeartIcon className="h-12 w-12 text-gray-400" />
               </div>
               <div className="mt-4">
                 <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">
@@ -140,9 +206,7 @@ const GamifiedLeaderboard: React.FC = () => {
           <div className="order-1 md:order-2">
             <div className="bg-gradient-to-b from-yellow-400 to-yellow-600 rounded-lg shadow-lg p-6 text-center relative transform scale-105">
               <div className="absolute -top-6 left-1/2 transform -translate-x-1/2">
-                <div className="w-16 h-16 bg-yellow-500 rounded-full flex items-center justify-center shadow-lg">
-                  <SparklesIcon className="h-8 w-8 text-white" />
-                </div>
+                <SparklesIcon className="h-16 w-16 text-white" />
               </div>
               <div className="mt-6">
                 <h3 className="text-xl font-bold text-white mb-2">
@@ -165,9 +229,7 @@ const GamifiedLeaderboard: React.FC = () => {
           <div className="order-3">
             <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 text-center relative">
               <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-                <div className="w-12 h-12 bg-amber-600 rounded-full flex items-center justify-center">
-                  <GiftIcon className="h-6 w-6 text-white" />
-                </div>
+                <GiftIcon className="h-12 w-12 text-amber-600" />
               </div>
               <div className="mt-4">
                 <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">
@@ -231,9 +293,7 @@ const GamifiedLeaderboard: React.FC = () => {
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="flex items-center">
                       <div className="flex-shrink-0 h-10 w-10">
-                        <div className="h-10 w-10 rounded-full bg-primary-500 flex items-center justify-center">
-                          <UserIcon className="h-6 w-6 text-white" />
-                        </div>
+                        <UserIcon className="h-10 w-10 text-gray-400 dark:text-gray-500" />
                       </div>
                       <div className="ml-4">
                         <div className="text-sm font-medium text-gray-900 dark:text-gray-100">
@@ -255,15 +315,14 @@ const GamifiedLeaderboard: React.FC = () => {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="flex items-center space-x-2">
-                      <span className="text-lg">{getStreakEmoji(user.streak_days)}</span>
-                      <span className="text-sm text-gray-900 dark:text-gray-100">
-                        {user.streak_days} days
+                      <span className="text-sm font-medium text-gray-900 dark:text-gray-100">
+                        {getStreakText(user.streak_days)} days
                       </span>
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="flex items-center space-x-2">
-                      <TrophyIcon className="h-5 w-5 text-yellow-500" />
+                      <TrophyIcon className="h-5 w-5 text-gray-400 dark:text-gray-500" />
                       <span className="text-sm text-gray-900 dark:text-gray-100">
                         {user.achievements_count}
                       </span>

@@ -87,7 +87,7 @@ class DatabaseExporter {
     }
 
     formatExportContent(queries) {
-        const header = `-- Initial Database Data for Coding Platform
+        const header = `-- Initial Database Data for CodeQuest Platform
 -- This file contains all the data from the original database
 -- Generated on: ${new Date().toISOString()}
 -- 

@@ -44,7 +44,7 @@ class LLMService {
                         'Authorization': `Bearer ${this.apiKey}`,
                         'Content-Type': 'application/json',
                         'HTTP-Referer': process.env.FRONTEND_URL || 'http://localhost:3000',
-                        'X-Title': 'Coding Platform'
+                        'X-Title': 'CodeQuest Platform'
                     }
                 }
             );

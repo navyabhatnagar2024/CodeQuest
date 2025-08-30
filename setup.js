@@ -9,7 +9,7 @@ class SetupManager {
     }
 
     async setup() {
-        console.log('🚀 Starting Coding Platform Setup...\n');
+        console.log('🚀 Starting CodeQuest Platform Setup...\n');
         
         try {
             // 1. Create database directory if it doesn't exist

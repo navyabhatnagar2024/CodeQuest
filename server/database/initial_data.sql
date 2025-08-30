@@ -1,4 +1,4 @@
--- Initial Database Data for Coding Platform
+-- Initial Database Data for CodeQuest Platform
 -- This file contains all the data from the original database
 -- Generated on: 2025-08-18T18:08:59.652Z
 -- 

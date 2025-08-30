@@ -93,7 +93,7 @@ const Contests: React.FC = () => {
   if (loading) {
     return (
       <div className="flex justify-center items-center min-h-screen">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary-600"></div>
+        <div className="loading-spinner"></div>
       </div>
     );
   }
@@ -102,13 +102,14 @@ const Contests: React.FC = () => {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <div className="text-red-600 text-6xl mb-4">⚠️</div>
-          <h2 className="text-2xl font-bold text-gray-800 mb-2">Error Loading Contests</h2>
-          <p className="text-gray-600 mb-4">{error}</p>
+          <div className="text-6xl mb-4">😔</div>
+          <h2 className="text-2xl font-bold text-white mb-2">Error Loading Contests</h2>
+          <p className="text-purple-200 mb-4">{error}</p>
           <button
             onClick={fetchContests}
-            className="bg-primary-600 text-white px-6 py-2 rounded-lg hover:bg-primary-700 transition-colors"
+            className="btn-primary inline-flex items-center glow-purple hover-lift"
           >
+            <span className="mr-2">🔄</span>
             Try Again
           </button>
         </div>
@@ -117,11 +118,21 @@ const Contests: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-8">
+    <div className="min-h-screen py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Programming Contests</h1>
-          <p className="text-gray-600">Compete with other programmers in timed challenges</p>
+        <div className="gamified-card border-b border-purple-200 mb-8">
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-3xl font-bold text-white mb-2">🏆 Programming Contests</h1>
+              <p className="text-purple-200">Compete with other programmers in timed challenges</p>
+            </div>
+            <div className="flex items-center space-x-4">
+              <div className="xp-counter">
+                <div className="text-sm text-purple-200">Total Contests</div>
+                <div className="text-2xl font-bold">{contests.length}</div>
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* Filters */}
@@ -135,10 +146,11 @@ const Contests: React.FC = () => {
             <button
               key={key}
               onClick={() => setFilter(key)}
-              className={`px-4 py-2 rounded-lg font-medium transition-colors ${filter === key
-                  ? 'bg-primary-600 text-white'
-                  : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-300'
-                }`}
+              className={`px-4 py-2 rounded-lg font-medium transition-all duration-300 hover-lift ${
+                filter === key
+                  ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg glow-purple'
+                  : 'bg-purple-500/20 text-purple-200 hover:bg-purple-500/30 hover:text-white border border-purple-300/30'
+              }`}
             >
               {label}
             </button>
@@ -151,23 +163,27 @@ const Contests: React.FC = () => {
             <Link
               key={contest.id}
               to={`/contests/${contest.id}`}
-              className="block bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200 overflow-hidden"
+              className="block interactive-card hover-lift overflow-hidden"
             >
               <div className="p-6">
                 <div className="flex items-start justify-between mb-3">
-                  <h3 className="text-lg font-semibold text-gray-900 line-clamp-2 flex-1 mr-3">
+                  <h3 className="text-lg font-semibold text-white line-clamp-2 flex-1 mr-3">
                     {contest.title}
                   </h3>
-                  <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(contest.status)}`}>
+                  <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                    contest.status === 'upcoming' ? 'text-blue-600 bg-blue-100' :
+                    contest.status === 'ongoing' ? 'text-green-600 bg-green-100' :
+                    'text-gray-600 bg-gray-100'
+                  }`}>
                     {contest.status.charAt(0).toUpperCase() + contest.status.slice(1)}
                   </span>
                 </div>
 
-                <p className="text-gray-600 text-sm mb-4 line-clamp-3">
+                <p className="text-purple-200 text-sm mb-4 line-clamp-3">
                   {contest.description || 'No description available.'}
                 </p>
 
-                <div className="space-y-2 text-sm text-gray-600">
+                <div className="space-y-2 text-sm text-purple-200">
                   <div className="flex items-center justify-between">
                     <span>Start:</span>
                     <span className="font-medium">{formatDate(contest.start_time)}</span>
@@ -184,8 +200,8 @@ const Contests: React.FC = () => {
                   </div>
                 </div>
 
-                <div className="mt-4 pt-3 border-t border-gray-200">
-                  <span className="text-primary-600 font-medium hover:text-primary-700">
+                <div className="mt-4 pt-3 border-t border-purple-300/30">
+                  <span className="text-purple-300 font-medium hover:text-white transition-colors">
                     View Contest →
                   </span>
                 </div>

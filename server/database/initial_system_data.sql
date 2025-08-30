@@ -1,4 +1,4 @@
--- System Settings Data for Coding Platform
+-- System Settings Data for CodeQuest Platform
 -- This file contains system configuration settings
 -- Generated on: 2025-08-18T18:08:59.652Z
 -- 

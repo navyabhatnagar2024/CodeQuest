@@ -190,7 +190,7 @@ const Profile: React.FC = () => {
   if (loading) {
     return (
       <div className="flex justify-center items-center min-h-screen">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary-600"></div>
+        <div className="loading-spinner"></div>
       </div>
     );
   }
@@ -199,13 +199,14 @@ const Profile: React.FC = () => {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <div className="text-red-600 text-6xl mb-4">⚠️</div>
-          <h2 className="text-2xl font-bold text-gray-800 mb-2">Error Loading Profile</h2>
-          <p className="text-gray-600 mb-4">{error}</p>
+          <div className="text-6xl mb-4">😔</div>
+          <h2 className="text-2xl font-bold text-white mb-2">Error Loading Profile</h2>
+          <p className="text-purple-200 mb-4">{error}</p>
           <button 
             onClick={fetchProfile}
-            className="bg-primary-600 text-white px-6 py-2 rounded-lg hover:bg-primary-700 transition-colors"
+            className="btn-primary inline-flex items-center glow-purple hover-lift"
           >
+            <span className="mr-2">🔄</span>
             Try Again
           </button>
         </div>
@@ -214,17 +215,27 @@ const Profile: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
+    <div className="min-h-screen py-8">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Profile Settings</h1>
-          <p className="text-gray-600">Manage your account information and preferences</p>
+        <div className="gamified-card border-b border-purple-200 mb-8">
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-3xl font-bold text-white mb-2">👤 Profile Settings</h1>
+              <p className="text-purple-200">Manage your account information and preferences</p>
+            </div>
+            <div className="flex items-center space-x-4">
+              <div className="xp-counter">
+                <div className="text-sm text-purple-200">User ID</div>
+                <div className="text-2xl font-bold">#{user?.id}</div>
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* Success/Error Messages */}
         {success && (
-          <div className="mb-6 bg-green-50 border border-green-200 rounded-md p-4">
+          <div className="mb-6 bg-green-500/20 border border-green-300/30 rounded-md p-4">
             <div className="flex">
               <div className="flex-shrink-0">
                 <svg className="h-5 w-5 text-green-400" viewBox="0 0 20 20" fill="currentColor">
@@ -232,14 +243,14 @@ const Profile: React.FC = () => {
                 </svg>
               </div>
               <div className="ml-3">
-                <p className="text-sm font-medium text-green-800">{success}</p>
+                <p className="text-sm font-medium text-green-300">{success}</p>
               </div>
             </div>
           </div>
         )}
 
         {error && (
-          <div className="mb-6 bg-red-50 border border-red-200 rounded-md p-4">
+          <div className="mb-6 bg-red-500/20 border border-red-300/30 rounded-md p-4">
             <div className="flex">
               <div className="flex-shrink-0">
                 <svg className="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
@@ -247,19 +258,19 @@ const Profile: React.FC = () => {
                 </svg>
               </div>
               <div className="ml-3">
-                <p className="text-sm font-medium text-red-800">{error}</p>
+                <p className="text-sm font-medium text-red-300">{error}</p>
               </div>
             </div>
           </div>
         )}
 
         {/* Profile Form */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
-          <h2 className="text-xl font-semibold text-gray-900 mb-6">Personal Information</h2>
+        <div className="gamified-card mb-6">
+          <h2 className="text-xl font-semibold text-white mb-6">Personal Information</h2>
           <form onSubmit={handleProfileSubmit} className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <label htmlFor="username" className="block text-sm font-medium text-gray-700">
+                <label htmlFor="username" className="block text-sm font-medium text-purple-200">
                   Username
                 </label>
                 <input
@@ -268,13 +279,13 @@ const Profile: React.FC = () => {
                   name="username"
                   value={profileData.username}
                   onChange={handleProfileChange}
-                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"
+                  className="mt-1 block w-full px-3 py-2 border border-purple-300/30 rounded-md shadow-sm focus:outline-none focus:ring-purple-500 focus:border-purple-500 bg-purple-500/10 text-white placeholder-purple-300"
                   required
                 />
               </div>
               
               <div>
-                <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+                <label htmlFor="email" className="block text-sm font-medium text-purple-200">
                   Email
                 </label>
                 <input
@@ -283,13 +294,13 @@ const Profile: React.FC = () => {
                   name="email"
                   value={profileData.email}
                   onChange={handleProfileChange}
-                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:ring-primary-500 focus:border-primary-500"
+                  className="mt-1 block w-full px-3 py-2 border border-purple-300/30 rounded-md shadow-sm focus:outline-none focus:ring-purple-500 focus:border-purple-500 bg-purple-500/10 text-white placeholder-purple-300"
                   required
                 />
               </div>
               
               <div>
-                <label htmlFor="full_name" className="block text-sm font-medium text-gray-700">
+                <label htmlFor="full_name" className="block text-sm font-medium text-purple-200">
                   Full Name
                 </label>
                 <input
@@ -298,13 +309,13 @@ const Profile: React.FC = () => {
                   name="full_name"
                   value={profileData.full_name}
                   onChange={handleProfileChange}
-                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"
+                  className="mt-1 block w-full px-3 py-2 border border-purple-300/30 rounded-md shadow-sm focus:outline-none focus:ring-purple-500 focus:border-purple-500 bg-purple-500/10 text-white placeholder-purple-300"
                   required
                 />
               </div>
               
               <div>
-                <label htmlFor="country" className="block text-sm font-medium text-gray-700">
+                <label htmlFor="country" className="block text-sm font-medium text-purple-200">
                   Country
                 </label>
                 <input
@@ -313,12 +324,12 @@ const Profile: React.FC = () => {
                   name="country"
                   value={profileData.country}
                   onChange={handleProfileChange}
-                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"
+                  className="mt-1 block w-full px-3 py-2 border border-purple-300/30 rounded-md shadow-sm focus:outline-none focus:ring-purple-500 focus:border-purple-500 bg-purple-500/10 text-white placeholder-purple-300"
                 />
               </div>
               
               <div>
-                <label htmlFor="timezone" className="block text-sm font-medium text-gray-700">
+                <label htmlFor="timezone" className="block text-sm font-medium text-purple-200">
                   Timezone
                 </label>
                 <select
@@ -326,7 +337,7 @@ const Profile: React.FC = () => {
                   name="timezone"
                   value={profileData.timezone}
                   onChange={handleProfileChange}
-                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"
+                  className="mt-1 block w-full px-3 py-2 border border-purple-300/30 rounded-md shadow-sm focus:outline-none focus:ring-purple-500 focus:border-purple-500 bg-purple-500/10 text-white"
                 >
                   <option value="UTC">UTC</option>
                   <option value="America/New_York">Eastern Time</option>
@@ -346,42 +357,42 @@ const Profile: React.FC = () => {
               <button
                 type="submit"
                 disabled={saving}
-                className="bg-primary-600 text-white px-6 py-2 rounded-lg hover:bg-primary-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                className="btn-primary inline-flex items-center glow-purple hover-lift disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {saving ? 'Saving...' : 'Save Changes'}
+                {saving ? '💾 Saving...' : '💾 Save Changes'}
               </button>
             </div>
           </form>
         </div>
 
         {/* Account Actions */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-          <h2 className="text-xl font-semibold text-gray-900 mb-6">Account Actions</h2>
+        <div className="gamified-card">
+          <h2 className="text-xl font-semibold text-white mb-6">Account Actions</h2>
           
           <div className="space-y-4">
-            <div className="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
+            <div className="flex items-center justify-between p-4 border border-purple-300/30 rounded-lg bg-purple-500/10">
               <div>
-                <h3 className="text-lg font-medium text-gray-900">Change Password</h3>
-                <p className="text-sm text-gray-600">Update your account password</p>
+                <h3 className="text-lg font-medium text-white">Change Password</h3>
+                <p className="text-sm text-purple-200">Update your account password</p>
               </div>
               <button
                 onClick={() => setShowPasswordModal(true)}
-                className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+                className="btn-primary inline-flex items-center glow-purple hover-lift"
               >
-                Change Password
+                🔐 Change Password
               </button>
             </div>
             
-            <div className="flex items-center justify-between p-4 border border-red-200 rounded-lg bg-red-50">
+            <div className="flex items-center justify-between p-4 border border-red-300/30 rounded-lg bg-red-500/10">
               <div>
-                <h3 className="text-lg font-medium text-red-900">Delete Account</h3>
-                <p className="text-sm text-red-600">Permanently delete your account and all data</p>
+                <h3 className="text-lg font-medium text-white">Delete Account</h3>
+                <p className="text-sm text-red-300">Permanently delete your account and all data</p>
               </div>
               <button
                 onClick={() => setShowDeleteModal(true)}
-                className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors"
+                className="bg-gradient-to-r from-red-500 to-red-600 text-white px-4 py-2 rounded-lg hover:from-red-600 hover:to-red-700 transition-all duration-300 glow-purple hover-lift"
               >
-                Delete Account
+                🗑️ Delete Account
               </button>
             </div>
           </div>
