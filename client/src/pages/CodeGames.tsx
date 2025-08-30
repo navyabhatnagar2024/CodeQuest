@@ -4,20 +4,16 @@ import {
   ClockIcon,
   PlayIcon,
   CheckCircleIcon,
-  AcademicCapIcon,
   UserGroupIcon,
   SparklesIcon,
   BookOpenIcon,
-  ChatBubbleLeftRightIcon,
   TrophyIcon,
   StarIcon,
   FireIcon,
-  LightBulbIcon,
   CogIcon,
   ArrowRightIcon,
   ArrowLeftIcon,
   HeartIcon,
-  GiftIcon,
   PuzzlePieceIcon
 } from '@heroicons/react/24/outline';
 

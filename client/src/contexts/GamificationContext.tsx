@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react';
 import { useAuth } from './AuthContext';
 import { gamificationAPI } from '../services/api';
 
@@ -160,7 +160,7 @@ export const GamificationProvider: React.FC<GamificationProviderProps> = ({ chil
   const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]);
   const [dailyChallenge, setDailyChallenge] = useState<DailyChallenge | null>(null);
   const [studyGroups, setStudyGroups] = useState<StudyGroup[]>([]);
-  const [codeReviews, setCodeReviews] = useState<CodeReview[]>([]);
+  const [codeReviews] = useState<CodeReview[]>([]);
   
   // Loading states
   const [loading, setLoading] = useState(false);
@@ -188,7 +188,7 @@ export const GamificationProvider: React.FC<GamificationProviderProps> = ({ chil
     }
   };
 
-  const loadInitialData = async () => {
+  const loadInitialData = useCallback(async () => {
     setLoading(true);
     try {
       await Promise.all([
@@ -203,7 +203,7 @@ export const GamificationProvider: React.FC<GamificationProviderProps> = ({ chil
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   const refreshStats = async () => {
     try {

@@ -28,7 +28,7 @@ const GamifiedLeaderboard: React.FC = () => {
     };
     
     loadLeaderboard();
-  }, []); // Remove refreshLeaderboard from dependencies to prevent infinite re-renders
+  }, [refreshLeaderboard]); // Include refreshLeaderboard in dependencies
 
   const getRankIcon = (rank: number) => {
     switch (rank) {
