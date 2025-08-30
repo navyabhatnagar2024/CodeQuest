@@ -1,0 +1,30 @@
+# Server files (not needed for frontend deployment)
+server/
+setup.js
+setup_final.js
+setup_llm.js
+export_database.js
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+
+# Environment files
+.env
+.env.local
+
+# Logs
+logs/
+*.log
+
+# Node modules (will be installed fresh)
+node_modules/
+
+# Git files
+.git/
+.gitignore
+
+# Documentation
+README.md
+GAMIFICATION_README.md
