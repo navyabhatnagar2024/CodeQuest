@@ -70,45 +70,37 @@ const AppRoutes: React.FC = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
 
-        {/* Protected routes */}
+        {/* Public routes - accessible without login */}
         <Route
           path="/"
           element={
-            <ProtectedRoute>
-              <Layout>
-                <Dashboard />
-              </Layout>
-            </ProtectedRoute>
+            <Layout>
+              <Dashboard />
+            </Layout>
           }
         />
         <Route
           path="/practice"
           element={
-            <ProtectedRoute>
-              <Layout>
-                <Practice />
-              </Layout>
-            </ProtectedRoute>
+            <Layout>
+              <Practice />
+            </Layout>
           }
         />
         <Route
           path="/code-games"
           element={
-            <ProtectedRoute>
-              <Layout>
-                <CodeGames />
-              </Layout>
-            </ProtectedRoute>
+            <Layout>
+              <CodeGames />
+            </Layout>
           }
         />
         <Route
           path="/study-groups"
           element={
-            <ProtectedRoute>
-              <Layout>
-                <StudyGroups />
-              </Layout>
-            </ProtectedRoute>
+            <Layout>
+              <StudyGroups />
+            </Layout>
           }
         />
         <Route
@@ -144,11 +136,9 @@ const AppRoutes: React.FC = () => {
         <Route
           path="/leaderboard"
           element={
-            <ProtectedRoute>
-              <Layout>
-                <Leaderboard />
-              </Layout>
-            </ProtectedRoute>
+            <Layout>
+              <Leaderboard />
+            </Layout>
           }
         />
         <Route

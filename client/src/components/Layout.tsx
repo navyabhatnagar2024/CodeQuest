@@ -154,23 +154,42 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
           
           {/* Mobile Footer */}
           <div className="p-4 border-t border-purple-300/20">
-            <div className="bg-purple-500/20 rounded-xl p-4">
-              <div className="flex items-center space-x-3 mb-3">
-                <div className="w-8 h-8 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full flex items-center justify-center">
-                  <UserIcon className="h-4 w-4 text-white" />
+            {isAuthenticated ? (
+              <div className="bg-purple-500/20 rounded-xl p-4">
+                <div className="flex items-center space-x-3 mb-3">
+                  <div className="w-8 h-8 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full flex items-center justify-center">
+                    <UserIcon className="h-4 w-4 text-white" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-white">{user?.username}</p>
+                    <p className="text-xs text-purple-200">Online</p>
+                  </div>
                 </div>
-                <div>
-                  <p className="text-sm font-medium text-white">{user?.username}</p>
-                  <p className="text-xs text-purple-200">Online</p>
-                </div>
+                <button
+                  onClick={handleLogout}
+                  className="w-full px-3 py-2 text-sm text-purple-200 hover:text-white bg-purple-500/20 hover:bg-purple-500/30 rounded-lg transition-all duration-200"
+                >
+                  Sign Out
+                </button>
               </div>
-              <button
-                onClick={handleLogout}
-                className="w-full px-3 py-2 text-sm text-purple-200 hover:text-white bg-purple-500/20 hover:bg-purple-500/30 rounded-lg transition-all duration-200"
-              >
-                Sign Out
-              </button>
-            </div>
+            ) : (
+              <div className="bg-purple-500/20 rounded-xl p-4 space-y-3">
+                <Link
+                  to="/login"
+                  className="w-full px-3 py-2 text-sm text-purple-200 hover:text-white bg-purple-500/20 hover:bg-purple-500/30 rounded-lg transition-all duration-200 text-center block"
+                  onClick={() => setSidebarOpen(false)}
+                >
+                  Login
+                </Link>
+                <Link
+                  to="/register"
+                  className="w-full px-3 py-2 text-sm text-white bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 rounded-lg transition-all duration-200 text-center block"
+                  onClick={() => setSidebarOpen(false)}
+                >
+                  Register
+                </Link>
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -256,23 +275,40 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
           
           {/* Desktop Footer */}
           <div className="p-4 border-t border-purple-300/20">
-            <div className="bg-purple-500/20 rounded-xl p-4">
-              <div className="flex items-center space-x-3 mb-3">
-                <div className="w-8 h-8 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full flex items-center justify-center">
-                  <UserIcon className="h-4 w-4 text-white" />
+            {isAuthenticated ? (
+              <div className="bg-purple-500/20 rounded-xl p-4">
+                <div className="flex items-center space-x-3 mb-3">
+                  <div className="w-8 h-8 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full flex items-center justify-center">
+                    <UserIcon className="h-4 w-4 text-white" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-white">{user?.username}</p>
+                    <p className="text-xs text-purple-200">Online</p>
+                  </div>
                 </div>
-                <div>
-                  <p className="text-sm font-medium text-white">{user?.username}</p>
-                  <p className="text-xs text-purple-200">Online</p>
-                </div>
+                <button
+                  onClick={handleLogout}
+                  className="w-full px-3 py-2 text-sm text-purple-200 hover:text-white bg-purple-500/20 hover:bg-purple-500/30 rounded-lg transition-all duration-200"
+                >
+                  Sign Out
+                </button>
               </div>
-              <button
-                onClick={handleLogout}
-                className="w-full px-3 py-2 text-sm text-purple-200 hover:text-white bg-purple-500/20 hover:bg-purple-500/30 rounded-lg transition-all duration-200"
-              >
-                Sign Out
-              </button>
-            </div>
+            ) : (
+              <div className="bg-purple-500/20 rounded-xl p-4 space-y-3">
+                <Link
+                  to="/login"
+                  className="w-full px-3 py-2 text-sm text-purple-200 hover:text-white bg-purple-500/20 hover:bg-purple-500/30 rounded-lg transition-all duration-200 text-center block"
+                >
+                  Login
+                </Link>
+                <Link
+                  to="/register"
+                  className="w-full px-3 py-2 text-sm text-white bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 rounded-lg transition-all duration-200 text-center block"
+                >
+                  Register
+                </Link>
+              </div>
+            )}
           </div>
         </div>
       </div>

@@ -29,7 +29,7 @@ interface RecentProblem {
 }
 
 const Dashboard: React.FC = () => {
-  const { user } = useAuth();
+  const { user, isAuthenticated } = useAuth();
   const [stats, setStats] = useState<UserStats | null>(null);
   const [recentSubmissions, setRecentSubmissions] = useState<RecentSubmission[]>([]);
   const [recentProblems, setRecentProblems] = useState<RecentProblem[]>([]);
@@ -145,6 +145,100 @@ const Dashboard: React.FC = () => {
             <span className="mr-2">🔄</span>
             Try Again
           </button>
+        </div>
+      </div>
+    );
+  }
+
+  // Show welcome message for non-authenticated users
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-screen py-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          {/* Welcome Header */}
+          <div className="gamified-card border-b border-purple-200 mb-8">
+            <div className="flex items-center justify-between">
+              <div>
+                <h1 className="text-3xl font-bold text-white mb-2">🚀 Welcome to CodeQuest!</h1>
+                <p className="text-purple-200">Your journey to coding mastery starts here</p>
+              </div>
+              <div className="flex items-center space-x-4">
+                <div className="xp-counter">
+                  <div className="text-sm text-purple-200">Join Now</div>
+                  <div className="text-2xl font-bold">Free</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Features Overview */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+            <div className="interactive-card hover-lift">
+              <div className="flex items-center">
+                <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg flex items-center justify-center mr-4">
+                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                  </svg>
+                </div>
+                <div>
+                  <h3 className="text-xl font-semibold text-white mb-2">Practice Problems</h3>
+                  <p className="text-purple-200">Solve coding challenges and improve your skills</p>
+                </div>
+              </div>
+              <div className="mt-4">
+                <Link to="/practice" className="text-blue-400 hover:text-blue-300 font-medium">Start Practicing →</Link>
+              </div>
+            </div>
+
+            <div className="interactive-card hover-lift">
+              <div className="flex items-center">
+                <div className="w-12 h-12 bg-gradient-to-r from-green-500 to-emerald-500 rounded-lg flex items-center justify-center mr-4">
+                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                  </svg>
+                </div>
+                <div>
+                  <h3 className="text-xl font-semibold text-white mb-2">Code Games</h3>
+                  <p className="text-purple-200">Learn through interactive games and challenges</p>
+                </div>
+              </div>
+              <div className="mt-4">
+                <Link to="/code-games" className="text-green-400 hover:text-green-300 font-medium">Play Games →</Link>
+              </div>
+            </div>
+
+            <div className="interactive-card hover-lift">
+              <div className="flex items-center">
+                <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg flex items-center justify-center mr-4">
+                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                  </svg>
+                </div>
+                <div>
+                  <h3 className="text-xl font-semibold text-white mb-2">Study Groups</h3>
+                  <p className="text-purple-200">Join study groups and learn with others</p>
+                </div>
+              </div>
+              <div className="mt-4">
+                <Link to="/study-groups" className="text-purple-400 hover:text-purple-300 font-medium">Join Groups →</Link>
+              </div>
+            </div>
+          </div>
+
+          {/* Call to Action */}
+          <div className="gamified-card text-center">
+            <h2 className="text-2xl font-bold text-white mb-4">Ready to Start Your Coding Journey?</h2>
+            <p className="text-purple-200 mb-6">Create an account to track your progress, earn XP, and unlock achievements!</p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link to="/register" className="btn-primary inline-flex items-center glow-purple hover-lift">
+                <span className="mr-2">🚀</span>
+                Get Started
+              </Link>
+              <Link to="/login" className="border-2 border-purple-400 text-purple-200 px-8 py-3 rounded-xl font-semibold hover:bg-purple-400 hover:text-white transition-colors">
+                Sign In
+              </Link>
+            </div>
+          </div>
         </div>
       </div>
     );
